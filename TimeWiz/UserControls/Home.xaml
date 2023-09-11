@@ -1,0 +1,40 @@
+﻿<UserControl x:Class="TimeWiz.UserControls.Home"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:TimeWiz.UserControls"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800">
+    <Grid HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+        <!-- Welcome Message -->
+        <StackPanel x:Name="stckPnlWelcome" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0,20,0,0" Height="96" Width="396">
+            <TextBlock Text="Welcome to TimeWiz!" HorizontalAlignment="Center" FontSize="36" FontWeight="Bold" FontFamily="Calibri"/>
+            <TextBlock Text="Manage your study time efficiently" HorizontalAlignment="Center" FontSize="22" Margin="0,5" FontFamily="Calibri"/>
+        </StackPanel>
+
+        <!-- Calendar -->
+        <Viewbox Stretch="UniformToFill" Height="290" Width="290" StretchDirection="Both" HorizontalAlignment="Center" VerticalAlignment="Bottom">
+            <Calendar x:Name="MyCalendar" Width="175" Height="183"  HorizontalAlignment="Center" VerticalAlignment="Center" FontFamily="Calibri" FontSize="16" >
+                <Calendar.Background>
+                    <LinearGradientBrush EndPoint="0.5,1" MappingMode="RelativeToBoundingBox" StartPoint="0.5,0">
+                        <GradientStop Color="#FFE4EAF0"/>
+                        <GradientStop Color="#FFECF0F4" Offset="0.16"/>
+                        <GradientStop Color="#FFFCFCFD" Offset="0.16"/>
+                        <GradientStop Color="#FFE7FF98" Offset="1"/>
+                    </LinearGradientBrush>
+                </Calendar.Background>
+
+                <Calendar.BorderBrush>
+                    <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                        <GradientStop Color="#FFA3AEB9" Offset="0"/>
+                        <GradientStop Color="#FF8399A9" Offset="0.375"/>
+                        <GradientStop Color="#FF718597" Offset="0.375"/>
+                        <GradientStop Color="#FF58817E" Offset="1"/>
+                    </LinearGradientBrush>
+                </Calendar.BorderBrush>
+            </Calendar>
+        </Viewbox>
+
+    </Grid>
+</UserControl>

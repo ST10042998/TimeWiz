@@ -1,0 +1,50 @@
+﻿<UserControl x:Class="TimeWiz.UserControls.Module"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:TimeWiz.UserControls"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800">
+
+    <Grid Margin="0,0,0,-34" HorizontalAlignment="Left" Width="790">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="638*"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+        <Label x:Name="ModuleNmLbl"  FontFamily="Calibri" Content="Module name :" HorizontalAlignment="Left" Margin="38,50,0,0" VerticalAlignment="Top" />
+        <Label x:Name="ModuleCodeLbl" FontFamily="Calibri" Content="Module Code :" HorizontalAlignment="Left" Margin="38,100,0,0" VerticalAlignment="Top" />
+        <Label x:Name="NumCrditLbl" FontFamily="Calibri" Content="Number of Credits :" HorizontalAlignment="Left" Margin="38,150,0,0" VerticalAlignment="Top"/>
+        <Label x:Name="ClassHrsLbl" FontFamily="Calibri" Content="Class hours per week :" HorizontalAlignment="Left" Margin="38,200,0,0" VerticalAlignment="Top" />
+
+        <TextBox x:Name="txtName" HorizontalAlignment="Left" Margin="215,53,0,0" TextWrapping="Wrap"  VerticalAlignment="Top" Width="120"/>
+        <TextBox x:Name="txtCode" HorizontalAlignment="Left" Margin="215,103,0,0" TextWrapping="Wrap"  VerticalAlignment="Top" Width="120"/>
+        <TextBox x:Name="txtCredits" HorizontalAlignment="Left" Margin="215,153,0,0" TextWrapping="Wrap"  VerticalAlignment="Top" Width="120"/>
+        <TextBox x:Name="txtHours" HorizontalAlignment="Left" Margin="215,203,0,0" TextWrapping="Wrap"  VerticalAlignment="Top" Width="120"/>
+
+        <Button x:Name="btnSaveModule" Content="Save" HorizontalAlignment="Left" Margin="211,253,0,0" VerticalAlignment="Top" Width="134" Background="#FFB5FF6F" Click="btnSaveModule_Click">
+            <Button.Effect>
+                <DropShadowEffect Color="#FF0CFF00" Opacity="0.35"/>
+            </Button.Effect>
+        </Button>
+        <Label x:Name="lblNumWeekSestr" FontFamily="Calibri" Content="Number of weeks in semester :" HorizontalAlignment="Left" Margin="38,310,0,0" VerticalAlignment="Top"/>
+
+        <TextBox x:Name="txtNumWeekSestr" HorizontalAlignment="Left" Margin="215,313,0,0" TextWrapping="Wrap"  VerticalAlignment="Top" Width="120"/>
+
+
+        <Label x:Name="lblStartDate" FontFamily="Calibri" Content="Start date of first week :" HorizontalAlignment="Left" Margin="38,350,0,0" VerticalAlignment="Top"/>
+
+        <DatePicker x:Name="txtStartDate" HorizontalAlignment="Left" Margin="215,353,0,0" VerticalAlignment="Top" Width="120"/>
+
+        <Button x:Name="btnSaveSemester" FontFamily="Calibri" Content="Save" HorizontalAlignment="Left" Margin="299,398,0,0" VerticalAlignment="Top" Width="50" Background="#FFB5FF6F" Click="btnSaveSemester_Click">
+            <Button.Effect>
+                <DropShadowEffect Color="#FF0CFF00" Opacity="0.45"/>
+            </Button.Effect>
+        </Button>
+        <Button x:Name="btnCancelSave" FontFamily="Calibri" Content="Cancel" HorizontalAlignment="Left" Margin="215,397,0,0" VerticalAlignment="Top" Width="50" Background="#FFFF987A" Click="btnCancelSave_Click">
+            <Button.Effect>
+                <DropShadowEffect Color="Red" Opacity="0.45"/>
+            </Button.Effect>
+        </Button>
+    </Grid>
+</UserControl>

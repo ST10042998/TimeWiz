@@ -1,0 +1,32 @@
+﻿<UserControl x:Class="TimeWiz.UserControls.View"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:TimeWiz.UserControls"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800">
+
+    <Grid HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+        <DataGrid Margin="30,94,30,19" HorizontalAlignment="Center" AutoGenerateColumns="False" VerticalScrollBarVisibility="Auto">
+            <DataGrid.Columns >
+                <DataGridTextColumn Header="Module Name"  Width="1.2*" Binding="{Binding Name}"/>
+                <DataGridTextColumn Header="Module Code" Width="0.8*" Binding="{Binding Code}"/>
+                <DataGridTextColumn Header="Credits" Width="0.6*" Binding="{Binding Credits}"/>
+                <DataGridTextColumn Header="Hours Needed" Width="0.8*" Binding="{Binding HoursNeeded}"/>
+                <DataGridTextColumn Header="Self-study Hours" Width="0.9*" Binding="{Binding SelfStudyHours}"/>
+
+                <!-- DataGridTemplateColumn for Completion -->
+                <DataGridTemplateColumn Header="Completion" Width="*">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <!-- Define the progress bar here -->
+                            <ProgressBar Maximum="100" Value="{Binding CompletionPercentage}" Width="100"/>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+            </DataGrid.Columns>
+        </DataGrid>
+    </Grid>
+
+</UserControl>
