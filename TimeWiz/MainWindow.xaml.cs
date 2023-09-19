@@ -23,12 +23,12 @@ namespace TimeWiz
     public partial class MainWindow : Window
     {
         private StudyClass study;
-        private SemesterClass semester;
+        private CalculationClass cal;
         public MainWindow()
         {
             InitializeComponent();
             study = new StudyClass();
-            semester = new SemesterClass();
+            cal = new CalculationClass();
             // Navigates to the home page when the application starts
             NavigateToUserControl(new UserControls.Home());
         }
@@ -53,13 +53,13 @@ namespace TimeWiz
                             NavigateToUserControl(new UserControls.Home());
                             break;
                         case "ModuleBtn":
-                            NavigateToUserControl(new UserControls.Module(study,semester));
+                            NavigateToUserControl(new UserControls.Module(study,cal));
                             break;
                         case "StudyBtn":
-                            NavigateToUserControl(new UserControls.Study(study,semester));
+                            NavigateToUserControl(new UserControls.Study(study));
                             break;
                         case "ViewBtn":
-                            NavigateToUserControl(new UserControls.View());
+                            NavigateToUserControl(new UserControls.View(study));
                             break;
                     }
                 }
@@ -75,7 +75,7 @@ namespace TimeWiz
         //--------------------------------------------------------------------------------------------------------------------------------------------------------
 
         /// <summary>
-        /// c
+        /// method to exit application
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
@@ -100,6 +100,25 @@ namespace TimeWiz
 
         }
 
+        //----------------------------------------------------------------------------------------------------------------------------------------------------------
+
+        /// <summary>
+        /// method to go to home display
+        /// </summary>
+        public void NavigateToHome()
+        {
+            NavigateToUserControl(new UserControls.Home());
+        }
+
+        //----------------------------------------------------------------------------------------------------------------------------------------------------------
+
+        /// <summary>
+        /// creating new instance of module
+        /// </summary>
+        public void NavigateToAddModule()
+        {
+            NavigateToUserControl(new UserControls.Module(study,cal));
+        }
     }
 }
 //-----------------------------------------------------------------------------------------------------------------------------------------------------END..Eugene*

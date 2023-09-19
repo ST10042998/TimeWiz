@@ -51,26 +51,32 @@ namespace MyTimeWizClassLib
         /// <summary>
         /// Gets or sets the number of hours studied for this module
         /// </summary>
-        private int? studiedHours;
-        public int? StudiedHours
-        {
-            get { return studiedHours; }
-            set
-            {
-                // Update the total studied hours when setting the value.
-                if (value.HasValue)
-                    TotalStudiedHours += value.Value;
+        private int studiedHours;
+        public int StudiedHours { get => studiedHours; set => studiedHours = value; }
 
-                studiedHours = value;
-            }
-        }
 
         //----------------------------------------------------------------------------------------------------------------------------------------------------------
 
         /// <summary>
-        /// Accumulated studied hours
+        /// Holds Remaining study hours for week
         /// </summary>
-        public int? TotalStudiedHours { get; private set; }
+        private int remainingWeekHours;
+        public int RemainingWeekHours { get => remainingWeekHours; set => remainingWeekHours = value; }
+
+        //----------------------------------------------------------------------------------------------------------------------------------------------------------
+
+        /// <summary>
+        /// Holds Remaining study hours for week
+        /// </summary>
+        private double progressbar;
+        public double Progressbar { get => progressbar; set => progressbar = value; }
+
+        //----------------------------------------------------------------------------------------------------------------------------------------------------------
+
+        /// <summary>
+        /// dictionary property to store the recorded hours for this module
+        /// </summary>
+        public Dictionary<DateTime, int> StudiedHoursPerDate { get; } = new Dictionary<DateTime, int>();
 
     }
 }

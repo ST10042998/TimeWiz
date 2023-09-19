@@ -21,69 +21,249 @@ namespace TimeWiz.UserControls
     /// </summary>
     public partial class Study : UserControl
     {
+        //initializing obj
+        private CalculationClass cal = new CalculationClass();
         private StudyClass study;
-        private SemesterClass semester;
-        private ModuleClass module;
-        public Study(StudyClass study, SemesterClass semester)
+        //----------------------------------------------------------------------------------------------------------------------------------------------------------------
+      
+        /// <summary>
+        /// constructor
+        /// </summary>
+        /// <param name="study"></param>
+        /// <param name="semester"></param>
+        public Study(StudyClass study)
         {
             InitializeComponent();
-            // Store the study object
-            this.study = study;
 
             // Store the semester object
-            this.semester = semester;
+            this.study = study;
 
-            module = new ModuleClass();
-            FillDataGrid();
+            // Populate the semester combobox
+            this.SemesterData();
         }
+
+
+        //----------------------------------------------------------------------------------------------------------------------------------------------------------------
 
         /// <summary>
-        /// method that displays my module/semester data on my datagrid
+        /// populating my semester combobox
         /// </summary>
-        public void FillDataGrid()
-
+        private void SemesterData()
         {
-                if (semester.ModuleList == null)
-                {
-                    MessageBox.Show("NO SAVED DATA", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
-                }
+            // Sort the semesters in alphabetical order
+            var sortedSemester = study.SemesterList
+                .OrderBy(s => s.semester.SemesterNum)
+                .ToList();
 
-                moduleDataGrid.ItemsSource = semester.ModuleList;
-                moduleDataGrid.Items.Refresh();
-            
-        }
-        
-        string moduleCode = string.Empty;
-        private void moduleDataGrid_CellEditEnding(object sender, DataGridCellEditEndingEventArgs e)
-        {
-            // Check if the user edited the "Input Study Hours" column and confirmed the edit.
-            if (e.Column.Header.ToString() == "Input Study Hours" && e.EditAction == DataGridEditAction.Commit)
+            // Clear the current items
+            cmBoxSemester.Items.Clear();
+
+            foreach (var sem in sortedSemester)
             {
-                // Get the row index where the user added input study hours.
-                int rowIndex = e.Row.GetIndex();
+                // Exclude empty module code
+                if (!string.IsNullOrWhiteSpace(sem.semester.SemesterNum.ToString()))
+                {
+                    ComboBoxItem comboBoxItem = new ComboBoxItem();
+                    comboBoxItem.Content = sem.semester.SemesterNum.ToString();
 
-                // Access the corresponding ModuleClass data item 
-                ModuleClass editedModule = moduleDataGrid.Items[rowIndex] as ModuleClass;
+                    // Set the Tag property with the associated StudyClass object
+                    comboBoxItem.Tag = sem; // Ensure 'study' is a valid StudyClass object
 
-                // Retrieve the Module Code from the editedModule object.
-                moduleCode = editedModule?.Code;
-
+                    this.cmBoxSemester.Items.Add(comboBoxItem);
+                }
+                else
+                {
+                    MessageBox.Show("Empty","Error",MessageBoxButton.OK,MessageBoxImage.Error);
+                }
             }
+
         }
 
+        //----------------------------------------------------------------------------------------------------------------------------------------------------------------
 
+        /// <summary>
+        /// save button event for study menu item
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void btnStudySave_Click(object sender, RoutedEventArgs e)
         {
-            foreach (ModuleClass moduleData in semester.ModuleList)
+            try
             {
-                // Find the module with the matching moduleCode in your semester.ModuleList
-                var module1 = semester.ModuleList.FirstOrDefault(m => module.Code == moduleCode);
-                if (module1 != null)
+                ComboBoxItem selectedComboBoxItem = cmBoxMCode.SelectedItem as ComboBoxItem;
+                if (selectedComboBoxItem == null)
                 {
-                    // Set the SelfStudyHours property of the module
-                    module1.StudiedHours = 
+                    MessageBox.Show("Invalid selection. Please choose a valid semester.", "Error", MessageBoxButton.OK, MessageBoxImage.Warning);
+                    return;
+                }
+
+                StudyClass Studysemester = selectedComboBoxItem.Tag as StudyClass;
+                if (Studysemester == null)
+                {
+                    MessageBox.Show("Invalid selection. Please choose a valid semester.", "Error", MessageBoxButton.OK, MessageBoxImage.Warning);
+                    return;
+                }
+
+                var selectedModule = FindModuleByCode(selectedComboBoxItem.Content.ToString());
+                if (selectedModule == null)
+                {
+                    MessageBox.Show($"Module with Code '{selectedComboBoxItem.Content.ToString()}' not found", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                    return;
+                }
+
+                if (!int.TryParse(txtStudyHrs.Text.Trim(), out int studiedHours))
+                {
+                    MessageBox.Show("Invalid Studied Hours input", "Error", MessageBoxButton.OK, MessageBoxImage.Warning);
+                    return;
+                }
+
+                DateTime currentDate = DateTime.Now.Date;
+                if (selectedModule.StudiedHoursPerDate.ContainsKey(currentDate))
+                {
+                    selectedModule.StudiedHoursPerDate[currentDate] += studiedHours;
+                }
+                else
+                {
+                    selectedModule.StudiedHoursPerDate[currentDate] = studiedHours;
+                }
+
+                selectedModule.StudiedHours = studiedHours;
+
+                if (this.cal.CalculateRemainingHoursForCurrentWeek(selectedModule) > 0)
+                {
+                    selectedModule.RemainingWeekHours = this.cal.CalculateRemainingHoursForCurrentWeek(selectedModule);
+                    selectedModule.Progressbar = cal.ProgressBarCal(selectedModule);
+                }
+                else
+                {
+                    MessageBox.Show("All self-study hours for the week have been completed", "Completed weekly self-study hours", MessageBoxButton.OK, MessageBoxImage.Information);
+                }
+
+                MessageBox.Show($" {selectedModule.Progressbar}");
+
+                txtStudyHrs.Clear();
+                MessageBox.Show($"Studied Hours for {selectedModule.Name} on {currentDate.ToShortDateString()} saved: {studiedHours}", "Save", MessageBoxButton.OK, MessageBoxImage.Information);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"An error occurred: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+        }
+
+        //----------------------------------------------------------------------------------------------------------------------------------------------------------------
+        
+        /// <summary>
+        /// Finding module by using modulecode
+        /// </summary>
+        /// <param name="code"></param>
+        /// <returns></returns>
+        private ModuleClass FindModuleByCode(string code)
+        {
+            var foundModule = study.SemesterList
+                .SelectMany(semester => semester.ModuleList)
+                .FirstOrDefault(module => module.Code == code);
+
+            if (foundModule != null)
+            {
+                // Module with the specified code found, return it
+                return foundModule;
+            }
+
+            // Module with the specified code not found
+            return null;
+        }
+
+        //----------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+        /// <summary>
+        /// handles the ComboBox's selection change event, updating data grids and refreshing a combo box based on the selected semester
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void CmBoxSemester_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            // Retrieve the selected item (ComboBoxItem) from the ComboBox
+            ComboBoxItem selectedComboBoxItem = cmBoxSemester.SelectedItem as ComboBoxItem;
+
+            if (selectedComboBoxItem != null)
+            {
+                // Retrieve the semester object from the ComboBox item's Tag
+                SemesterDataClass Studysemester = selectedComboBoxItem.Tag as SemesterDataClass;
+
+                if (Studysemester != null)
+                {
+                    // Display the selected semester in a MessageBox or any other control you prefer
+
+                    semesterDataGrid.ItemsSource = Studysemester.SemesterList;
+                    semesterDataGrid.Items.Refresh();
+
+                    moduleDataGrid.ItemsSource = Studysemester.ModuleList;
+                    moduleDataGrid.Items.Refresh();
+
+                    // Update the items in cmBoxMCode based on the modules of the selected semester
+                    RefreshComboBox(Studysemester);
+                 
+                }
+                else
+                {
+                    // Handle the case where selectedStudy is null, e.g., display an error message.
+                    MessageBox.Show("Invalid selection. Please choose a valid semester.", "Error", MessageBoxButton.OK, MessageBoxImage.Warning);
+                }
+            }
+            else
+            {
+                MessageBox.Show("No item selected.", "Error", MessageBoxButton.OK, MessageBoxImage.Warning);
+            }
+        }
+
+
+        //----------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+        /// <summary>
+        /// refreshing the combo box to show the Module Code
+        /// </summary>
+        private void RefreshComboBox(SemesterDataClass modules)
+        {
+            // Sort the Module code in alphabetical order
+            var sortModuleCode = modules.ModuleList.OrderBy(m => m.Code).ToList();
+
+            // Clear the current items
+            this.cmBoxMCode.Items.Clear();
+
+            // Add the sorted module codes to the combo box
+            foreach (var module in sortModuleCode)
+            {
+                // Exclude empty module code
+                if (!string.IsNullOrWhiteSpace(module.Code))
+                {
+                    ComboBoxItem comboBoxItem = new ComboBoxItem();
+                    comboBoxItem.Content = module.Code;
+                    comboBoxItem.Tag = study;
+                    this.cmBoxMCode.Items.Add(comboBoxItem);
                 }
             }
         }
-    } 
+
+        //----------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+        /// <summary>
+        /// Cancel button event
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void btnStudyCancel_Click(object sender, RoutedEventArgs e)
+        {
+            var option = MessageBox.Show("Cancel the operation?", "Cancel", MessageBoxButton.YesNo, MessageBoxImage.Warning);
+
+            if (option == MessageBoxResult.Yes)
+            {
+                // Call the NavigateToHome method of the MainWindow
+                if (Window.GetWindow(this) is MainWindow mainWindow)
+                {
+                    mainWindow.NavigateToHome();
+                }
+            }
+        }
+    }
 }
+//----------------------------------------------------------------------------------------------------------------------------------------------------------Eugene*End...

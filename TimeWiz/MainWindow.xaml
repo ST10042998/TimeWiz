@@ -5,47 +5,43 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:TimeWiz"
         mc:Ignorable="d"
-        Title="MainWindow" Height="550" Width="864" ResizeMode="CanMinimize">
-    <Grid Margin="0,0,-32,-21">
+        Title="TimeWiz" FontFamily="Arial" Height="550" Width="864" ResizeMode="CanMinimize" SizeToContent="WidthAndHeight" WindowStartupLocation="CenterScreen" Background="Azure">
+
+    <Grid Margin="0,0,-38,-21" HorizontalAlignment="Left" Width="896">
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="177*"/>
-          
+            <ColumnDefinition Width="61*"/>
+
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
             <RowDefinition/>
         </Grid.RowDefinitions>
-        <StackPanel HorizontalAlignment="Left" Width="138" Background="#FF004461">
-            <Button x:Name="HomeBtn" HorizontalAlignment="Stretch" Margin="19,35,19,0" Background="#FFE2E2E2"  Width="100" Click="HomeBtn_Click">
+        <StackPanel HorizontalAlignment="Left" Width="138" Background="#FF004461" Margin="0,0,0,10" Grid.ColumnSpan="2">
+            <Button x:Name="HomeBtn" HorizontalAlignment="Stretch" Margin="19,35,19,0" Background="#FFE2E2E2"  Width="100"  Height="30" Click="HomeBtn_Click">
                 <StackPanel Orientation="Horizontal">
                     <Image Source="Icons/home.png" Width="20" Height="20" VerticalAlignment="Center"/>
                     <TextBlock Text="Home" Margin="10,0" VerticalAlignment="Center" Foreground="Black"/>
                 </StackPanel>
             </Button>
-            <Button x:Name="ModuleBtn" HorizontalAlignment="Stretch" Margin="10,30,10,0" Background="#FFE2E2E2" Width="100" Click="HomeBtn_Click">
+            <Button x:Name="ModuleBtn" HorizontalAlignment="Stretch" Margin="10,30,10,0" Background="#FFE2E2E2" Width="100" Height="30" Click="HomeBtn_Click">
                 <StackPanel  Orientation="Horizontal">
                     <Image Source="Icons/module.png" Width="20" Height="20" VerticalAlignment="Center"/>
-                    <TextBlock Text="Module" Margin="10,0" VerticalAlignment="Center" Foreground="Black"/>
+                    <TextBlock Text="Add Module" Margin="10,0" VerticalAlignment="Center" Foreground="Black" Width="67"/>
                 </StackPanel>
             </Button>
-            <Button x:Name="StudyBtn" HorizontalAlignment="Stretch" Margin="10,30,10,0" Background="#FFE2E2E2" Width="100" Click="HomeBtn_Click">
+            <Button x:Name="StudyBtn" HorizontalAlignment="Stretch" Margin="10,30,10,0" Background="#FFE2E2E2" Width="100" Height="30" Click="HomeBtn_Click">
                 <StackPanel Orientation="Horizontal">
                     <Image Source="Icons/study.png" Width="20" Height="20" VerticalAlignment="Center"/>
                     <TextBlock Text="Study" Margin="10,0" VerticalAlignment="Center" Foreground="Black"/>
                 </StackPanel>
             </Button>
-            <Button x:Name="ViewBtn" HorizontalAlignment="Stretch" Margin="10,30,10,0" Background="#FFE2E2E2" Width="100" Click="HomeBtn_Click">
+            <Button x:Name="ViewBtn" HorizontalAlignment="Stretch" Margin="10,30,10,0" Background="#FFE2E2E2" Width="100" Height="30" Click="HomeBtn_Click">
                 <StackPanel Orientation="Horizontal">
                     <Image Source="Icons/view.png" Width="20" Height="20" VerticalAlignment="Center"/>
                     <TextBlock Text="View" Margin="10,0" VerticalAlignment="Center" Foreground="Black"/>
                 </StackPanel>
             </Button>
-            <Button x:Name="SettingBtn" HorizontalAlignment="Stretch" Margin="10,30,10,0" Background="#FFE2E2E2" Width="100" Click="HomeBtn_Click">
-                <StackPanel Orientation="Horizontal">
-                    <Image Source="Icons/settings.png" Width="20" Height="20"/>
-                    <TextBlock Text="Setting" Margin="10,0" VerticalAlignment="Center" Foreground="Black"/>
-                </StackPanel>
-            </Button>
-            <Button x:Name="ExitBtn" HorizontalAlignment="Stretch" Margin="10,30,10,0" Background="#FFE2E2E2" Width="100" Click="ExitBtn_Click">
+
+            <Button x:Name="ExitBtn" HorizontalAlignment="Stretch" Margin="10,30,10,0" Background="#FFE2E2E2" Width="100" Height="30" Click="ExitBtn_Click">
                 <StackPanel Orientation="Horizontal">
                     <Image Source="Icons/exit.png" Width="20" Height="20" VerticalAlignment="Center"/>
                     <TextBlock Text="Exit" Margin="10,0" VerticalAlignment="Center" Foreground="Black"/>
@@ -54,7 +50,7 @@
         </StackPanel>
 
         <!-- Frame for displaying pages such as home,module,study and view  -->
-        <ContentControl Name="MainFrame" Grid.Row="0" Background="#FFE0E0E0" Margin="162,0,0,0" Grid.ColumnSpan="3" Height="519" VerticalAlignment="Top" HorizontalAlignment="Left" Width="695"/>
+        <ContentControl Name="MainFrame" Grid.Row="0" Background="#FFE0E0E0" Margin="143,0,31,0" Height="532" VerticalAlignment="Top"/>
 
     </Grid>
 </Window>

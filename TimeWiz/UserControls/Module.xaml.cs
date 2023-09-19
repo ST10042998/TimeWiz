@@ -23,27 +23,36 @@ namespace TimeWiz.UserControls
     /// </summary>
     public partial class Module : UserControl
     {
+      
         /// <summary>
-        /// Instance of main window class
+        ///  creating obj of study class
         /// </summary>
-        private MainWindow main = new MainWindow();
-        private SemesterClass semester;
         private StudyClass study;
-        private ModuleClass module;
+
+        /// <summary>
+        /// creating obj of calculation class
+        /// </summary>
+        private CalculationClass cal;
+        private SemesterDataClass currentSemester ;
+
+        /// <summary>
+        /// list that holds module data for my calculations
+        /// </summary>
+        private List<int> moduleData = new List<int>();
+
         //----------------------------------------------------------------------------------------------------------------------------------------------------------
-        List<int> moduleData = new List<int>();
+
         /// <summary>
         /// Constructor
         /// </summary>
-        public Module(StudyClass study,SemesterClass semester)
+        public Module(StudyClass study,CalculationClass cal)
         {
             InitializeComponent();
-            module = new ModuleClass();
-
+           
             // Store the study object
             this.study = study;
-            this.semester = semester;
-
+            this.cal = cal;
+            currentSemester = new SemesterDataClass();
         }
 
         //----------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -54,48 +63,65 @@ namespace TimeWiz.UserControls
         /// <param name="mc"></param>
         public void SaveModuleData()
         {
-            //creating a new obj to save module data 
+            // Initialize a flag to check if all input is valid
+            bool isValid = true;
+
+            // Creating a new object to save module data
             ModuleClass mc = new ModuleClass();
 
-            mc.Name = txtName.Text.Trim();
-            mc.Code = txtCode.Text.Trim();
+            //when saving i make the first lette rof the module name uppercase
+            mc.Name = char.ToUpper(txtName.Text[0]) + txtName.Text.Substring(1);
 
-            if(int.TryParse(txtCredits.Text.Trim(), out int credits))
+            //when saving make the module code uppercase 
+            mc.Code = txtCode.Text.Trim().ToUpper();
+
+            // Validate and parse Credits input
+            if (int.TryParse(txtCredits.Text.Trim(), out int credits))
             {
                 mc.Credits = credits;
             }
             else
             {
-                // Display an error message or handle the invalid input appropriately
-                MessageBox.Show("Invalid Module Credits input" , "Invalid", MessageBoxButton.OK, MessageBoxImage.Error);
-                return;
+                // Display an error message to handle the invalid input appropriately
+                this.lblErrorM.Content = "Invalid Module Credits input";
+                this.txtCredits.Clear();
+                isValid = false;
             }
 
-
+            // Validate and parse ClassHoursPerWeek input
             if (int.TryParse(txtHours.Text.Trim(), out int hours))
             {
                 mc.ClassHoursPerWeek = hours;
             }
             else
             {
-                // Display an error message or handle the invalid input appropriately
-                MessageBox.Show("Invalid Module ClassHoursPerWeek input" , "Invalid", MessageBoxButton.OK, MessageBoxImage.Error);
+                // Display an error message to handle the invalid input appropriately
+                this.lblErrorM.Content = "Invalid Module ClassHoursPerWeek input";
+                this.txtHours.Clear();
+                isValid = false;
+            }
+
+            // Save module data only if all input is valid
+            if (isValid)
+            {
+                // Add the module to the list of modules for the current semester
+                currentSemester.ModuleList.Add(mc);
+                moduleData.Add(mc.Credits);
+                moduleData.Add(mc.ClassHoursPerWeek);
+
+                txtName.Clear();
+                txtCode.Clear();
+                txtCredits.Clear();
+                txtHours.Clear();
+                this.lblSaved.Content = $"Module {mc.Name} saved successfully";
+            }
+            else
+            { 
+                //error message if isvalid returns false
+                this.lblSaved.Content = "Cannot save module due to insufficient or invalid input data";
                 return;
             }
-            semester.ModuleList.Add(mc);
-            moduleData.Add(mc.Credits);
-            moduleData.Add(mc.ClassHoursPerWeek);
-
-            txtName.Clear();
-            txtCode.Clear();
-            txtCredits.Clear();
-            txtHours.Clear();
-
         }
-
-      
-
-
 
         //----------------------------------------------------------------------------------------------------------------------------------------------------------
 
@@ -105,9 +131,10 @@ namespace TimeWiz.UserControls
         /// <param name="sc"></param>
         public void SaveSemesterData()
         {
-            //Creating new obj to save semester data
+            // Initialize a flag to check if all input is valid
+            bool isValid = true;
+
             SemesterClass sc = new SemesterClass();
-            
 
             if (int.TryParse(txtNumWeekSestr.Text.Trim(), out int Weeks))
             {
@@ -116,41 +143,55 @@ namespace TimeWiz.UserControls
             else
             {
                 // Display an error message or handle the invalid input appropriately
-                MessageBox.Show("Invalid Number of weeks input" , "Invalid",MessageBoxButton.OK, MessageBoxImage.Error);
-                return;
+                this.lblErrorS.Content = "Invalid Number of weeks input";
+                isValid = false;
             }
 
             sc.StartDate = Convert.ToDateTime(txtStartDate.Text.Trim());
-            study.Semester.Add(sc);
-
-            foreach (ModuleClass moduleData in semester.ModuleList)
-            {
-                int numberOfWeeks = sc.NumberOfWeeks;
-                int classHoursPerWeek = moduleData.ClassHoursPerWeek;
-                int credits = moduleData.Credits;
-                string code = moduleData.Code;
-
-
-                // Find the module with the matching moduleCode in your semester.ModuleList
-                var module1 = semester.ModuleList.FirstOrDefault(m => moduleData.Code == code);
-                if (module1 != null)
-                {
-                    // Set the SelfStudyHours property of the module
-                    module1.SelfStudyHours = study.CalculateSelfStudyHours(code, numberOfWeeks, classHoursPerWeek, credits);
-                }
-                else
-                {
-                    MessageBox.Show($"Module with code {code} not found.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
-                }
-              
-            }
-
             
-            txtNumWeekSestr.Clear();
-            txtStartDate.SelectedDate = null;
 
-           
+            if (int.TryParse(txtSemester.Text.Trim(), out int semNum))
+            {
+                sc.SemesterNum = semNum;
+                currentSemester.semester.SemesterNum = semNum;
+            }
+            else
+            {
+                // Display an error message or handle the invalid input appropriately
+                this.lblErrorS.Content = "Invalid Semester number input";
+                isValid = false;
+            }
+            // Save module data only if all input is valid
+            if (isValid)
+            {
+                currentSemester.SemesterList.Add(sc);
+
+                study.SemesterList.Add(currentSemester);
+
+                foreach (ModuleClass moduleData in currentSemester.ModuleList)
+                {
+                    int numberOfWeeks = sc.NumberOfWeeks;
+                    int classHoursPerWeek = moduleData.ClassHoursPerWeek;
+                    int credits = moduleData.Credits;
+                    string code = moduleData.Code;
+
+                    // Calculate the SelfStudyHours for the current module
+                    int selfStudyHours = cal.CalculateSelfStudyHours(code, numberOfWeeks, classHoursPerWeek, credits);
+
+                    // Update the SelfStudyHours property of the current module
+                    moduleData.SelfStudyHours = selfStudyHours;
+                }
+                txtSemester.Clear();
+                txtNumWeekSestr.Clear();
+                txtStartDate.SelectedDate = null;
+            }
+            else
+            {
+                MessageBox.Show("Can't Save semester due to insufficient input data", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                return;
+            }
         }
+
 
 
         //----------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -162,11 +203,19 @@ namespace TimeWiz.UserControls
         /// <param name="e"></param>
         private void btnSaveModule_Click(object sender, RoutedEventArgs e)
         {
-            
-            this.SaveModuleData();
-            MessageBox.Show($"Module {module.Name} successfully saved", "Save", MessageBoxButton.OK, MessageBoxImage.Information);
-
-
+            if (!string.IsNullOrEmpty(txtCode.Text) &&
+                !string.IsNullOrEmpty(txtCredits.Text) &&
+                !string.IsNullOrEmpty(txtHours.Text) &&
+                !string.IsNullOrEmpty(txtName.Text))
+            {
+                this.lblErrorM.Content = string.Empty;
+                this.SaveModuleData();
+            }
+            else
+            {
+                this.lblSaved.Content = "Cannot save module due to insufficient input data";
+               
+            }
         }
 
         //----------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -178,28 +227,51 @@ namespace TimeWiz.UserControls
         /// <param name="e"></param>
         private void btnSaveSemester_Click(object sender, RoutedEventArgs e)
         {
+            // Check if there are any saved modules in the current semester
+            if (currentSemester.ModuleList.Count == 0)
+            {
+                MessageBox.Show("Cannot save semester without saving at least one module.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                return;
+            }
 
-            this.SaveSemesterData();
-            MessageBox.Show("Data successfully saved", "Save", MessageBoxButton.OK, MessageBoxImage.Information);
-            
+            else if (!string.IsNullOrEmpty(txtSemester.Text) && !string.IsNullOrEmpty(txtNumWeekSestr.Text) && !string.IsNullOrEmpty(txtStartDate.Text))
+            {
+                this.lblSaved.Content = string.Empty;
+                this.SaveSemesterData();
+                MessageBox.Show("Semester data successfully saved", "Save", MessageBoxButton.OK, MessageBoxImage.Information);
               
+                //new instance of module usercontrol to help with dataSaving 
+                if (Window.GetWindow(this) is MainWindow mainWindow)
+                {
+                    mainWindow.NavigateToAddModule();
+                }
+            }
+            else
+            {
+                MessageBox.Show("Can't Save semester due to insufficient input data", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
         }
 
-        //----------------------------------------------------------------------------------------------------------------------------------------------------------
+            //----------------------------------------------------------------------------------------------------------------------------------------------------------
 
-        /// <summary>
-        /// Cancel button event 
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void btnCancelSave_Click(object sender, RoutedEventArgs e)
+            /// <summary>
+            /// Cancel button event 
+            /// </summary>
+            /// <param name="sender"></param>
+            /// <param name="e"></param>
+            private void btnCancelSave_Click(object sender, RoutedEventArgs e)
         {
-           var option = MessageBox.Show("Cancelling ..." , "Cancel", MessageBoxButton.YesNo , MessageBoxImage.Warning);
+            var option = MessageBox.Show("Cancel the operation?", "Cancel", MessageBoxButton.YesNo, MessageBoxImage.Warning);
+
             if (option == MessageBoxResult.Yes)
             {
-                main.NavigateToUserControl(new UserControls.Home());
+                // Call the NavigateToHome method of the MainWindow
+                if (Window.GetWindow(this) is MainWindow mainWindow)
+                {
+                    mainWindow.NavigateToHome();
+                }
             }
-           
+
         }
     }
 }

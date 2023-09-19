@@ -6,39 +6,32 @@ using System.Threading.Tasks;
 
 namespace MyTimeWizClassLib
 {
-   public class SemesterClass
+   public class SemesterDataClass
     {
         /// <summary>
-        /// Holds the number of weeks the semester has
+        /// creating a obj for my semesterclass
         /// </summary>
-        private int numberOfWeeks;
-        public int NumberOfWeeks { get => numberOfWeeks; set => numberOfWeeks = value; }
+        public SemesterClass semester = new SemesterClass();
 
         //----------------------------------------------------------------------------------------------------------------------------------------------------------
 
         /// <summary>
-        /// Holds the semester num
+        /// creating a obj for my moduleclass
         /// </summary>
-        private int semesterNum;
-        public int SemesterNum { get => semesterNum; set => semesterNum = value; }
+        public ModuleClass module = new ModuleClass();
 
         //----------------------------------------------------------------------------------------------------------------------------------------------------------
 
         /// <summary>
-        /// Holds the start date of the semester 
+        /// List of the module class
         /// </summary>
-        private DateTime startDate;
-        public DateTime StartDate { get => startDate; set => startDate = value; }
-
+        public List<ModuleClass> ModuleList = new List<ModuleClass>();
         //----------------------------------------------------------------------------------------------------------------------------------------------------------
-       
+
         /// <summary>
-        /// Default constructor
+        /// list of semesterclass
         /// </summary>
-        public SemesterClass()
-        {
-         
-        }
+        public List<SemesterClass> SemesterList = new List<SemesterClass>();
+
     }
 }
-//----------------------------------------------------------------------------------------------------------------------------------------------------------Eugene*End..

@@ -136,5 +136,11 @@
       <Name>MyTimeWizClassLib</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Icons\bin.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\TimeWiz-Home.jpg" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
