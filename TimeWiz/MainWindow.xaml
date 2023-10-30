@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:TimeWiz"
         mc:Ignorable="d"
-        Title="TimeWiz" FontFamily="Arial" Height="550" Width="864" ResizeMode="CanMinimize" SizeToContent="WidthAndHeight" WindowStartupLocation="CenterScreen" Background="Azure">
+        Title="TimeWiz" FontFamily="Arial" Height="550" Width="864" ResizeMode="CanMinimize" SizeToContent="WidthAndHeight" WindowStartupLocation="CenterScreen" Background="Azure" Icon="Icons/hourglass.png">
 
     <Grid Margin="0,0,-38,-21" HorizontalAlignment="Left" Width="896">
         <Grid.ColumnDefinitions>
@@ -16,7 +16,8 @@
             <RowDefinition/>
         </Grid.RowDefinitions>
         <StackPanel HorizontalAlignment="Left" Width="138" Background="#FF004461" Margin="0,0,0,10" Grid.ColumnSpan="2">
-            <Button x:Name="HomeBtn" HorizontalAlignment="Stretch" Margin="19,35,19,0" Background="#FFE2E2E2"  Width="100"  Height="30" Click="HomeBtn_Click">
+
+            <Button  x:Name="HomeBtn" HorizontalAlignment="Stretch" Margin="19,35,19,0" Background="#FFE2E2E2"  Width="100"  Height="30" Click="HomeBtn_Click">
                 <StackPanel Orientation="Horizontal">
                     <Image Source="Icons/home.png" Width="20" Height="20" VerticalAlignment="Center"/>
                     <TextBlock Text="Home" Margin="10,0" VerticalAlignment="Center" Foreground="Black"/>
@@ -34,14 +35,14 @@
                     <TextBlock Text="Study" Margin="10,0" VerticalAlignment="Center" Foreground="Black"/>
                 </StackPanel>
             </Button>
-            <Button x:Name="ViewBtn" HorizontalAlignment="Stretch" Margin="10,30,10,0" Background="#FFE2E2E2" Width="100" Height="30" Click="HomeBtn_Click">
+            <Button x:Name="ViewBtn" HorizontalAlignment="Stretch"  Margin="10,30,10,0" Background="#FFE2E2E2" Width="100" Height="30" Click="HomeBtn_Click">
                 <StackPanel Orientation="Horizontal">
                     <Image Source="Icons/view.png" Width="20" Height="20" VerticalAlignment="Center"/>
                     <TextBlock Text="View" Margin="10,0" VerticalAlignment="Center" Foreground="Black"/>
                 </StackPanel>
             </Button>
 
-            <Button x:Name="ExitBtn" HorizontalAlignment="Stretch" Margin="10,30,10,0" Background="#FFE2E2E2" Width="100" Height="30" Click="ExitBtn_Click">
+            <Button x:Name="ExitBtn" HorizontalAlignment="Stretch"  Margin="10,30,10,0" Background="#FFE2E2E2" Width="100" Height="30" Click="ExitBtn_Click">
                 <StackPanel Orientation="Horizontal">
                     <Image Source="Icons/exit.png" Width="20" Height="20" VerticalAlignment="Center"/>
                     <TextBlock Text="Exit" Margin="10,0" VerticalAlignment="Center" Foreground="Black"/>

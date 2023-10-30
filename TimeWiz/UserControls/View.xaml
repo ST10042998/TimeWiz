@@ -9,29 +9,30 @@
 
     <Grid HorizontalAlignment="Stretch" Height="450" VerticalAlignment="Top">
 
-        <Label x:Name="lblSemester" Content="Semester" HorizontalAlignment="Left" Margin="38,24,0,0" VerticalAlignment="Top" Width="82"/>
+        <Label x:Name="lblSemester" Content="Semester" HorizontalAlignment="Left" Margin="38,24,0,0" VerticalAlignment="Top" Width="82" FontSize="14" FontWeight="Bold"/>
         <ComboBox x:Name="cmBoxSemest"  SelectionChanged="CmBoxSemest_SelectionChanged" HorizontalAlignment="Left" Margin="146,24,0,0" VerticalAlignment="Top" Width="120"/>
 
         <!-- datagrid to display the semester data -->
         <DataGrid  x:Name="DatagrdViewSem" IsReadOnly="True" VerticalScrollBarVisibility="Auto" HorizontalAlignment="Left" Height="99" Margin="202,65,0,0"
-                   VerticalAlignment="Top" Width="376" HorizontalGridLinesBrush="Black" AutoGenerateColumns="False" VerticalGridLinesBrush="Black" CanUserResizeColumns="False" CanUserResizeRows="False" Background="#FFF9DBC1" >
+                   VerticalAlignment="Top" Width="498" HorizontalGridLinesBrush="Black" AutoGenerateColumns="False" VerticalGridLinesBrush="Black" CanUserResizeColumns="False" CanUserResizeRows="False" Background="#FFF9DBC1" >
             <!-- Defining columns -->
             <DataGrid.Columns>
-                <DataGridTextColumn Header="semester" Width="*" Binding="{Binding SemesterNum}"/>
-                <DataGridTextColumn Header="Number of Weeks" Width="*" Binding="{Binding NumberOfWeeks}"/>
-                <DataGridTextColumn Header="Start Date" Width="*" Binding="{Binding StartDate}"/>
+                <DataGridTextColumn Header="Semester" Width="0.8*" Binding="{Binding SemesterNum}"/>
+                <DataGridTextColumn Header="Number of Weeks" Width="0.8*" Binding="{Binding NumberOfWeeks}"/>
+                <DataGridTextColumn Header="Start Date" Width="1*" Binding="{Binding StartDate}"/>
+                <DataGridTextColumn Header="End Date" Width="1*" Binding="{Binding EndDate}"/>
             </DataGrid.Columns>
         </DataGrid>
 
         <!-- datagrid to display the Module data -->
-        <DataGrid x:Name="DatagrdViewModule" Margin="6,184,14,0"  IsReadOnly="True" VerticalScrollBarVisibility="Auto" Height="195"
+        <DataGrid x:Name="DatagrdViewModule" Margin="6,184,10,0"  IsReadOnly="True" VerticalScrollBarVisibility="Auto" Height="195"
                    VerticalAlignment="Top" HorizontalGridLinesBrush="Black" AutoGenerateColumns="False" VerticalGridLinesBrush="Black" CanUserResizeColumns="False" CanUserResizeRows="False" Background="#FFF9DBC1" >
             <!-- Defining columns -->
             <DataGrid.Columns >
                 <DataGridTextColumn Header="Module Name"  Width="1.2*" Binding="{Binding Name}"/>
                 <DataGridTextColumn Header="Module Code" Width="0.8*" Binding="{Binding Code}"/>
                 <DataGridTextColumn Header="Credits" Width="0.6*" Binding="{Binding Credits}"/>
-                <DataGridTextColumn Header="ClassHoursPerWeek" Width="*" Binding="{Binding ClassHoursPerWeek}"/>
+                <DataGridTextColumn Header="ClassHoursPerWeek" Width="1*" Binding="{Binding ClassHoursPerWeek}"/>
                 <DataGridTextColumn Header="Selfstudy Hours" Width="0.9*" Binding="{Binding SelfStudyHours}"/>
                 <DataGridTextColumn Header="RemainingHours" Width="*" Binding="{Binding RemainingWeekHours}"/>
 
@@ -40,7 +41,7 @@
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
                             <!-- Define the progress bar here -->
-                            <ProgressBar Foreground="Green" Minimum="0"
+                            <ProgressBar Foreground="Green"  Minimum="0"
                                          Maximum="100" Value="{Binding Progressbar}" Width="100"/>
 
                         </DataTemplate>
@@ -60,6 +61,7 @@
                 <TextBlock FontSize="16" Text="Delete" Margin="10,0" VerticalAlignment="Center" Foreground="Black"/>
             </StackPanel>
         </Button>
+        <Label x:Name="lblWeek" Foreground="Magenta" FontSize="21" HorizontalAlignment="Left" Margin="38,113,0,0" VerticalAlignment="Top" Height="31" Width="109"/>
 
     </Grid>
 

@@ -1,0 +1,52 @@
+# My Student Time Management Desktop Application
+TimeWiz
+
+Project was created for my PROG6212 Programming POE 
+It's a gui application where you can add modules, add semesters, and it will give you the self-study hours needed per week for modules
+you can view and also delete semesters after completing them.
+
+--Open with visual studios--
+Download zip file containing My TimeWiz application
+after downloading extract file and open it in visual studio
+if you're version of visual studio does not have NET 4.8 it won't be a problem just convert it to 4.6 a pop-up message will give that info
+
+--Open with exe file--
+Download zip file containing My TimeWiz application
+after downloading extract file, open it by going to bin, and click on debug there you will find the exe file which you can double click to open the application.
+
+Features
+-Can add unlimited modules and semesters
+-Can choose which semester you want to view  
+-Can see self study hours per week and also capture how much hours you've spend studying 
+-Can delete semester after you are finished
+
+Once application is opened my home screen will be the first thing to greet you on the left side of the window you will find the menu options 
+
+The application starts on the fisrt menu option home which showcase a calendar and also the name of the application with a small motivation message
+
+Choosing option 2 'Add Module' 
+			-You will see that the application requires you to enter input for semester and module regarding your course 
+			-After entering the Module data you can save the module data by clicking on the "Add Module" button 
+			-After entering the Semester data you can save the semester data by clicking on the "save" button
+			-To cancel the operation you can click on the "cancel" button which will take you back to home
+
+Choosing option 3 'Study'
+			-You can choose which semester you want to view 
+			-This option is where you enter the amount of study hours you've completed and click on the "save" button to save input
+			-To cancel the operation you can click on the "cancel" button which will take you back to home
+
+Choosing option 4 'View'
+			-In this option you view the semester data 			
+			-You also view the remaining study hours for the week 
+			-Theres a delete button and it deletes the current chosen semester when you confirm the deletion
+
+Choosing option 5 'Exit'
+			-The application will close 
+
+Note
+-Current version of application only saves to memory thus when you close the application all saved data will disappear
+-The application may not go full screen but can still be minimized.
+
+Enjoy using TimeWiz to manage your study time effectively!
+
+

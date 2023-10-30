@@ -10,15 +10,15 @@
         <ImageBrush ImageSource="/TimeWiz;component/Images/TimeWiz-Home.jpg" Opacity="0.5"/>
     </UserControl.Background>
 
-    <Grid HorizontalAlignment="Stretch" Height="450" VerticalAlignment="Top">
+    <Grid HorizontalAlignment="Right" Height="450" VerticalAlignment="Top" Width="800">
         <Grid.Background>
             <ImageBrush/>
         </Grid.Background>
 
         <!-- Welcome Message -->
-        <StackPanel x:Name="stckPnlWelcome" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="142,20,144,0" Height="96" Width="514">
+        <StackPanel x:Name="stckPnlWelcome" HorizontalAlignment="Center" VerticalAlignment="Bottom" Margin="133,0,153,334" Height="96" Width="514">
             <TextBlock Text="Welcome to TimeWiz" HorizontalAlignment="Center" FontSize="36" FontWeight="Bold"/>
-            <TextBlock Text="Transform Minutes into Milestones! 🌟🚀🕒" HorizontalAlignment="Center" FontSize="22" Margin="0,5" FontWeight="SemiBold" FontFamily="Calibri"/>
+            <TextBlock Text="Transform Minutes into Milestones! 🕒" HorizontalAlignment="Center" FontSize="22" Margin="0,5" FontWeight="SemiBold" FontFamily="Calibri"/>
         </StackPanel>
 
         <!-- Calendar -->

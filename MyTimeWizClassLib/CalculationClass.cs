@@ -12,6 +12,22 @@ namespace MyTimeWizClassLib
     {
 
         /// <summary>
+        /// Calculates the end date of the semester
+        /// </summary>
+        /// <param name="startDate"></param>
+        /// <param name="numberOfWeeks"></param>
+        /// <returns></returns>
+        public string CalculateEndOfSemester(DateTime startDate, int numberOfWeeks)
+        {
+            // Calculate the end date by adding the number of weeks to the start date
+           string endDate = Convert.ToString(startDate.AddDays(numberOfWeeks * 7));
+
+            return endDate;
+        }
+
+        //----------------------------------------------------------------------------------------------------------------------------------------------------------
+
+        /// <summary>
         /// calculating the self study amount of time for the student (selfstudy = number of credits * 10 / number of weeks - class hours per week)
         /// </summary>
         /// <param name="credits"></param>
@@ -28,13 +44,14 @@ namespace MyTimeWizClassLib
 
                 if (NumberOfWeeks > ClassHoursPerWeek)
                 {
-                    studyHours = (Credits * 10 / NumberOfWeeks) - ClassHoursPerWeek;
+                    studyHours = Credits * 10 / NumberOfWeeks - ClassHoursPerWeek;
                 }
                 else if (studyHours == 0)
                 {
                     // Handle the case where division by zero would occur
 
                     MessageBox.Show($"Warning: Division by zero prevented for module {moduleCode}.", "Warning", MessageBoxButton.OK, MessageBoxImage.Warning);
+                    
                 }
 
             }
@@ -53,7 +70,7 @@ namespace MyTimeWizClassLib
         /// </summary>
         /// <param name="module"></param>
         /// <returns></returns>
-        public int CalculateRemainingHoursForCurrentWeek(ModuleClass module)
+        public int CalculateRemainingHoursForCurrentWeek(Dictionary<DateTime, int> StudiedHoursPerDate, int SelfStudyHours)
         {
             DateTime currentDate = DateTime.Now.Date;
             int currentWeek = GetWeekOfYear(currentDate);
@@ -66,7 +83,7 @@ namespace MyTimeWizClassLib
 
             int totalStudiedHoursThisWeek = 0;
 
-            foreach (var entry in module.StudiedHoursPerDate)
+            foreach (var entry in StudiedHoursPerDate)
             {
                 if (entry.Key >= startOfWeek && entry.Key <= endOfWeek)
                 {
@@ -74,7 +91,7 @@ namespace MyTimeWizClassLib
                 }
             }
 
-            int remainingHours = module.SelfStudyHours - totalStudiedHoursThisWeek;
+            int remainingHours = SelfStudyHours - totalStudiedHoursThisWeek;
             return remainingHours;
         }
 
@@ -84,10 +101,45 @@ namespace MyTimeWizClassLib
         /// ProgressBar calculation that will give percentage
         /// </summary>
         /// <returns></returns>
-        public double ProgressBarCal(ModuleClass module)
+        public double ProgressBarCal(int StudiedHoursPerDate, double selfStudyHours)
         {
-           return (module.RemainingWeekHours / Convert.ToDouble(module.SelfStudyHours)) * 100;
+            var progress = 0.0;
 
+            
+               progress = (StudiedHoursPerDate / selfStudyHours) * 100;
+            
+
+            return progress;
+
+        }
+
+        //----------------------------------------------------------------------------------------------------------------------------------------------------------
+
+        /// <summary>
+        /// calculate the week im in now based on the number of weeks of a semester
+        /// </summary>
+        /// <param name="numberOfWeeks"></param>
+        /// <returns></returns>
+        public int GetCurrentWeek(DateTime startDate, int numberOfWeeks)
+        {
+            DateTime currentDate = DateTime.Now.Date;
+
+            // Calculate the number of days elapsed between the current date and the start date
+            int daysElapsed = (currentDate - startDate).Days;
+
+            // Calculate the current week based on the number of days elapsed
+            int currentWeek = (daysElapsed / 7) + 1;
+  
+            // Check if the current week is within the provided number of weeks
+            if (currentWeek <= numberOfWeeks && currentWeek >= 1)
+            {
+                return currentWeek;
+            }
+            else
+            {
+                // Handle the case where the current week exceeds the provided number of weeks
+                return -1;
+            }
         }
 
         //----------------------------------------------------------------------------------------------------------------------------------------------------------

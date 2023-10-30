@@ -27,11 +27,19 @@ namespace MyTimeWizClassLib
         /// <summary>
         /// Holds the start date of the semester 
         /// </summary>
-        private DateTime startDate;
-        public DateTime StartDate { get => startDate; set => startDate = value; }
+        private string startDate;
+        public string StartDate { get => startDate; set => startDate = value; }
 
         //----------------------------------------------------------------------------------------------------------------------------------------------------------
-       
+
+        /// <summary>
+        /// Holds the end date of the semester 
+        /// </summary>
+        private string endDate;
+        public string EndDate { get => endDate; set => endDate = value; }
+
+        //----------------------------------------------------------------------------------------------------------------------------------------------------------
+
         /// <summary>
         /// Default constructor
         /// </summary>

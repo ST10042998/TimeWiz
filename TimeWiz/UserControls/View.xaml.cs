@@ -23,6 +23,7 @@ namespace TimeWiz.UserControls
     {
         //creating obj for StudyClass
         private StudyClass study;
+        private CalculationClass cal = new CalculationClass();
 
         //----------------------------------------------------------------------------------------------------------------------------------------------------------
      
@@ -69,14 +70,25 @@ namespace TimeWiz.UserControls
 
                     this.cmBoxSemest.Items.Add(comboBoxItem);
                 }
-                else
-                {
-                    MessageBox.Show("Empty", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
-                }
+                
             }
 
         }
+        private SemesterClass FindSemesterByNum(string date)
+        {
+            var foundSemester = study.SemesterList
+                .SelectMany(semester => semester.SemesterList)
+                .FirstOrDefault(s => s.SemesterNum.ToString() == date);
 
+            if (foundSemester != null)
+            {
+                // Module with the specified code found, return it
+                return foundSemester;
+            }
+
+            // Module with the specified code not found
+            return null;
+        }
         //----------------------------------------------------------------------------------------------------------------------------------------------------------
 
         /// <summary>
@@ -104,16 +116,15 @@ namespace TimeWiz.UserControls
                     DatagrdViewModule.ItemsSource = Studysemester.ModuleList;
                     DatagrdViewModule.Items.Refresh();
 
+                    var selectedSemester = FindSemesterByNum(selectedComboBoxItem.Content.ToString());
+                    this.lblWeek.Content = $"Week : {cal.GetCurrentWeek(Convert.ToDateTime(selectedSemester.StartDate), selectedSemester.NumberOfWeeks)}";           
+                
                 }
                 else
                 {
                     // Handle the case where selectedStudy is null, e.g., display an error message.
                     MessageBox.Show("Invalid selection. Please choose a valid semester.", "Error", MessageBoxButton.OK, MessageBoxImage.Warning);
                 }
-            }
-            else
-            {
-                MessageBox.Show("No item selected.", "Error", MessageBoxButton.OK, MessageBoxImage.Warning);
             }
         }
 
@@ -144,8 +155,10 @@ namespace TimeWiz.UserControls
                         Studysemester.ModuleList.Clear();
                         Studysemester.SemesterList.Clear();
 
-                        //refreshing my datagrids after deleting semester
-                        DatagrdViewSem.Items.Refresh();
+                        this.lblWeek.Content =string.Empty;
+
+                       //refreshing my datagrids after deleting semester
+                       DatagrdViewSem.Items.Refresh();
                         DatagrdViewModule.Items.Refresh();
                         
                         MessageBox.Show($"Successfully deleted semester", "Delete", MessageBoxButton.OK, MessageBoxImage.Information);

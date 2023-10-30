@@ -13,6 +13,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using MyTimeWizClassLib;
+using TimeWiz.Classes;
 
 namespace TimeWiz.UserControls
 {
@@ -24,8 +25,18 @@ namespace TimeWiz.UserControls
         //initializing obj
         private CalculationClass cal = new CalculationClass();
         private StudyClass study;
+
+        private Semesters semester = new Semesters();
+        private ModuleTables module;
+        private StudyTables studyTable ;
+
         //----------------------------------------------------------------------------------------------------------------------------------------------------------------
-      
+
+        /// <summary>
+        /// dictionary property to store the recorded hours for this module
+        /// </summary>
+        public Dictionary<DateTime, int> StudiedHoursPerDate { get; } = new Dictionary<DateTime, int>();
+
         /// <summary>
         /// constructor
         /// </summary>
@@ -40,6 +51,9 @@ namespace TimeWiz.UserControls
 
             // Populate the semester combobox
             this.SemesterData();
+            //semester = new Semesters();
+            module = new ModuleTables();
+            studyTable = new StudyTables();
         }
 
 
@@ -50,9 +64,10 @@ namespace TimeWiz.UserControls
         /// </summary>
         private void SemesterData()
         {
+            var semesterList = semester.Sem.ToList();
             // Sort the semesters in alphabetical order
-            var sortedSemester = study.SemesterList
-                .OrderBy(s => s.semester.SemesterNum)
+            var sortedSemester = semesterList
+                .OrderBy(s => s.SemesterNum)
                 .ToList();
 
             // Clear the current items
@@ -61,10 +76,10 @@ namespace TimeWiz.UserControls
             foreach (var sem in sortedSemester)
             {
                 // Exclude empty module code
-                if (!string.IsNullOrWhiteSpace(sem.semester.SemesterNum.ToString()))
+                if (!string.IsNullOrWhiteSpace(sem.SemesterNum.ToString()))
                 {
                     ComboBoxItem comboBoxItem = new ComboBoxItem();
-                    comboBoxItem.Content = sem.semester.SemesterNum.ToString();
+                    comboBoxItem.Content = sem.SemesterNum.ToString();
 
                     // Set the Tag property with the associated StudyClass object
                     comboBoxItem.Tag = sem; // Ensure 'study' is a valid StudyClass object
@@ -82,7 +97,7 @@ namespace TimeWiz.UserControls
         //----------------------------------------------------------------------------------------------------------------------------------------------------------------
 
         /// <summary>
-        /// save button event for study menu item
+        /// save button event to capture the study hous 
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
@@ -97,8 +112,8 @@ namespace TimeWiz.UserControls
                     return;
                 }
 
-                StudyClass Studysemester = selectedComboBoxItem.Tag as StudyClass;
-                if (Studysemester == null)
+                 semester = selectedComboBoxItem.Tag as Semesters;
+                if (semester == null)
                 {
                     MessageBox.Show("Invalid selection. Please choose a valid semester.", "Error", MessageBoxButton.OK, MessageBoxImage.Warning);
                     return;
@@ -116,33 +131,46 @@ namespace TimeWiz.UserControls
                     MessageBox.Show("Invalid Studied Hours input", "Error", MessageBoxButton.OK, MessageBoxImage.Warning);
                     return;
                 }
-
+                
                 DateTime currentDate = DateTime.Now.Date;
-                if (selectedModule.StudiedHoursPerDate.ContainsKey(currentDate))
+                var hours = 0;
+                hours += studiedHours;
+
+                // theres only 24 hours in a day so you cant add more hours than that 
+                if (hours <= 24)
                 {
-                    selectedModule.StudiedHoursPerDate[currentDate] += studiedHours;
+                    var selected = selectedModule.StudyTables.FirstOrDefault();
+                    selected.StudiedHours += studiedHours;
+
+                    if (selected.StudiedHours <= selected.SelfStudyHours)
+
+                    {
+                        StudiedHoursPerDate.Add(currentDate, studiedHours);
+                        // Calculate ProgressBarPercentage based on your business logic
+                        selected.ProgressBarPercentage = this.cal.CalculateRemainingHoursForCurrentWeek(StudiedHoursPerDate, selected.SelfStudyHours);
+
+                        // Update the StudyDate with the current date
+                        selected.StudyDate = DateTime.Now;
+
+                        // Save changes to the database
+                        studyTable.UpdateStudy(selected.Study_Id, selected.ClassHoursPerWeek, selected.SelfStudyHours, selected.StudiedHours, selected.RemainingWeekHours, selected.Module_Id, (decimal)selected.ProgressBarPercentage, (DateTime)selected.StudyDate);
+
+                        txtStudyHrs.Clear();
+                        MessageBox.Show($"Studied {selected.StudiedHours} hours for {selectedModule.Name} on {currentDate.ToShortDateString()}", "Save", MessageBoxButton.OK, MessageBoxImage.Information);
+                    }
+                    else
+                    {
+                        selected.StudiedHours -= studiedHours;
+                        MessageBox.Show("The amount of self-study hours is more than assigned.", "Self-study hours", MessageBoxButton.OK, MessageBoxImage.Information);
+                        txtStudyHrs.Clear();
+                    }
                 }
                 else
                 {
-                    selectedModule.StudiedHoursPerDate[currentDate] = studiedHours;
+                    hours -= studiedHours;
+                    MessageBox.Show("Studied hours entered is more hours thats in one day(24 hours)", "Weekly self-study hours", MessageBoxButton.OK, MessageBoxImage.Warning);
+                    txtStudyHrs.Clear();
                 }
-
-                selectedModule.StudiedHours = studiedHours;
-
-                if (this.cal.CalculateRemainingHoursForCurrentWeek(selectedModule) > 0)
-                {
-                    selectedModule.RemainingWeekHours = this.cal.CalculateRemainingHoursForCurrentWeek(selectedModule);
-                    selectedModule.Progressbar = cal.ProgressBarCal(selectedModule);
-                }
-                else
-                {
-                    MessageBox.Show("All self-study hours for the week have been completed", "Completed weekly self-study hours", MessageBoxButton.OK, MessageBoxImage.Information);
-                }
-
-                MessageBox.Show($" {selectedModule.Progressbar}");
-
-                txtStudyHrs.Clear();
-                MessageBox.Show($"Studied Hours for {selectedModule.Name} on {currentDate.ToShortDateString()} saved: {studiedHours}", "Save", MessageBoxButton.OK, MessageBoxImage.Information);
             }
             catch (Exception ex)
             {
@@ -151,16 +179,18 @@ namespace TimeWiz.UserControls
         }
 
         //----------------------------------------------------------------------------------------------------------------------------------------------------------------
-        
+
         /// <summary>
         /// Finding module by using modulecode
         /// </summary>
         /// <param name="code"></param>
         /// <returns></returns>
-        private ModuleClass FindModuleByCode(string code)
+        private ModuleTable FindModuleByCode(string code)
         {
-            var foundModule = study.SemesterList
-                .SelectMany(semester => semester.ModuleList)
+            var semesterList = semester.Sem.ToList();
+            
+            var foundModule = semesterList
+                .SelectMany(s => s.ModuleTables)
                 .FirstOrDefault(module => module.Code == code);
 
             if (foundModule != null)
@@ -187,22 +217,21 @@ namespace TimeWiz.UserControls
 
             if (selectedComboBoxItem != null)
             {
+                var semesterList = semester.Sem.ToList();
                 // Retrieve the semester object from the ComboBox item's Tag
-                SemesterDataClass Studysemester = selectedComboBoxItem.Tag as SemesterDataClass;
+                Semester Studysemester = selectedComboBoxItem.Tag as Semester;
 
                 if (Studysemester != null)
                 {
                     // Display the selected semester in a MessageBox or any other control you prefer
-
-                    semesterDataGrid.ItemsSource = Studysemester.SemesterList;
+                    semesterDataGrid.ItemsSource = semesterList;
                     semesterDataGrid.Items.Refresh();
 
-                    moduleDataGrid.ItemsSource = Studysemester.ModuleList;
+                    moduleDataGrid.ItemsSource = Studysemester.ModuleTables;
                     moduleDataGrid.Items.Refresh();
 
                     // Update the items in cmBoxMCode based on the modules of the selected semester
                     RefreshComboBox(Studysemester);
-                 
                 }
                 else
                 {
@@ -216,16 +245,15 @@ namespace TimeWiz.UserControls
             }
         }
 
-
         //----------------------------------------------------------------------------------------------------------------------------------------------------------------
 
         /// <summary>
         /// refreshing the combo box to show the Module Code
         /// </summary>
-        private void RefreshComboBox(SemesterDataClass modules)
+        private void RefreshComboBox(Semester modules)
         {
             // Sort the Module code in alphabetical order
-            var sortModuleCode = modules.ModuleList.OrderBy(m => m.Code).ToList();
+            var sortModuleCode = modules.ModuleTables.OrderBy(m => m.Code).ToList();
 
             // Clear the current items
             this.cmBoxMCode.Items.Clear();

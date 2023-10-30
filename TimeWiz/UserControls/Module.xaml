@@ -7,7 +7,7 @@
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800" FontFamily="Arial">
 
-    <Grid HorizontalAlignment="Left" Width="790" Height="450" VerticalAlignment="Top">
+    <Grid HorizontalAlignment="Left" Width="790" Height="450" VerticalAlignment="Top" Margin="0,-4,0,0">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="638*"/>
             <ColumnDefinition Width="*"/>
@@ -15,56 +15,61 @@
 
         <!-- Semester number-->
         <Label x:Name="lblSemester" FontFamily="Calibri" Content="Semester Number :" HorizontalAlignment="Left" Margin="38,15,0,0" VerticalAlignment="Top"/>
-        <TextBox x:Name="txtSemester" HorizontalAlignment="Left" Margin="215,17,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120"/>
+        <TextBox x:Name="txtSemester" HorizontalAlignment="Left" Margin="215,19,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120"/>
 
         <!-- Module Name-->
-        <Label x:Name="ModuleNmLbl"  FontFamily="Calibri" Content="Module name :" HorizontalAlignment="Left" Margin="38,56,0,0" VerticalAlignment="Top" />
-        <TextBox x:Name="txtName"  HorizontalAlignment="Left" Margin="215,59,0,0" TextWrapping="Wrap"  VerticalAlignment="Top" Width="120"/>
+        <Label x:Name="ModuleNmLbl" FontFamily="Calibri" Content="Module name :" HorizontalAlignment="Left" Margin="38,215,0,0" VerticalAlignment="Top" />
+        <TextBox x:Name="txtName"  HorizontalAlignment="Left" Margin="215,0,0,0" TextWrapping="Wrap"  VerticalAlignment="Center" Width="120"/>
 
         <!-- Module Code-->
-        <Label x:Name="ModuleCodeLbl" FontFamily="Calibri" Content="Module Code :" HorizontalAlignment="Left" Margin="38,106,0,0" VerticalAlignment="Top" />
-        <TextBox x:Name="txtCode" HorizontalAlignment="Left" Margin="215,109,0,0" TextWrapping="Wrap"  VerticalAlignment="Top" Width="120"/>
+        <Label x:Name="ModuleCodeLbl" FontFamily="Calibri" Content="Module Code :" HorizontalAlignment="Left" Margin="38,255,0,0" VerticalAlignment="Top" />
+        <TextBox x:Name="txtCode" HorizontalAlignment="Left" Margin="215,255,0,0" TextWrapping="Wrap"  VerticalAlignment="Top" Width="120"/>
 
         <!-- Number of Credits -->
-        <Label x:Name="NumCrditLbl" FontFamily="Calibri" Content="Number of Credits :" HorizontalAlignment="Left" Margin="38,156,0,0" VerticalAlignment="Top"/>
-        <TextBox x:Name="txtCredits" HorizontalAlignment="Left" Margin="215,159,0,0" TextWrapping="Wrap"  VerticalAlignment="Top" Width="120"/>
+        <Label x:Name="NumCrditLbl" FontFamily="Calibri" Content="Number of Credits :" HorizontalAlignment="Left" Margin="38,293,0,0" VerticalAlignment="Top"/>
+        <TextBox x:Name="txtCredits" HorizontalAlignment="Left" Margin="215,297,0,0" TextWrapping="Wrap"  VerticalAlignment="Top" Width="120"/>
 
-        <!-- Class hours per week --> 
-        <Label x:Name="ClassHrsLbl" FontFamily="Calibri" Content="Class hours per week :" HorizontalAlignment="Left" Margin="38,206,0,0" VerticalAlignment="Top" />
-        <TextBox x:Name="txtHours" HorizontalAlignment="Left" Margin="215,209,0,0" TextWrapping="Wrap"  VerticalAlignment="Top" Width="120"/>
+        <!-- Class hours per week -->
+        <Label x:Name="ClassHrsLbl" FontFamily="Calibri" Content="Class hours per week :" HorizontalAlignment="Left" Margin="38,335,0,0" VerticalAlignment="Top" />
+        <TextBox x:Name="txtHours" HorizontalAlignment="Left" Margin="215,341,0,0" TextWrapping="Wrap"  VerticalAlignment="Top" Width="120"/>
 
         <!-- Add module button-->
-        <Button x:Name="btnSaveModule" Content="Add Module" HorizontalAlignment="Left" Margin="211,259,0,0" VerticalAlignment="Top" Width="134" Background="#FFB5FF6F" Click="btnSaveModule_Click">
+        <Button x:Name="btnSaveModule" Content="Add Module" HorizontalAlignment="Left" Margin="211,371,0,0" VerticalAlignment="Top" Width="134" Background="#FFB5FF6F" Click="btnSaveModule_Click">
             <Button.Effect>
                 <DropShadowEffect Color="#FF0CFF00" Opacity="0.35"/>
             </Button.Effect>
         </Button>
 
         <!-- Number of weeks in semester-->
-        <Label x:Name="lblNumWeekSestr" FontFamily="Calibri" Content="Number of weeks in semester :" HorizontalAlignment="Left" Margin="38,316,0,0" VerticalAlignment="Top"/>
-        <TextBox x:Name="txtNumWeekSestr" HorizontalAlignment="Left" Margin="215,319,0,0" TextWrapping="Wrap"  VerticalAlignment="Top" Width="120"/>
+        <Label x:Name="lblNumWeekSestr" FontFamily="Calibri" Content="Number of weeks in semester :" HorizontalAlignment="Left" Margin="38,54,0,0" Height="26" VerticalAlignment="Top"/>
+        <TextBox x:Name="txtNumWeekSestr" HorizontalAlignment="Left" Margin="215,59,0,0" TextWrapping="Wrap"  VerticalAlignment="Top" Width="120"/>
 
         <!-- Start date for Semester-->
-        <Label x:Name="lblStartDate" FontFamily="Calibri" Content="Start date of first week :" HorizontalAlignment="Left" Margin="38,356,0,0" VerticalAlignment="Top"/>
-        <DatePicker x:Name="txtStartDate"  HorizontalAlignment="Left" Margin="215,359,0,0" VerticalAlignment="Top" Width="120"/>
+        <Label x:Name="lblStartDate" FontFamily="Calibri" Content="Start date of first week :" HorizontalAlignment="Left" Margin="38,95,0,0" VerticalAlignment="Top"/>
+        <DatePicker x:Name="txtStartDate"  HorizontalAlignment="Left" Margin="215,95,0,0" VerticalAlignment="Top" Width="120"/>
 
         <!-- button to save semester-->
-        <Button x:Name="btnSaveSemester" FontFamily="Calibri" Content="Save" HorizontalAlignment="Left" Margin="299,404,0,0" VerticalAlignment="Top" Width="50" Background="#FFB5FF6F" Click="btnSaveSemester_Click">
+        <Button x:Name="btnSaveSemester" FontFamily="Calibri" Content="Save Semester" HorizontalAlignment="Left" Margin="211,158,0,0" VerticalAlignment="Top" Width="138" Background="#FFB5FF6F" Click="btnSaveSemester_Click">
             <Button.Effect>
                 <DropShadowEffect Color="#FF0CFF00" Opacity="0.45"/>
             </Button.Effect>
         </Button>
 
         <!-- button to cancel-->
-        <Button x:Name="btnCancelSave" FontFamily="Calibri" Content="Cancel" HorizontalAlignment="Left" Margin="215,403,0,0" VerticalAlignment="Top" Width="50" Background="#FFFF987A" Click="btnCancelSave_Click">
+        <Button x:Name="btnCancelSave" FontFamily="Calibri" Content="Cancel" HorizontalAlignment="Left" Margin="587,387,0,0" VerticalAlignment="Top" Width="50" Background="#FFFF987A" Click="btnCancelSave_Click">
             <Button.Effect>
                 <DropShadowEffect Color="Red" Opacity="0.45"/>
             </Button.Effect>
         </Button>
 
-        <Label x:Name="lblSaved" HorizontalAlignment="Left" Margin="148,233,0,0" VerticalAlignment="Top" Width="293" Height="25"/>
-        <Label x:Name="lblErrorM" HorizontalAlignment="Left" Margin="377,126,0,0" VerticalAlignment="Top" Foreground="Red" Width="325" Height="25"/>
-        <Label x:Name="lblErrorS"  HorizontalAlignment="Left" Margin="353,314,0,0" VerticalAlignment="Top" Foreground="Red" Width="325" Height="25"/>
+        <Label x:Name="lblSaved" HorizontalAlignment="Left" Margin="146,415,0,0" VerticalAlignment="Top" Width="293" Height="25"/>
+        <Label x:Name="lblErrorM" HorizontalAlignment="Left" Margin="377,272,0,0" VerticalAlignment="Top" Foreground="Red" Width="325" Height="26"/>
+        <Label x:Name="lblErrorS"  HorizontalAlignment="Left" Margin="353,48,0,0" VerticalAlignment="Top" Foreground="Red" Width="325" Height="26"/>
+        <Button x:Name="btnDone" FontFamily="Calibri" Content="Done" HorizontalAlignment="Left" Margin="661,387,0,0" VerticalAlignment="Top" Width="50" Background="#FFB5FF6F" Click="btnDone_Click">
+            <Button.Effect>
+                <DropShadowEffect Color="#FF0CFF00" Opacity="0.45"/>
+            </Button.Effect>
+        </Button>
 
     </Grid>
 </UserControl>

@@ -13,6 +13,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using MyTimeWizClassLib;
+using TimeWiz.Classes;
 
 namespace TimeWiz
 {
@@ -24,11 +25,13 @@ namespace TimeWiz
     {
         private StudyClass study;
         private CalculationClass cal;
+        private  Semesters semesters;
         public MainWindow()
         {
             InitializeComponent();
             study = new StudyClass();
             cal = new CalculationClass();
+           semesters =  new Semesters();
             // Navigates to the home page when the application starts
             NavigateToUserControl(new UserControls.Home());
         }
@@ -53,7 +56,7 @@ namespace TimeWiz
                             NavigateToUserControl(new UserControls.Home());
                             break;
                         case "ModuleBtn":
-                            NavigateToUserControl(new UserControls.Module(study,cal));
+                            NavigateToUserControl(new UserControls.Module(study,cal,semesters));
                             break;
                         case "StudyBtn":
                             NavigateToUserControl(new UserControls.Study(study));
@@ -117,7 +120,7 @@ namespace TimeWiz
         /// </summary>
         public void NavigateToAddModule()
         {
-            NavigateToUserControl(new UserControls.Module(study,cal));
+            NavigateToUserControl(new UserControls.Module(study,cal, semesters));
         }
     }
 }
