@@ -4,53 +4,53 @@
   <edmx:Runtime>
     <!-- SSDL content -->
     <edmx:StorageModels>
-      <Schema xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl" Alias="Self" Namespace="MyTimeWizDatabaseModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012">
+    <Schema Namespace="MyTimeWizDatabaseModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
         <EntityType Name="ModuleTable">
           <Key>
             <PropertyRef Name="Module_Id" />
           </Key>
-          <Property Name="Module_Id" Nullable="false" StoreGeneratedPattern="Identity" Type="int" />
-          <Property Name="Name" Nullable="false" Type="varchar(max)" />
-          <Property Name="Code" Nullable="false" MaxLength="50" Type="varchar" />
-          <Property Name="Credits" Nullable="false" Type="int" />
-          <Property Name="Semester_Id" Nullable="false" Type="int" />
+          <Property Name="Module_Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Name" Type="varchar(max)" Nullable="false" />
+          <Property Name="Code" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="Credits" Type="int" />
+          <Property Name="Semester_Id" Type="int" Nullable="false" />
         </EntityType>
         <EntityType Name="Semester">
           <Key>
             <PropertyRef Name="Semester_Id" />
           </Key>
-          <Property Name="Semester_Id" Nullable="false" StoreGeneratedPattern="Identity" Type="int" />
-          <Property Name="SemesterNum" Nullable="false" Type="int" />
-          <Property Name="NumOfWeeks" Nullable="false" Type="int" />
-          <Property Name="StartDate" Nullable="false" Type="datetime" />
-          <Property Name="EndDate" Nullable="false" Type="datetime" />
+          <Property Name="Semester_Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="SemesterNum" Type="int" Nullable="false" />
+          <Property Name="NumOfWeeks" Type="int" Nullable="false" />
+          <Property Name="StartDate" Type="datetime" Nullable="false" />
+          <Property Name="EndDate" Type="datetime" Nullable="false" />
         </EntityType>
         <EntityType Name="Student">
           <Key>
             <PropertyRef Name="Student_Id" />
           </Key>
-          <Property Name="Student_Id" Nullable="false" StoreGeneratedPattern="Identity" Type="int" />
-          <Property Name="Name" Nullable="false" Type="varchar(max)" />
-          <Property Name="Surname" Nullable="false" Type="varchar(max)" />
-          <Property Name="Email" Nullable="false" Type="varchar(max)" />
-          <Property Name="Gender" Nullable="false" MaxLength="50" Type="varchar" />
+          <Property Name="Student_Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Name" Type="varchar(max)" Nullable="false" />
+          <Property Name="Surname" Type="varchar(max)" Nullable="false" />
+          <Property Name="Email" Type="varchar(max)" Nullable="false" />
+          <Property Name="Gender" Type="varchar" MaxLength="50" Nullable="false" />
         </EntityType>
         <EntityType Name="StudyTable">
           <Key>
             <PropertyRef Name="Study_Id" />
           </Key>
-          <Property Name="Study_Id" Nullable="false" StoreGeneratedPattern="Identity" Type="int" />
-          <Property Name="ClassHoursPerWeek" Nullable="false" Type="int" />
-          <Property Name="SelfStudyHours" Nullable="false" Type="int" />
-          <Property Name="StudiedHours" Nullable="false" Type="int" />
-          <Property Name="RemainingWeekHours" Nullable="false" Type="int" />
-          <Property Name="Module_Id" Nullable="false" Type="int" />
-          <Property Name="ProgressBarPercentage" Precision="18" Scale="0" Type="decimal" />
+          <Property Name="Study_Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="ClassHoursPerWeek" Type="int" Nullable="false" />
+          <Property Name="SelfStudyHours" Type="int" Nullable="false" />
+          <Property Name="StudiedHours" Type="int" Nullable="false" />
+          <Property Name="RemainingWeekHours" Type="int" Nullable="false" />
+          <Property Name="Module_Id" Type="int" Nullable="false" />
+          <Property Name="ProgressBarPercentage" Type="decimal" Precision="18" Scale="0" />
           <Property Name="StudyDate" Type="datetime" />
         </EntityType>
         <Association Name="FK_ModuleTable_Semester">
-          <End Type="Self.Semester" Multiplicity="1" Role="Semester" />
-          <End Type="Self.ModuleTable" Multiplicity="*" Role="ModuleTable" />
+          <End Role="Semester" Type="Self.Semester" Multiplicity="1" />
+          <End Role="ModuleTable" Type="Self.ModuleTable" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="Semester">
               <PropertyRef Name="Semester_Id" />
@@ -61,8 +61,8 @@
           </ReferentialConstraint>
         </Association>
         <Association Name="FK_StudyTable_Module">
-          <End Type="Self.ModuleTable" Multiplicity="1" Role="ModuleTable" />
-          <End Type="Self.StudyTable" Multiplicity="*" Role="StudyTable" />
+          <End Role="ModuleTable" Type="Self.ModuleTable" Multiplicity="1" />
+          <End Role="StudyTable" Type="Self.StudyTable" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="ModuleTable">
               <PropertyRef Name="Module_Id" />
@@ -78,16 +78,15 @@
           <EntitySet Name="Student" EntityType="Self.Student" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="StudyTable" EntityType="Self.StudyTable" Schema="dbo" store:Type="Tables" />
           <AssociationSet Name="FK_ModuleTable_Semester" Association="Self.FK_ModuleTable_Semester">
-            <End EntitySet="Semester" Role="Semester" />
-            <End EntitySet="ModuleTable" Role="ModuleTable" />
+            <End Role="Semester" EntitySet="Semester" />
+            <End Role="ModuleTable" EntitySet="ModuleTable" />
           </AssociationSet>
           <AssociationSet Name="FK_StudyTable_Module" Association="Self.FK_StudyTable_Module">
-            <End EntitySet="ModuleTable" Role="ModuleTable" />
-            <End EntitySet="StudyTable" Role="StudyTable" />
+            <End Role="ModuleTable" EntitySet="ModuleTable" />
+            <End Role="StudyTable" EntitySet="StudyTable" />
           </AssociationSet>
         </EntityContainer>
-      </Schema>
-    </edmx:StorageModels>
+      </Schema></edmx:StorageModels>
     <!-- CSDL content -->
     <edmx:ConceptualModels>
       <Schema Namespace="MyTimeWizDatabaseModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
@@ -98,7 +97,7 @@
           <Property Name="Module_Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="Name" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" Nullable="false" />
           <Property Name="Code" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
-          <Property Name="Credits" Type="Int32" Nullable="false" />
+          <Property Name="Credits" Type="Int32" />
           <Property Name="Semester_Id" Type="Int32" Nullable="false" />
           <NavigationProperty Name="Semester" Relationship="Self.FK_ModuleTable_Semester" FromRole="ModuleTable" ToRole="Semester" />
           <NavigationProperty Name="StudyTables" Relationship="Self.FK_StudyTable_Module" FromRole="ModuleTable" ToRole="StudyTable" />

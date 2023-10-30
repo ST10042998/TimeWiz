@@ -17,7 +17,9 @@ namespace TimeWiz.Classes
 
         private MyTimeWizDatabaseEntities1 db = new MyTimeWizDatabaseEntities1();
 
-        private Semester semeseter = new Semester();
+        public  Semester semeseter = new Semester();
+
+       public ModuleTables module = new ModuleTables();
         public DbSet<Semester> Sem { get; set; }
         public Semesters ()
     {
@@ -97,6 +99,48 @@ namespace TimeWiz.Classes
                 MessageBox.Show(e.Message);
                 return null;
             }
+        }
+
+        public List<Semester> GetAllSemesterAdo()
+        {
+            List<Semester> semesters = new List<Semester>();
+
+            try
+            {
+                using (SqlConnection connection = new SqlConnection(ConnectString))
+                {
+                    connection.Open();
+
+                    string selectQuery = "SELECT * FROM Semester"; // SQL query to select all semesters
+
+                    using (SqlCommand cmd = new SqlCommand(selectQuery, connection))
+                    {
+                        using (SqlDataReader reader = cmd.ExecuteReader())
+                        {
+                            while (reader.Read())
+                            {
+                                // Map the database columns to the Semester object
+                                Semester semester = new Semester
+                                {
+                                    Semester_Id = (int)reader["Semester_Id"],
+                                    SemesterNum = (int)reader["SemesterNum"],
+                                    NumOfWeeks = (int)reader["NumOfWeeks"],
+                                    StartDate = (DateTime)reader["StartDate"],
+                                    EndDate = (DateTime)reader["EndDate"]
+                                };
+
+                                semesters.Add(semester);
+                            }
+                        }
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                MessageBox.Show(e.Message);
+            }
+
+            return semesters;
         }
 
 

@@ -8,6 +8,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Controls.Primitives;
 using System.Windows.Media.Animation;
 
 namespace TimeWiz.Classes
@@ -126,7 +127,53 @@ namespace TimeWiz.Classes
                 return null;
             }
         }
+        public List<ModuleTable> GetAllModulesAdo(string selectedSemesterNum)
+        {
+            List<ModuleTable> modules = new List<ModuleTable>();
 
+            try
+            {
+                using (SqlConnection connection = new SqlConnection(connectionString))
+                {
+                    connection.Open();
+
+                    string selectQuery = @" SELECT *
+                                            FROM ModuleTable
+                                            JOIN Semester ON ModuleTable.Semester_Id = Semester.Semester_Id
+                                            WHERE Semester.SemesterNum = @selectedSemesterNum";
+
+
+                    using (SqlCommand cmd = new SqlCommand(selectQuery, connection))
+                    {
+                        cmd.Parameters.AddWithValue("@selectedSemesterNum", selectedSemesterNum);
+
+                        using (SqlDataReader reader = cmd.ExecuteReader())
+                        {
+                            while (reader.Read())
+                            {
+                                // Map the database columns to the ModuleTable object
+                                ModuleTable module = new ModuleTable
+                                {
+                                    Module_Id = (int)reader["Module_Id"],
+                                    Name = (string)reader["Name"],
+                                    Code = (string)reader["Code"],
+                                    Credits = (int)reader["Credits"]
+                                };
+
+                                modules.Add(module);
+                            }
+                        }
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                throw;
+                MessageBox.Show(e.Message);
+            }
+
+            return modules;
+        }
         public ModuleTable UpdateModule(int id,string name, string code, int credits)
         {
             using (db = new MyTimeWizDatabaseEntities1())
@@ -164,22 +211,17 @@ namespace TimeWiz.Classes
                 }
             }
         }
-        public List <ModuleTable> GetAllModules()
+        public List<ModuleTable> GetAllModules(Semester semester)
         {
             using (db = new MyTimeWizDatabaseEntities1())
             {
-                var modules = db.ModuleTables.ToList();
-                if (modules != null)
-                {
-                    return modules;
-                }
-                else
-                {
-                    return null;
-                }
+                var modules = db.ModuleTables.Where(m => m.Semester_Id == semester.Semester_Id).ToList();
+                return modules;
             }
         }
-        public ModuleTable DeleteModule(int id)
+
+    
+    public ModuleTable DeleteModule(int id)
         {
             using (db = new MyTimeWizDatabaseEntities1())
             {

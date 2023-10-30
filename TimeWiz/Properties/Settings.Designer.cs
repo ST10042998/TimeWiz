@@ -23,17 +23,14 @@ namespace TimeWiz.Properties {
             }
         }
         
-        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("Data Source=(LocalDB)\\MSSQLLocalDB;AttachDbFilename=\"C:\\Users\\lab_services_studen" +
-            "t\\Downloads\\ST10042998 Eugene Paulse PROG6212 PART1\\TimeWiz\\TimeWiz\\MyTimeWizDat" +
-            "abase.mdf\";Integrated Security=True")]
+        [global::System.Configuration.SpecialSettingAttribute(global::System.Configuration.SpecialSetting.ConnectionString)]
+        [global::System.Configuration.DefaultSettingValueAttribute("Data Source=(LocalDB)\\MSSQLLocalDB;AttachDbFilename=|DataDirectory|\\MyTimeWizData" +
+            "base.mdf;Integrated Security=True")]
         public string ConnectionString {
             get {
                 return ((string)(this["ConnectionString"]));
-            }
-            set {
-                this["ConnectionString"] = value;
             }
         }
     }

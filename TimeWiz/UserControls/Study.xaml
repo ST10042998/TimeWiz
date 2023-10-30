@@ -34,16 +34,15 @@
 
         <!-- Datagrid to display the module data-->
         <DataGrid Name="moduleDataGrid" HorizontalAlignment="Stretch" IsReadOnly="True" HorizontalGridLinesBrush="Black" VerticalGridLinesBrush="Black"
-                  CanUserResizeColumns="False" CanUserResizeRows="False" AreRowDetailsFrozen="true" AutoGenerateColumns="False" Margin="4,140,62,164" VerticalScrollBarVisibility="Auto" Grid.RowSpan="2" Background="#FFFBFFDF">
-            <!-- Defining columns -->
-            <DataGrid.Columns>
-                <DataGridTextColumn Header="Module Name" Width="1.*" Binding="{Binding Name}"/>
-                <DataGridTextColumn Header="Module Code" Width="0.8*" Binding="{Binding Code}"/>
-                <DataGridTextColumn Header="Credits" Width="0.6*" Binding="{Binding Credits}"/>
-                <DataGridTextColumn Header="ClassHoursPerWeek" Width="0.9*" Binding="{Binding ClassHoursPerWeek}"/>
-                <DataGridTextColumn Header="Self-study Hours" Width="0.9*" Binding="{Binding SelfStudyHours}"/>
-            </DataGrid.Columns>
-        </DataGrid>
+                  CanUserResizeColumns="False" CanUserResizeRows="False" AreRowDetailsFrozen="true" AutoGenerateColumns="True" Margin="4,140,62,164" VerticalScrollBarVisibility="Auto" Grid.RowSpan="2" Background="#FFFBFFDF"/>
+        <!-- Defining columns -->
+            <!--<DataGrid.Columns> -->
+              <!--  <DataGridTextColumn Header="Module Name" Width="1.*" Binding="{Binding Name}"/>-->
+            <!--   <DataGridTextColumn Header="Module Code" Width="0.8*" Binding="{Binding Code}"/>-->
+            <!--  <DataGridTextColumn Header="Credits" Width="0.6*" Binding="{Binding Credits}"/> -->
+                <!-- <DataGridTextColumn Header="ClassHoursPerWeek" Width="0.9*" Binding="{Binding ClassHoursPerWeek}"/>
+                <DataGridTextColumn Header="Self-study Hours" Width="0.9*" Binding="{Binding SelfStudyHours}"/> -->
+            
 
         <!-- label and combobox for choosing module code -->
         <Label x:Name="lblMdlCode" Content="Module Code" HorizontalAlignment="Left" Margin="58,112,0,0" VerticalAlignment="Top" Height="26" Width="82" Grid.Row="1"/>

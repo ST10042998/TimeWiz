@@ -20,12 +20,11 @@ namespace TimeWiz
         {
             this.StudyTables = new HashSet<StudyTable>();
         }
-
         [Key]
         public int Module_Id { get; set; }
         public string Name { get; set; }
         public string Code { get; set; }
-        public int Credits { get; set; }
+        public Nullable<int> Credits { get; set; }
         public int Semester_Id { get; set; }
     
         public virtual Semester Semester { get; set; }

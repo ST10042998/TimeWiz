@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.SqlClient;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -29,6 +30,7 @@ namespace TimeWiz.UserControls
         private Semesters semester = new Semesters();
         private ModuleTables module;
         private StudyTables studyTable ;
+        private SqlConnection connection;
 
         //----------------------------------------------------------------------------------------------------------------------------------------------------------------
 
@@ -64,9 +66,9 @@ namespace TimeWiz.UserControls
         /// </summary>
         private void SemesterData()
         {
-            var semesterList = semester.Sem.ToList();
+           ;
             // Sort the semesters in alphabetical order
-            var sortedSemester = semesterList
+            var sortedSemester = semester.GetAllSemesterAdo()
                 .OrderBy(s => s.SemesterNum)
                 .ToList();
 
@@ -212,38 +214,30 @@ namespace TimeWiz.UserControls
         /// <param name="e"></param>
         private void CmBoxSemester_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            // Retrieve the selected item (ComboBoxItem) from the ComboBox
             ComboBoxItem selectedComboBoxItem = cmBoxSemester.SelectedItem as ComboBoxItem;
 
             if (selectedComboBoxItem != null)
             {
-                var semesterList = semester.Sem.ToList();
-                // Retrieve the semester object from the ComboBox item's Tag
-                Semester Studysemester = selectedComboBoxItem.Tag as Semester;
+                Semester selectedSemester = selectedComboBoxItem.Tag as Semester;
+                MessageBox.Show($"Selected Semester: {selectedSemester.SemesterNum}");
 
-                if (Studysemester != null)
-                {
-                    // Display the selected semester in a MessageBox or any other control you prefer
-                    semesterDataGrid.ItemsSource = semesterList;
-                    semesterDataGrid.Items.Refresh();
+                semesterDataGrid.ItemsSource = new List<Semester> { selectedSemester };
 
-                    moduleDataGrid.ItemsSource = Studysemester.ModuleTables;
-                    moduleDataGrid.Items.Refresh();
 
-                    // Update the items in cmBoxMCode based on the modules of the selected semester
-                    RefreshComboBox(Studysemester);
-                }
-                else
-                {
-                    // Handle the case where selectedStudy is null, e.g., display an error message.
-                    MessageBox.Show("Invalid selection. Please choose a valid semester.", "Error", MessageBoxButton.OK, MessageBoxImage.Warning);
-                }
+                var semesterModules = module.GetAllModules(selectedSemester);
+                moduleDataGrid.ItemsSource = semesterModules;
+
+
+
+                RefreshComboBox(selectedSemester);
             }
             else
             {
-                MessageBox.Show("No item selected.", "Error", MessageBoxButton.OK, MessageBoxImage.Warning);
+                MessageBox.Show("Invalid selection. Please choose a valid semester.", "Error", MessageBoxButton.OK, MessageBoxImage.Warning);
             }
         }
+
+
 
         //----------------------------------------------------------------------------------------------------------------------------------------------------------------
 
@@ -253,11 +247,12 @@ namespace TimeWiz.UserControls
         private void RefreshComboBox(Semester modules)
         {
             // Sort the Module code in alphabetical order
-            var sortModuleCode = modules.ModuleTables.OrderBy(m => m.Code).ToList();
+            var sortModuleCode = module.GetAllModules(modules).OrderBy(m => m.Code).ToList();
 
             // Clear the current items
             this.cmBoxMCode.Items.Clear();
 
+               
             // Add the sorted module codes to the combo box
             foreach (var module in sortModuleCode)
             {
@@ -266,10 +261,11 @@ namespace TimeWiz.UserControls
                 {
                     ComboBoxItem comboBoxItem = new ComboBoxItem();
                     comboBoxItem.Content = module.Code;
-                    comboBoxItem.Tag = study;
+                    comboBoxItem.Tag = module; // Ensure 'study' is defined correctly
                     this.cmBoxMCode.Items.Add(comboBoxItem);
                 }
             }
+
         }
 
         //----------------------------------------------------------------------------------------------------------------------------------------------------------------

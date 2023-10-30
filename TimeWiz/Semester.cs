@@ -20,7 +20,6 @@ namespace TimeWiz
         {
             this.ModuleTables = new HashSet<ModuleTable>();
         }
-
         [Key]
         public int Semester_Id { get; set; }
         public int SemesterNum { get; set; }
