@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
@@ -105,23 +106,28 @@ namespace TimeWiz.UserControls
         /// <param name="e"></param>
         private void btnStudySave_Click(object sender, RoutedEventArgs e)
         {
+            ModuleClass mc = new ModuleClass();
             try
             {
                 ComboBoxItem selectedComboBoxItem = cmBoxMCode.SelectedItem as ComboBoxItem;
+
+                MessageBox.Show($"Selected Module: {selectedComboBoxItem.Content}");
                 if (selectedComboBoxItem == null)
                 {
                     MessageBox.Show("Invalid selection. Please choose a valid semester.", "Error", MessageBoxButton.OK, MessageBoxImage.Warning);
                     return;
                 }
 
-                 semester = selectedComboBoxItem.Tag as Semesters;
+               /* Semester semester = selectedComboBoxItem.Tag as Semester;
                 if (semester == null)
                 {
-                    MessageBox.Show("Invalid selection. Please choose a valid semester.", "Error", MessageBoxButton.OK, MessageBoxImage.Warning);
+                    MessageBox.Show("hereInvalid selection. Please choose a valid semester.", "Error", MessageBoxButton.OK, MessageBoxImage.Warning);
                     return;
-                }
+                }*/
 
                 var selectedModule = FindModuleByCode(selectedComboBoxItem.Content.ToString());
+
+                MessageBox.Show($"Selected Module: {selectedModule.Name}");
                 if (selectedModule == null)
                 {
                     MessageBox.Show($"Module with Code '{selectedComboBoxItem.Content.ToString()}' not found", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
@@ -133,49 +139,97 @@ namespace TimeWiz.UserControls
                     MessageBox.Show("Invalid Studied Hours input", "Error", MessageBoxButton.OK, MessageBoxImage.Warning);
                     return;
                 }
-                
-                DateTime currentDate = DateTime.Now.Date;
-                var hours = 0;
-                hours += studiedHours;
-
-                // theres only 24 hours in a day so you cant add more hours than that 
-                if (hours <= 24)
+                try
                 {
-                    var selected = selectedModule.StudyTables.FirstOrDefault();
-                    selected.StudiedHours += studiedHours;
+                    DateTime currentDate = DateTime.Now.Date;
+                    var hours = 0;
+                    hours += studiedHours;
 
-                    if (selected.StudiedHours <= selected.SelfStudyHours)
-
+                    // theres only 24 hours in a day so you cant add more hours than that 
+                    if (hours <= 24)
                     {
-                        StudiedHoursPerDate.Add(currentDate, studiedHours);
-                        // Calculate ProgressBarPercentage based on your business logic
-                        selected.ProgressBarPercentage = this.cal.CalculateRemainingHoursForCurrentWeek(StudiedHoursPerDate, selected.SelfStudyHours);
+                        // Assuming you have the selected module's Module_Id
+                        int selectedModuleId = selectedModule.Module_Id;
 
-                        // Update the StudyDate with the current date
-                        selected.StudyDate = DateTime.Now;
+                        // Access the study associated with the same module ID
+                        var selected = studyTable.GetStudyByID(selectedModuleId).FirstOrDefault();
 
-                        // Save changes to the database
-                        studyTable.UpdateStudy(selected.Study_Id, selected.ClassHoursPerWeek, selected.SelfStudyHours, selected.StudiedHours, selected.RemainingWeekHours, selected.Module_Id, (decimal)selected.ProgressBarPercentage, (DateTime)selected.StudyDate);
+                     
+                        if (selected != null)
+                        {
+                            mc.StudiedHours += studiedHours;
+                            MessageBox.Show($"Studied {studiedHours} hours for {selectedModule.Name} on {currentDate.ToShortDateString()}", "Save", MessageBoxButton.OK, MessageBoxImage.Information);
 
-                        txtStudyHrs.Clear();
-                        MessageBox.Show($"Studied {selected.StudiedHours} hours for {selectedModule.Name} on {currentDate.ToShortDateString()}", "Save", MessageBoxButton.OK, MessageBoxImage.Information);
+                            if (mc.StudiedHours <= selectedModule.SelfStudyHours)
+
+                            {
+                                StudiedHoursPerDate.Add(currentDate, studiedHours);
+                                // Calculate ProgressBarPercentage based on your business logic
+                                mc.Progressbar = cal.ProgressBarCal(StudiedHoursPerDate, selectedModule.SelfStudyHours.Value);
+                                mc.RemainingWeekHours = this.cal.CalculateRemainingHoursForCurrentWeek(StudiedHoursPerDate, selectedModule.SelfStudyHours.Value);
+
+                                // Save changes to the database
+                                studyTable.UpdateStudy(selectedModuleId, mc.StudiedHours, mc.RemainingWeekHours, selectedModuleId, Convert.ToDecimal(mc.Progressbar), DateTime.Now);
+
+                                txtStudyHrs.Clear();
+                                MessageBox.Show($"Studied {mc.StudiedHours} hours for {selectedModule.Name} on {currentDate.ToShortDateString()}", "Save", MessageBoxButton.OK, MessageBoxImage.Information);
+                            }
+                            else
+                            {
+                                mc.StudiedHours -= studiedHours;
+                                MessageBox.Show("The amount of self-study hours is more than assigned.", "Self-study hours", MessageBoxButton.OK, MessageBoxImage.Information);
+                                txtStudyHrs.Clear();
+                            }
+                        }
+                        else if(selected == null)
+                        {
+                            mc.StudiedHours = 0;
+                            mc.StudiedHours += studiedHours;
+                            MessageBox.Show($"Studied {studiedHours} hours for {selectedModule.Name} on {currentDate.ToShortDateString()}", "Save", MessageBoxButton.OK, MessageBoxImage.Information);
+
+                            if (mc.StudiedHours <= selectedModule.SelfStudyHours)
+
+                            {
+                            
+
+                                StudiedHoursPerDate.Add(currentDate, studiedHours);
+                                // Calculate ProgressBarPercentage based on your business logic
+                                mc.Progressbar = cal.ProgressBarCal(StudiedHoursPerDate, selectedModule.SelfStudyHours.Value);
+                                mc.RemainingWeekHours = this.cal.CalculateRemainingHoursForCurrentWeek(StudiedHoursPerDate, selectedModule.SelfStudyHours.Value);
+
+                                // Save changes to the database
+                                studyTable.AddStudy( mc.StudiedHours, mc.RemainingWeekHours, selectedModuleId, Convert.ToDecimal(mc.Progressbar), DateTime.Now);
+
+                                txtStudyHrs.Clear();
+                                MessageBox.Show($"Studied {selected.StudiedHours} hours for {selectedModule.Name} on {currentDate.ToShortDateString()}", "Save", MessageBoxButton.OK, MessageBoxImage.Information);
+                            }
+                            else
+                            {
+                                mc.StudiedHours -= studiedHours;
+                                MessageBox.Show("The amount of self-study hours is more than assigned.", "Self-study hours", MessageBoxButton.OK, MessageBoxImage.Information);
+                                txtStudyHrs.Clear();
+                            }
+                        }
+                        else
+                        {
+                            MessageBox.Show("No study record found for this module", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                            return;
+                        }
                     }
                     else
                     {
-                        selected.StudiedHours -= studiedHours;
-                        MessageBox.Show("The amount of self-study hours is more than assigned.", "Self-study hours", MessageBoxButton.OK, MessageBoxImage.Information);
+                        hours -= studiedHours;
+                        MessageBox.Show("Studied hours entered is more hours thats in one day(24 hours)", "Weekly self-study hours", MessageBoxButton.OK, MessageBoxImage.Warning);
                         txtStudyHrs.Clear();
                     }
-                }
-                else
+                }catch
                 {
-                    hours -= studiedHours;
-                    MessageBox.Show("Studied hours entered is more hours thats in one day(24 hours)", "Weekly self-study hours", MessageBoxButton.OK, MessageBoxImage.Warning);
-                    txtStudyHrs.Clear();
+                    throw;
                 }
             }
             catch (Exception ex)
             {
+                throw;
                 MessageBox.Show($"An error occurred: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
@@ -187,23 +241,15 @@ namespace TimeWiz.UserControls
         /// </summary>
         /// <param name="code"></param>
         /// <returns></returns>
-        private ModuleTable FindModuleByCode(string code)
+        public ModuleTable FindModuleByCode(string code)
         {
-            var semesterList = semester.Sem.ToList();
-            
-            var foundModule = semesterList
-                .SelectMany(s => s.ModuleTables)
-                .FirstOrDefault(module => module.Code == code);
-
-            if (foundModule != null)
+            using (var db = new MyTimeWizDatabaseEntities1())
             {
-                // Module with the specified code found, return it
-                return foundModule;
+                var module = db.ModuleTables.Where(m => m.Code == code).FirstOrDefault();
+                return module;
             }
-
-            // Module with the specified code not found
-            return null;
         }
+
 
         //----------------------------------------------------------------------------------------------------------------------------------------------------------------
 
@@ -215,26 +261,30 @@ namespace TimeWiz.UserControls
         private void CmBoxSemester_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             ComboBoxItem selectedComboBoxItem = cmBoxSemester.SelectedItem as ComboBoxItem;
-
-            if (selectedComboBoxItem != null)
+            try
             {
-                Semester selectedSemester = selectedComboBoxItem.Tag as Semester;
-                MessageBox.Show($"Selected Semester: {selectedSemester.SemesterNum}");
+                if (selectedComboBoxItem != null)
+                {
+                    Semester selectedSemester = selectedComboBoxItem.Tag as Semester;
+                    MessageBox.Show($"Selected Semester: {selectedSemester.SemesterNum}");
 
-                semesterDataGrid.ItemsSource = new List<Semester> { selectedSemester };
-
-
-                var semesterModules = module.GetAllModules(selectedSemester);
-                moduleDataGrid.ItemsSource = semesterModules;
+                    semesterDataGrid.ItemsSource = new List<Semester> { selectedSemester };
 
 
+                    var semesterModules = module.GetAllModules(selectedSemester);
+                    moduleDataGrid.ItemsSource = semesterModules;
 
-                RefreshComboBox(selectedSemester);
+
+
+                    RefreshComboBox(selectedSemester);
+                }
             }
-            else
+            catch (Exception ex)
             {
-                MessageBox.Show("Invalid selection. Please choose a valid semester.", "Error", MessageBoxButton.OK, MessageBoxImage.Warning);
+                MessageBox.Show($"An error occurred: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                throw;
             }
+            
         }
 
 
@@ -254,14 +304,14 @@ namespace TimeWiz.UserControls
 
                
             // Add the sorted module codes to the combo box
-            foreach (var module in sortModuleCode)
+            foreach (var myModule in sortModuleCode)
             {
-                // Exclude empty module code
-                if (!string.IsNullOrWhiteSpace(module.Code))
+                
+                if (!string.IsNullOrWhiteSpace(myModule.Code))
                 {
                     ComboBoxItem comboBoxItem = new ComboBoxItem();
-                    comboBoxItem.Content = module.Code;
-                    comboBoxItem.Tag = module; // Ensure 'study' is defined correctly
+                    comboBoxItem.Content = myModule.Code;
+                    comboBoxItem.Tag = module; 
                     this.cmBoxMCode.Items.Add(comboBoxItem);
                 }
             }

@@ -50,19 +50,20 @@ namespace TimeWiz.Classes
 
         //----------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
-        public StudyTable AddStudyADO(int classHoursPerWeek, int selfStudyHours, int studiedHours, int remainingWeekHours, int module_id)
+        public StudyTable AddStudyADO(int studiedHours, int remainingWeekHours, int module_id, decimal progressbar, DateTime studyDate)
         {
             try
             {
                 using (SqlConnection connection = new SqlConnection(ConnectString))
                 {
                     connection.Open();
-                    SqlCommand cmd = new SqlCommand("INSERT INTO StudyTable (ClassHoursPerWeek, SelfStudyHours, StudiedHours, RemainingWeekHours, Module_Id) VALUES (@ClassHoursPerWeek, @SelfStudyHours, @StudiedHours, @RemainingWeekHours, @Module_Id)", connection);
-                    cmd.Parameters.AddWithValue("@ClassHoursPerWeek", classHoursPerWeek);
-                    cmd.Parameters.AddWithValue("@SelfStudyHours", selfStudyHours);
+                    SqlCommand cmd = new SqlCommand("INSERT INTO StudyTable ( StudiedHours, RemainingWeekHours, Module_Id, ProgressBarPercentage, StudyDate) VALUES (@ClassHoursPerWeek, @SelfStudyHours, @StudiedHours, @RemainingWeekHours, @Module_Id, @ProgressBarPercentage, @StudyDate)", connection);
+                   
                     cmd.Parameters.AddWithValue("@StudiedHours", studiedHours);
                     cmd.Parameters.AddWithValue("@RemainingWeekHours", remainingWeekHours);
                     cmd.Parameters.AddWithValue("@Module_Id", module_id);
+                    cmd.Parameters.AddWithValue("@ProgressBarPercentage", progressbar);
+                    cmd.Parameters.AddWithValue("@StudyDate", studyDate);
                     cmd.ExecuteNonQuery();
                     connection.Close();
                     return study;
@@ -77,15 +78,16 @@ namespace TimeWiz.Classes
 
         //----------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
-        public StudyTable AddStudy(int classHoursPerWeek, int selfStudyHours, int studiedHours, int remainingWeekHours, int module_id)
+        public StudyTable AddStudy( int studiedHours, int remainingWeekHours, int module_id, decimal progressbar,DateTime studyDate)
         {
             var study = new StudyTable
             {
-                ClassHoursPerWeek = classHoursPerWeek,
-                SelfStudyHours = selfStudyHours,
                 StudiedHours = studiedHours,
                 RemainingWeekHours = remainingWeekHours,
-                Module_Id = module_id
+                Module_Id = module_id,
+                ProgressBarPercentage = progressbar,
+                StudyDate = studyDate   
+
             };
             try
             {
@@ -111,32 +113,43 @@ namespace TimeWiz.Classes
             }
         }
 
+        public List <StudyTable> GetStudyByID(int id)
+        {
+                using (db = new MyTimeWizDatabaseEntities1())
+                {
+                    var study = db.StudyTables.Where(st => st.Module_Id == id).ToList();
+                    if (study != null)
+                    {
+                        return study;
+                    }
+                    else
+                    {
+                        return null;
+                    }
+                }
+         }
+        
+
         //----------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
-        public StudyTable UpdateStudy(int id, int classHoursPerWeek, int selfStudyHours, int studiedHours, int remainingWeekHours, int module_id, decimal progressBarPercentage, DateTime studyDate)
+        public StudyTable UpdateStudy(int id, int studiedHours, int remainingWeekHours, int module_id, decimal progressBarPercentage, DateTime studyDate)
         {
-            using (db = new MyTimeWizDatabaseEntities1())
+            using (var db = new MyTimeWizDatabaseEntities1())
             {
-                var study = db.StudyTables.Where(s => s.Study_Id == id).SingleOrDefault();
-                study.ClassHoursPerWeek = classHoursPerWeek;
-                study.SelfStudyHours = selfStudyHours;
-                study.StudiedHours = studiedHours;
-                study.RemainingWeekHours = remainingWeekHours;
-                study.Module_Id = module_id;
-                study.ProgressBarPercentage = progressBarPercentage;
-                study.StudyDate = studyDate;
-                db.SaveChanges();
+                var study = db.StudyTables.Where(s => s.Module_Id == id).SingleOrDefault();
                 if (study != null)
                 {
-                    return study;
+                   
+                    study.StudiedHours = studiedHours;
+                    study.RemainingWeekHours = remainingWeekHours;
+                    study.Module_Id = module_id;
+                    study.ProgressBarPercentage = progressBarPercentage;
+                    study.StudyDate = studyDate;
+                    db.SaveChanges();
                 }
-                else
-                {
-                    return null;
-                }
+                return study;
             }
         }
-
         //----------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
         public StudyTable GetStudy(int id)

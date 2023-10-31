@@ -207,10 +207,9 @@ namespace TimeWiz.UserControls
                     }
 
                     // entity is giving error so i used ado.net to save module data
-                    var module = moduleTables.AddModuleUsingADO(mc.Name, mc.Code, mc.Credits, semester_id);
+                    var module = moduleTables.AddModuleUsingADO(mc.Name, mc.Code, mc.Credits, semester_id, mc.ClassHoursPerWeek, mc.SelfStudyHours);
 
-                    var study = studyTable.AddStudyADO(mc.ClassHoursPerWeek, mc.SelfStudyHours , 0 , 0 , module.Module_Id);
-
+                
                     if (module != null)
                     {
                         txtName.Clear();
@@ -317,7 +316,7 @@ namespace TimeWiz.UserControls
         private void btnDone_Click(object sender, RoutedEventArgs e)
         {
             // Check if there are any modules associated with the current semester
-            if (semesters.GetAllSemesters().Any())
+            if (semesters.GetAllSemesterAdo().Any())
             {
                 txtSemester.Clear();
                 txtNumWeekSestr.Clear();

@@ -11,8 +11,7 @@ namespace TimeWiz
 {
     using System;
     using System.Collections.Generic;
-    using System.ComponentModel.DataAnnotations;
-
+    
     public partial class Semester
     {
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
@@ -20,7 +19,7 @@ namespace TimeWiz
         {
             this.ModuleTables = new HashSet<ModuleTable>();
         }
-        [Key]
+    
         public int Semester_Id { get; set; }
         public int SemesterNum { get; set; }
         public int NumOfWeeks { get; set; }

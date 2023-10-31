@@ -11,14 +11,10 @@ namespace TimeWiz
 {
     using System;
     using System.Collections.Generic;
-    using System.ComponentModel.DataAnnotations;
-
+    
     public partial class StudyTable
     {
-        [Key]
         public int Study_Id { get; set; }
-        public int ClassHoursPerWeek { get; set; }
-        public int SelfStudyHours { get; set; }
         public int StudiedHours { get; set; }
         public int RemainingWeekHours { get; set; }
         public int Module_Id { get; set; }

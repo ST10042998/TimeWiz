@@ -4,7 +4,7 @@
   <edmx:Runtime>
     <!-- SSDL content -->
     <edmx:StorageModels>
-    <Schema Namespace="MyTimeWizDatabaseModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+      <Schema Namespace="MyTimeWizDatabaseModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
         <EntityType Name="ModuleTable">
           <Key>
             <PropertyRef Name="Module_Id" />
@@ -14,6 +14,8 @@
           <Property Name="Code" Type="varchar" MaxLength="50" Nullable="false" />
           <Property Name="Credits" Type="int" />
           <Property Name="Semester_Id" Type="int" Nullable="false" />
+          <Property Name="ClassHoursPerWeek" Type="int" />
+          <Property Name="SelfStudyHours" Type="int" />
         </EntityType>
         <EntityType Name="Semester">
           <Key>
@@ -40,8 +42,6 @@
             <PropertyRef Name="Study_Id" />
           </Key>
           <Property Name="Study_Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="ClassHoursPerWeek" Type="int" Nullable="false" />
-          <Property Name="SelfStudyHours" Type="int" Nullable="false" />
           <Property Name="StudiedHours" Type="int" Nullable="false" />
           <Property Name="RemainingWeekHours" Type="int" Nullable="false" />
           <Property Name="Module_Id" Type="int" Nullable="false" />
@@ -86,7 +86,8 @@
             <End Role="StudyTable" EntitySet="StudyTable" />
           </AssociationSet>
         </EntityContainer>
-      </Schema></edmx:StorageModels>
+      </Schema>
+    </edmx:StorageModels>
     <!-- CSDL content -->
     <edmx:ConceptualModels>
       <Schema Namespace="MyTimeWizDatabaseModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
@@ -99,6 +100,8 @@
           <Property Name="Code" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
           <Property Name="Credits" Type="Int32" />
           <Property Name="Semester_Id" Type="Int32" Nullable="false" />
+          <Property Name="ClassHoursPerWeek" Type="Int32" />
+          <Property Name="SelfStudyHours" Type="Int32" />
           <NavigationProperty Name="Semester" Relationship="Self.FK_ModuleTable_Semester" FromRole="ModuleTable" ToRole="Semester" />
           <NavigationProperty Name="StudyTables" Relationship="Self.FK_StudyTable_Module" FromRole="ModuleTable" ToRole="StudyTable" />
         </EntityType>
@@ -128,8 +131,6 @@
             <PropertyRef Name="Study_Id" />
           </Key>
           <Property Name="Study_Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="ClassHoursPerWeek" Type="Int32" Nullable="false" />
-          <Property Name="SelfStudyHours" Type="Int32" Nullable="false" />
           <Property Name="StudiedHours" Type="Int32" Nullable="false" />
           <Property Name="RemainingWeekHours" Type="Int32" Nullable="false" />
           <Property Name="Module_Id" Type="Int32" Nullable="false" />
@@ -189,6 +190,8 @@
                 <ScalarProperty Name="Code" ColumnName="Code" />
                 <ScalarProperty Name="Credits" ColumnName="Credits" />
                 <ScalarProperty Name="Semester_Id" ColumnName="Semester_Id" />
+                <ScalarProperty Name="ClassHoursPerWeek" ColumnName="ClassHoursPerWeek" />
+                <ScalarProperty Name="SelfStudyHours" ColumnName="SelfStudyHours" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
@@ -218,8 +221,6 @@
             <EntityTypeMapping TypeName="MyTimeWizDatabaseModel.StudyTable">
               <MappingFragment StoreEntitySet="StudyTable">
                 <ScalarProperty Name="Study_Id" ColumnName="Study_Id" />
-                <ScalarProperty Name="ClassHoursPerWeek" ColumnName="ClassHoursPerWeek" />
-                <ScalarProperty Name="SelfStudyHours" ColumnName="SelfStudyHours" />
                 <ScalarProperty Name="StudiedHours" ColumnName="StudiedHours" />
                 <ScalarProperty Name="RemainingWeekHours" ColumnName="RemainingWeekHours" />
                 <ScalarProperty Name="Module_Id" ColumnName="Module_Id" />

@@ -52,23 +52,21 @@ namespace TimeWiz.Classes
         }
 
         //----------------------------------------------------------------------------------------------------------------------------------------------------------------------
-        public ModuleTable AddModuleUsingADO(string name, string code, int credits, int semesterId)
+        public ModuleTable AddModuleUsingADO(string name, string code, int credits, int semesterId, int classhours,int selfstudyhours)
         {
             try
             {
                 using (SqlConnection connection = new SqlConnection(connectionString))
                 {
                     connection.Open();
-
-                    string insertQuery = "INSERT INTO ModuleTable (Name, Code, Credits, Semester_Id) " +
-                        "VALUES (@Name, @Code, @Credits, @Semester_Id); SELECT SCOPE_IDENTITY()";
-
-                    using (SqlCommand cmd = new SqlCommand(insertQuery, connection))
+                    using (SqlCommand cmd = new SqlCommand("INSERT INTO ModuleTable (Name, Code, Credits, Semester_Id, ClassHoursPerWeek, SelfStudyHours) VALUES (@Name, @Code, @Credits, @Semester_Id,@ClassHoursPerWeek,@SelfStudyHours); SELECT SCOPE_IDENTITY()", connection))
                     {
                         cmd.Parameters.AddWithValue("@Name", name);
                         cmd.Parameters.AddWithValue("@Code", code);
                         cmd.Parameters.AddWithValue("@Credits", credits);
                         cmd.Parameters.AddWithValue("@Semester_Id", semesterId);
+                        cmd.Parameters.AddWithValue("@ClassHoursPerWeek", classhours);
+                        cmd.Parameters.AddWithValue("@SelfStudyHours", selfstudyhours);
 
                         int moduleId = Convert.ToInt32(cmd.ExecuteScalar()); // Get the newly inserted module's ID
 
@@ -81,7 +79,10 @@ namespace TimeWiz.Classes
                                 Name = name,
                                 Code = code,
                                 Credits = credits,
-                                Semester_Id = semesterId
+                                Semester_Id = semesterId,
+                                ClassHoursPerWeek = classhours,
+                                SelfStudyHours = selfstudyhours
+                                
                             };
                         }
                         else
@@ -99,14 +100,16 @@ namespace TimeWiz.Classes
             }
         }
 
-        public ModuleTable AddModule(string name, string code, int credits, int semesterId)
+        public ModuleTable AddModule(string name, string code, int credits, int semesterId ,int classhours , int selfstudy)
         {
             var module = new ModuleTable
             {
                 Name = name,
                 Code = code,
                 Credits = credits,
-                Semester_Id = semesterId
+                Semester_Id = semesterId,
+                ClassHoursPerWeek  = classhours,
+                SelfStudyHours = selfstudy
             };
             try
 
@@ -196,11 +199,11 @@ namespace TimeWiz.Classes
             }
         }   
 
-        public ModuleTable GetModule(int id)
+        public List<ModuleTable> GetModuleByCode(string code)
         {
             using (db = new MyTimeWizDatabaseEntities1())
             {
-                var module = db.ModuleTables.Where(m => m.Module_Id == id).SingleOrDefault();
+                var module = db.ModuleTables.Where(m => m.Code == code).ToList();
                 if (module != null)
                 {
                     return module;

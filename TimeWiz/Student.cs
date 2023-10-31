@@ -11,11 +11,9 @@ namespace TimeWiz
 {
     using System;
     using System.Collections.Generic;
-    using System.ComponentModel.DataAnnotations;
-
+    
     public partial class Student
     {
-        [Key]
         public int Student_Id { get; set; }
         public string Name { get; set; }
         public string Surname { get; set; }

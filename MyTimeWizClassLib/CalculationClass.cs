@@ -101,13 +101,15 @@ namespace MyTimeWizClassLib
         /// ProgressBar calculation that will give percentage
         /// </summary>
         /// <returns></returns>
-        public double ProgressBarCal(int StudiedHoursPerDate, double selfStudyHours)
+        public double ProgressBarCal(Dictionary<DateTime, int> StudiedHoursPerDate, double selfStudyHours)
         {
             var progress = 0.0;
 
-            
-               progress = (StudiedHoursPerDate / selfStudyHours) * 100;
-            
+
+            foreach (var entry in StudiedHoursPerDate)
+            {
+                progress = (entry.Value / selfStudyHours) * 100;
+            }
 
             return progress;
 
