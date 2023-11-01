@@ -98,33 +98,29 @@
     <Compile Include="Classes\ModuleTables.cs" />
     <Compile Include="Classes\Semesters.cs" />
     <Compile Include="Classes\Students.cs" />
-    <Compile Include="Classes\StudyTables.cs" />
     <Compile Include="ModuleTable.cs">
-      <DependentUpon>MyTimeWizModel.tt</DependentUpon>
+      <DependentUpon>MyTimeWIzModel.tt</DependentUpon>
     </Compile>
-    <Compile Include="MyTimeWizModel.Context.cs">
+    <Compile Include="MyTimeWIzModel.Context.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
-      <DependentUpon>MyTimeWizModel.Context.tt</DependentUpon>
+      <DependentUpon>MyTimeWIzModel.Context.tt</DependentUpon>
     </Compile>
-    <Compile Include="MyTimeWizModel.cs">
+    <Compile Include="MyTimeWIzModel.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
-      <DependentUpon>MyTimeWizModel.tt</DependentUpon>
+      <DependentUpon>MyTimeWIzModel.tt</DependentUpon>
     </Compile>
-    <Compile Include="MyTimeWizModel.Designer.cs">
+    <Compile Include="MyTimeWIzModel.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
-      <DependentUpon>MyTimeWizModel.edmx</DependentUpon>
+      <DependentUpon>MyTimeWIzModel.edmx</DependentUpon>
     </Compile>
     <Compile Include="Semester.cs">
-      <DependentUpon>MyTimeWizModel.tt</DependentUpon>
+      <DependentUpon>MyTimeWIzModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Student.cs">
-      <DependentUpon>MyTimeWizModel.tt</DependentUpon>
-    </Compile>
-    <Compile Include="StudyTable.cs">
-      <DependentUpon>MyTimeWizModel.tt</DependentUpon>
+      <DependentUpon>MyTimeWIzModel.tt</DependentUpon>
     </Compile>
     <Compile Include="UserControls\Home.xaml.cs">
       <DependentUpon>Home.xaml</DependentUpon>
@@ -185,12 +181,12 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
-    <EntityDeploy Include="MyTimeWizModel.edmx">
+    <EntityDeploy Include="MyTimeWIzModel.edmx">
       <Generator>EntityModelCodeGenerator</Generator>
-      <LastGenOutput>MyTimeWizModel.Designer.cs</LastGenOutput>
+      <LastGenOutput>MyTimeWIzModel.Designer.cs</LastGenOutput>
     </EntityDeploy>
-    <None Include="MyTimeWizModel.edmx.diagram">
-      <DependentUpon>MyTimeWizModel.edmx</DependentUpon>
+    <None Include="MyTimeWIzModel.edmx.diagram">
+      <DependentUpon>MyTimeWIzModel.edmx</DependentUpon>
     </None>
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
@@ -248,19 +244,22 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       <DependentUpon>MyTimeWizDatabase.mdf</DependentUpon>
     </Content>
-    <Content Include="MyTimeWizModel.Context.tt">
+    <Content Include="MyTimeWIzModel.Context.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
-      <DependentUpon>MyTimeWizModel.edmx</DependentUpon>
-      <LastGenOutput>MyTimeWizModel.Context.cs</LastGenOutput>
+      <DependentUpon>MyTimeWIzModel.edmx</DependentUpon>
+      <LastGenOutput>MyTimeWIzModel.Context.cs</LastGenOutput>
     </Content>
-    <Content Include="MyTimeWizModel.tt">
+    <Content Include="MyTimeWIzModel.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
-      <DependentUpon>MyTimeWizModel.edmx</DependentUpon>
-      <LastGenOutput>MyTimeWizModel.cs</LastGenOutput>
+      <DependentUpon>MyTimeWIzModel.edmx</DependentUpon>
+      <LastGenOutput>MyTimeWIzModel.cs</LastGenOutput>
     </Content>
   </ItemGroup>
   <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="LoginAndRegister\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

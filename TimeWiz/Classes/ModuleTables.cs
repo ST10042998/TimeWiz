@@ -5,6 +5,7 @@ using System.Data.Common;
 using System.Data.Entity;
 using System.Data.SqlClient;
 using System.Linq;
+using System.Security.Cryptography.Pkcs;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
@@ -16,7 +17,7 @@ namespace TimeWiz.Classes
     public class ModuleTables: DbContext
     {
 
-        private MyTimeWizDatabaseEntities1 db = new MyTimeWizDatabaseEntities1();
+        private MyTimeWizDatabaseEntities2 db = new MyTimeWizDatabaseEntities2();
 
         private ModuleTable module = new ModuleTable();
         public DbSet<ModuleTable> mod { get; set; }
@@ -52,14 +53,15 @@ namespace TimeWiz.Classes
         }
 
         //----------------------------------------------------------------------------------------------------------------------------------------------------------------------
-        public ModuleTable AddModuleUsingADO(string name, string code, int credits, int semesterId, int classhours,int selfstudyhours)
+        public ModuleTable AddModuleUsingADO(string name, string code, int credits, int semesterId, int classhours, int selfstudyhours)
         {
             try
             {
                 using (SqlConnection connection = new SqlConnection(connectionString))
                 {
                     connection.Open();
-                    using (SqlCommand cmd = new SqlCommand("INSERT INTO ModuleTable (Name, Code, Credits, Semester_Id, ClassHoursPerWeek, SelfStudyHours) VALUES (@Name, @Code, @Credits, @Semester_Id,@ClassHoursPerWeek,@SelfStudyHours); SELECT SCOPE_IDENTITY()", connection))
+                    using (SqlCommand cmd = new SqlCommand("INSERT INTO ModuleTable (Name, Code, Credits, Semester_Id, ClassHoursPerWeek, SelfStudyHours, RemainingWeekHours, ProgressBarPercentage, StudyDate, StudiedHours)" +
+                        " VALUES (@Name, @Code, @Credits, @Semester_Id, @ClassHoursPerWeek, @SelfStudyHours, @RemainingWeekHours, @ProgressBarPercentage, @StudyDate, @StudiedHours); SELECT SCOPE_IDENTITY()", connection))
                     {
                         cmd.Parameters.AddWithValue("@Name", name);
                         cmd.Parameters.AddWithValue("@Code", code);
@@ -67,6 +69,10 @@ namespace TimeWiz.Classes
                         cmd.Parameters.AddWithValue("@Semester_Id", semesterId);
                         cmd.Parameters.AddWithValue("@ClassHoursPerWeek", classhours);
                         cmd.Parameters.AddWithValue("@SelfStudyHours", selfstudyhours);
+                        cmd.Parameters.AddWithValue("@RemainingWeekHours", DBNull.Value); // Nullable column
+                        cmd.Parameters.AddWithValue("@ProgressBarPercentage", 0 ); // Nullable column
+                        cmd.Parameters.AddWithValue("@StudyDate", DBNull.Value); // Nullable column
+                        cmd.Parameters.AddWithValue("@StudiedHours", DBNull.Value); // Nullable column
 
                         int moduleId = Convert.ToInt32(cmd.ExecuteScalar()); // Get the newly inserted module's ID
 
@@ -82,7 +88,6 @@ namespace TimeWiz.Classes
                                 Semester_Id = semesterId,
                                 ClassHoursPerWeek = classhours,
                                 SelfStudyHours = selfstudyhours
-                                
                             };
                         }
                         else
@@ -99,6 +104,7 @@ namespace TimeWiz.Classes
                 return null;
             }
         }
+
 
         public ModuleTable AddModule(string name, string code, int credits, int semesterId ,int classhours , int selfstudy)
         {
@@ -177,9 +183,11 @@ namespace TimeWiz.Classes
 
             return modules;
         }
-        public ModuleTable UpdateModule(int id,string name, string code, int credits)
+
+        
+        public ModuleTable UpdateModule(int id,string name, string code, int credits,int semester_id,int classHours, int selfHours, int remainingHours,int Progressbar, DateTime date, int studiedHrs)
         {
-            using (db = new MyTimeWizDatabaseEntities1())
+            using (db = new MyTimeWizDatabaseEntities2())
             {
 
 
@@ -189,6 +197,14 @@ namespace TimeWiz.Classes
                     module.Name = name;
                     module.Code = code;
                     module.Credits = credits;
+                    module.Semester_Id = semester_id;
+                    module.ClassHoursPerWeek = classHours;
+                    module.SelfStudyHours = selfHours;
+                    module.RemainingWeekHours = remainingHours;
+                    module.ProgressBarPercentage = Progressbar;
+                    module.StudyDate = date;
+                    module.StudiedHours = studiedHrs;
+
                     db.SaveChanges();
                     return module;
                 }
@@ -197,11 +213,53 @@ namespace TimeWiz.Classes
                     return null;
                 }
             }
-        }   
+        }
+
+        public ModuleTable UpdateStudyModule(int id, int remainingHours, int Progressbar, DateTime date,int studiedHrs)
+        {
+            using (db = new MyTimeWizDatabaseEntities2())
+            {
+
+
+                var module = db.ModuleTables.Where(m => m.Module_Id == id).SingleOrDefault();
+                if (module != null)
+                {
+               
+                    module.RemainingWeekHours = remainingHours;
+                    module.ProgressBarPercentage = Progressbar;
+                    module.StudyDate = date;
+                    module.StudiedHours = studiedHrs;
+
+                    db.SaveChanges();
+                    return module;
+                }
+                else
+                {
+                    return null;
+                }
+            }
+        }
+
+        public int GetStudiedHours(int id)
+        {
+            using (db = new MyTimeWizDatabaseEntities2())
+            {
+                var module = db.ModuleTables.Where(m => m.Module_Id == id).SingleOrDefault();
+                if (module != null)
+                {
+                    id = module.StudiedHours.Value;
+                    return id;
+                }
+                else
+                {
+                    return 0;
+                }
+            }
+        }
 
         public List<ModuleTable> GetModuleByCode(string code)
         {
-            using (db = new MyTimeWizDatabaseEntities1())
+            using (db = new MyTimeWizDatabaseEntities2())
             {
                 var module = db.ModuleTables.Where(m => m.Code == code).ToList();
                 if (module != null)
@@ -216,30 +274,32 @@ namespace TimeWiz.Classes
         }
         public List<ModuleTable> GetAllModules(Semester semester)
         {
-            using (db = new MyTimeWizDatabaseEntities1())
+            using (db = new MyTimeWizDatabaseEntities2())
             {
                 var modules = db.ModuleTables.Where(m => m.Semester_Id == semester.Semester_Id).ToList();
                 return modules;
             }
         }
+     
 
-    
-    public ModuleTable DeleteModule(int id)
+        public List <ModuleTable> DeleteModuleBySemesterId(int id)
         {
-            using (db = new MyTimeWizDatabaseEntities1())
+            using (db = new MyTimeWizDatabaseEntities2())
             {
-                var module = db.ModuleTables.Where(m => m.Module_Id == id).SingleOrDefault();
-                if (module != null)
+                var module = db.ModuleTables.Where(m => m.Semester_Id == id).ToList();
+                if (module.Count > 0)
                 {
-                    db.ModuleTables.Remove(module);
+                    db.ModuleTables.RemoveRange(module);
                     db.SaveChanges();
                     return module;
                 }
                 else
                 {
-                    return null;
+                    return module;
                 }
             }
+        
         }
+
     }
 }

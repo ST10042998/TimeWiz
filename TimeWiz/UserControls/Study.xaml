@@ -12,17 +12,18 @@
             <RowDefinition Height="106*"/>
             <RowDefinition Height="119*"/>
         </Grid.RowDefinitions>
+        <Label x:Name="lblView" Foreground="DarkCyan" Content="STUDY" FontSize="25" FontWeight="Bold"  Margin="0,10,0,0" VerticalAlignment="Top" Height="38" HorizontalAlignment="Right" Width="95"/>
 
         <!-- label and comobox for choosing semester  -->
         <Label Content="Semester" HorizontalAlignment="Left" Margin="4,14,0,0" FontWeight="SemiBold" FontSize="15" Width="111" Height="30" VerticalAlignment="Top"/>
-        <ComboBox x:Name="cmBoxSemester" SelectionChanged="CmBoxSemester_SelectionChanged" HorizontalAlignment="Left" Margin="98,19,0,0" VerticalAlignment="Top" Width="120" Height="22"/>
+        <ComboBox x:Name="cmBoxSemester" SelectionChanged="CmBoxSemester_SelectionChanged" HorizontalAlignment="Left" Margin="88,19,0,0" VerticalAlignment="Top" Width="120" Height="22"/>
 
         <!-- datagrid to display the semester data -->
-        <DataGrid  Name="semesterDataGrid" IsReadOnly="True" VerticalScrollBarVisibility="Auto" Height="100" Margin="253,25,62,0"
+        <DataGrid  Name="semesterDataGrid" IsReadOnly="True" VerticalScrollBarVisibility="Auto" Height="100" Margin="221,25,94,0"
                    VerticalAlignment="Top" HorizontalGridLinesBrush="Black" AutoGenerateColumns="False" VerticalGridLinesBrush="Black" CanUserResizeColumns="False" CanUserResizeRows="False" Background="#FFFBFFDF" >
             <DataGrid.Columns>
                 <DataGridTextColumn Header="Semester" Width="0.6*" Binding="{Binding SemesterNum}"/>
-                <DataGridTextColumn Header="Number of Weeks" Width="0.9*" Binding="{Binding NumberOfWeeks}"/>
+                <DataGridTextColumn Header="Number of Weeks" Width="0.9*" Binding="{Binding NumOfWeeks}"/>
                 <DataGridTextColumn Header="Start Date" Width="1*" Binding="{Binding StartDate}"/>
                 <DataGridTextColumn Header="End Date" Width="1*" Binding="{Binding EndDate}"/>
             </DataGrid.Columns>
@@ -34,16 +35,18 @@
 
         <!-- Datagrid to display the module data-->
         <DataGrid Name="moduleDataGrid" HorizontalAlignment="Stretch" IsReadOnly="True" HorizontalGridLinesBrush="Black" VerticalGridLinesBrush="Black"
-                  CanUserResizeColumns="False" CanUserResizeRows="False" AreRowDetailsFrozen="true" AutoGenerateColumns="True" Margin="4,140,62,164" VerticalScrollBarVisibility="Auto" Grid.RowSpan="2" Background="#FFFBFFDF"/>
-        <!-- Defining columns -->
-            <!--<DataGrid.Columns> -->
-              <!--  <DataGridTextColumn Header="Module Name" Width="1.*" Binding="{Binding Name}"/>-->
-            <!--   <DataGridTextColumn Header="Module Code" Width="0.8*" Binding="{Binding Code}"/>-->
-            <!--  <DataGridTextColumn Header="Credits" Width="0.6*" Binding="{Binding Credits}"/> -->
-                <!-- <DataGridTextColumn Header="ClassHoursPerWeek" Width="0.9*" Binding="{Binding ClassHoursPerWeek}"/>
-                <DataGridTextColumn Header="Self-study Hours" Width="0.9*" Binding="{Binding SelfStudyHours}"/> -->
-            
+                  CanUserResizeColumns="False" CanUserResizeRows="False" AreRowDetailsFrozen="true" AutoGenerateColumns="false" Margin="4,140,62,164" VerticalScrollBarVisibility="Auto" Grid.RowSpan="2" Background="#FFFBFFDF">
+            <!-- Defining columns -->
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="Module Name" Width="1.*" Binding="{Binding Name}"/>
+                <DataGridTextColumn Header="Module Code" Width="0.8*" Binding="{Binding Code}"/>
+                <DataGridTextColumn Header="Credits" Width="0.6*" Binding="{Binding Credits}"/>
+                <DataGridTextColumn Header="ClassHoursPerWeek" Width="0.9*" Binding="{Binding ClassHoursPerWeek}"/>
 
+                <DataGridTextColumn Header="Self-study Hours" Width="0.9*" Binding="{Binding SelfStudyHours}"/>
+
+            </DataGrid.Columns>
+        </DataGrid>
         <!-- label and combobox for choosing module code -->
         <Label x:Name="lblMdlCode" Content="Module Code" HorizontalAlignment="Left" Margin="58,112,0,0" VerticalAlignment="Top" Height="26" Width="82" Grid.Row="1"/>
         <ComboBox x:Name="cmBoxMCode" HorizontalAlignment="Left" Margin="58,142,0,0" VerticalAlignment="Top" Width="120" Height="22" Grid.Row="1"/>

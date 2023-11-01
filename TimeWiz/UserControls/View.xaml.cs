@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.SqlClient;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -13,6 +14,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using MyTimeWizClassLib;
+using TimeWiz.Classes;
 
 namespace TimeWiz.UserControls
 {
@@ -21,12 +23,17 @@ namespace TimeWiz.UserControls
     /// </summary>
     public partial class View : UserControl
     {
-        //creating obj for StudyClass
-        private StudyClass study;
+       //initializing obj
         private CalculationClass cal = new CalculationClass();
+        private StudyClass study;
+
+        private Semesters semester = new Semesters();
+        private ModuleTables module;
+       
+        private SqlConnection connection;
 
         //----------------------------------------------------------------------------------------------------------------------------------------------------------
-     
+
         /// <summary>
         /// constructor
         /// </summary>
@@ -40,6 +47,9 @@ namespace TimeWiz.UserControls
 
             // Populate the semester combobox
             this.SemesterData();
+            
+            module = new ModuleTables();
+           
         }
 
         //----------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -49,9 +59,10 @@ namespace TimeWiz.UserControls
         /// </summary>
         private void SemesterData()
         {
+           
             // Sort the semesters in alphabetical order
-            var sortedSemester = study.SemesterList
-                .OrderBy(s => s.semester.SemesterNum)
+            var sortedSemester = semester.GetAllSemesterAdo()
+                .OrderBy(s => s.SemesterNum)
                 .ToList();
 
             // Clear the current items
@@ -60,35 +71,33 @@ namespace TimeWiz.UserControls
             foreach (var sem in sortedSemester)
             {
                 // Exclude empty module code
-                if (!string.IsNullOrWhiteSpace(sem.semester.SemesterNum.ToString()))
+                if (!string.IsNullOrWhiteSpace(sem.SemesterNum.ToString()))
                 {
                     ComboBoxItem comboBoxItem = new ComboBoxItem();
-                    comboBoxItem.Content = sem.semester.SemesterNum.ToString();
+                    comboBoxItem.Content = sem.SemesterNum.ToString();
 
                     // Set the Tag property with the associated StudyClass object
                     comboBoxItem.Tag = sem; // Ensure 'study' is a valid StudyClass object
 
                     this.cmBoxSemest.Items.Add(comboBoxItem);
                 }
-                
+                else
+                {
+                    MessageBox.Show("Empty","Error",MessageBoxButton.OK,MessageBoxImage.Error);
+                }
             }
 
         }
-        private SemesterClass FindSemesterByNum(string date)
+        private Semester FindSemesterByNum(string num)
         {
-            var foundSemester = study.SemesterList
-                .SelectMany(semester => semester.SemesterList)
-                .FirstOrDefault(s => s.SemesterNum.ToString() == date);
-
-            if (foundSemester != null)
+          
+            using (var db = new MyTimeWizDatabaseEntities2())
             {
-                // Module with the specified code found, return it
-                return foundSemester;
+                var semester = db.Semesters.Where(s => s.SemesterNum.ToString() == num).First();
+                return semester;
             }
-
-            // Module with the specified code not found
-            return null;
         }
+      
         //----------------------------------------------------------------------------------------------------------------------------------------------------------
 
         /// <summary>
@@ -96,28 +105,34 @@ namespace TimeWiz.UserControls
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void CmBoxSemest_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        private async void CmBoxSemest_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            // Retrieve the selected item (ComboBoxItem) from the ComboBox
             ComboBoxItem selectedComboBoxItem = cmBoxSemest.SelectedItem as ComboBoxItem;
-
-            if (selectedComboBoxItem != null)
-            {
-                // Retrieve the semester object from the ComboBox item's Tag
-                SemesterDataClass Studysemester = selectedComboBoxItem.Tag as SemesterDataClass;
-
-                if (Studysemester != null)
+           
+                if (selectedComboBoxItem != null)
                 {
-                    // Display the selected semester in a MessageBox or any other control you prefer
+                    Semester selectedSemester = selectedComboBoxItem.Tag as Semester;
 
-                    DatagrdViewSem.ItemsSource = Studysemester.SemesterList;
-                    DatagrdViewSem.Items.Refresh();
+                var semester = await Task.Run(() => selectedSemester);
+                // Retrieve data asynchronously
+                // Update the data grids on the main UI thread
+                Dispatcher.Invoke(() =>
+                {
+                    DatagrdViewSem.ItemsSource = new List<Semester> { selectedSemester };
+                });
 
-                    DatagrdViewModule.ItemsSource = Studysemester.ModuleList;
-                    DatagrdViewModule.Items.Refresh();
+                var semesterModules = await Task.Run(() => module.GetAllModules(selectedSemester));
+                // Update the data grids on the main UI thread
+                Dispatcher.Invoke(() => 
+                {
+                     DatagrdViewModule.ItemsSource = semesterModules;
+                     
+                });
 
-                    var selectedSemester = FindSemesterByNum(selectedComboBoxItem.Content.ToString());
-                    this.lblWeek.Content = $"Week : {cal.GetCurrentWeek(Convert.ToDateTime(selectedSemester.StartDate), selectedSemester.NumberOfWeeks)}";           
+
+
+                var selectedSemest = FindSemesterByNum(selectedComboBoxItem.Content.ToString());
+                    this.lblWeek.Content = $"Week : {cal.GetCurrentWeek(Convert.ToDateTime(selectedSemester.StartDate), selectedSemest.NumOfWeeks)}";           
                 
                 }
                 else
@@ -126,7 +141,7 @@ namespace TimeWiz.UserControls
                     MessageBox.Show("Invalid selection. Please choose a valid semester.", "Error", MessageBoxButton.OK, MessageBoxImage.Warning);
                 }
             }
-        }
+        
 
         /// <summary>
         /// deleting a semester (button click event)
@@ -142,24 +157,28 @@ namespace TimeWiz.UserControls
             if (selectedComboBoxItem != null)
             {
                 // Retrieve the semester object from the ComboBox item's Tag
-                SemesterDataClass Studysemester = selectedComboBoxItem.Tag as SemesterDataClass;
+                Semester Studysemester = selectedComboBoxItem.Tag as Semester;
 
                 if (Studysemester != null)
                 {
-                    var option = MessageBox.Show($"Are you sure you want to delete semester {Studysemester.semester.SemesterNum}","Delete",MessageBoxButton.YesNo,MessageBoxImage.Warning);
+                    var option = MessageBox.Show($"Are you sure you want to delete semester {Studysemester.SemesterNum}","Delete",MessageBoxButton.YesNo,MessageBoxImage.Warning);
                    if( option == MessageBoxResult.Yes)
                    {
-                        // Remove the Studysemester from the SemesterList
-                        study.SemesterList.Remove(Studysemester);
- 
-                        Studysemester.ModuleList.Clear();
-                        Studysemester.SemesterList.Clear();
+                        //deleting data from database
+                        module.DeleteModuleBySemesterId(Studysemester.Semester_Id);
 
+                        semester.DeleteSemester(Studysemester.Semester_Id);
+                                           
                         this.lblWeek.Content =string.Empty;
 
-                       //refreshing my datagrids after deleting semester
-                       DatagrdViewSem.Items.Refresh();
-                        DatagrdViewModule.Items.Refresh();
+                        //refreshing my datagrids after deleting semester
+                        Dispatcher.Invoke(() =>
+                        {
+                            DatagrdViewSem.ItemsSource = null;
+                            DatagrdViewSem.Items.Refresh();
+                            DatagrdViewModule.ItemsSource = null;
+                            DatagrdViewModule.Items.Refresh();
+                        });
                         
                         MessageBox.Show($"Successfully deleted semester", "Delete", MessageBoxButton.OK, MessageBoxImage.Information);
 
@@ -169,7 +188,7 @@ namespace TimeWiz.UserControls
                    }
                     else
                     {
-                       MessageBox.Show($"Deletion of semester{Studysemester.semester.SemesterNum} cancelled ", "Delete", MessageBoxButton.OK, MessageBoxImage.Information);
+                       MessageBox.Show($"Deletion of semester{Studysemester.SemesterNum} cancelled ", "Delete", MessageBoxButton.OK, MessageBoxImage.Information);
                     }
                 }
             }

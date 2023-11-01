@@ -4,7 +4,7 @@
   <edmx:Runtime>
     <!-- SSDL content -->
     <edmx:StorageModels>
-      <Schema Namespace="MyTimeWizDatabaseModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+    <Schema Namespace="MyTimeWizDatabaseModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
         <EntityType Name="ModuleTable">
           <Key>
             <PropertyRef Name="Module_Id" />
@@ -16,6 +16,10 @@
           <Property Name="Semester_Id" Type="int" Nullable="false" />
           <Property Name="ClassHoursPerWeek" Type="int" />
           <Property Name="SelfStudyHours" Type="int" />
+          <Property Name="RemainingWeekHours" Type="int" />
+          <Property Name="ProgressBarPercentage" Type="int" />
+          <Property Name="StudyDate" Type="datetime" />
+          <Property Name="StudiedHours" Type="int" />
         </EntityType>
         <EntityType Name="Semester">
           <Key>
@@ -37,17 +41,6 @@
           <Property Name="Email" Type="varchar(max)" Nullable="false" />
           <Property Name="Gender" Type="varchar" MaxLength="50" Nullable="false" />
         </EntityType>
-        <EntityType Name="StudyTable">
-          <Key>
-            <PropertyRef Name="Study_Id" />
-          </Key>
-          <Property Name="Study_Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="StudiedHours" Type="int" Nullable="false" />
-          <Property Name="RemainingWeekHours" Type="int" Nullable="false" />
-          <Property Name="Module_Id" Type="int" Nullable="false" />
-          <Property Name="ProgressBarPercentage" Type="decimal" Precision="18" Scale="0" />
-          <Property Name="StudyDate" Type="datetime" />
-        </EntityType>
         <Association Name="FK_ModuleTable_Semester">
           <End Role="Semester" Type="Self.Semester" Multiplicity="1" />
           <End Role="ModuleTable" Type="Self.ModuleTable" Multiplicity="*" />
@@ -60,34 +53,16 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK_StudyTable_Module">
-          <End Role="ModuleTable" Type="Self.ModuleTable" Multiplicity="1" />
-          <End Role="StudyTable" Type="Self.StudyTable" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="ModuleTable">
-              <PropertyRef Name="Module_Id" />
-            </Principal>
-            <Dependent Role="StudyTable">
-              <PropertyRef Name="Module_Id" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <EntityContainer Name="MyTimeWizDatabaseModelStoreContainer">
           <EntitySet Name="ModuleTable" EntityType="Self.ModuleTable" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Semester" EntityType="Self.Semester" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Student" EntityType="Self.Student" Schema="dbo" store:Type="Tables" />
-          <EntitySet Name="StudyTable" EntityType="Self.StudyTable" Schema="dbo" store:Type="Tables" />
           <AssociationSet Name="FK_ModuleTable_Semester" Association="Self.FK_ModuleTable_Semester">
             <End Role="Semester" EntitySet="Semester" />
             <End Role="ModuleTable" EntitySet="ModuleTable" />
           </AssociationSet>
-          <AssociationSet Name="FK_StudyTable_Module" Association="Self.FK_StudyTable_Module">
-            <End Role="ModuleTable" EntitySet="ModuleTable" />
-            <End Role="StudyTable" EntitySet="StudyTable" />
-          </AssociationSet>
         </EntityContainer>
-      </Schema>
-    </edmx:StorageModels>
+      </Schema></edmx:StorageModels>
     <!-- CSDL content -->
     <edmx:ConceptualModels>
       <Schema Namespace="MyTimeWizDatabaseModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
@@ -102,8 +77,11 @@
           <Property Name="Semester_Id" Type="Int32" Nullable="false" />
           <Property Name="ClassHoursPerWeek" Type="Int32" />
           <Property Name="SelfStudyHours" Type="Int32" />
+          <Property Name="RemainingWeekHours" Type="Int32" />
+          <Property Name="ProgressBarPercentage" Type="Int32" />
+          <Property Name="StudyDate" Type="DateTime" Precision="3" />
           <NavigationProperty Name="Semester" Relationship="Self.FK_ModuleTable_Semester" FromRole="ModuleTable" ToRole="Semester" />
-          <NavigationProperty Name="StudyTables" Relationship="Self.FK_StudyTable_Module" FromRole="ModuleTable" ToRole="StudyTable" />
+          <Property Name="StudiedHours" Type="Int32" />
         </EntityType>
         <EntityType Name="Semester">
           <Key>
@@ -126,18 +104,6 @@
           <Property Name="Email" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" Nullable="false" />
           <Property Name="Gender" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
         </EntityType>
-        <EntityType Name="StudyTable">
-          <Key>
-            <PropertyRef Name="Study_Id" />
-          </Key>
-          <Property Name="Study_Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="StudiedHours" Type="Int32" Nullable="false" />
-          <Property Name="RemainingWeekHours" Type="Int32" Nullable="false" />
-          <Property Name="Module_Id" Type="Int32" Nullable="false" />
-          <Property Name="ProgressBarPercentage" Type="Decimal" Precision="18" Scale="0" />
-          <Property Name="StudyDate" Type="DateTime" Precision="3" />
-          <NavigationProperty Name="ModuleTable" Relationship="Self.FK_StudyTable_Module" FromRole="StudyTable" ToRole="ModuleTable" />
-        </EntityType>
         <Association Name="FK_ModuleTable_Semester">
           <End Role="Semester" Type="Self.Semester" Multiplicity="1" />
           <End Role="ModuleTable" Type="Self.ModuleTable" Multiplicity="*" />
@@ -150,30 +116,13 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK_StudyTable_Module">
-          <End Role="ModuleTable" Type="Self.ModuleTable" Multiplicity="1" />
-          <End Role="StudyTable" Type="Self.StudyTable" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="ModuleTable">
-              <PropertyRef Name="Module_Id" />
-            </Principal>
-            <Dependent Role="StudyTable">
-              <PropertyRef Name="Module_Id" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <EntityContainer Name="MyTimeWizDatabaseEntities1" annotation:LazyLoadingEnabled="true">
+        <EntityContainer Name="MyTimeWizDatabaseEntities2" annotation:LazyLoadingEnabled="true">
           <EntitySet Name="ModuleTables" EntityType="Self.ModuleTable" />
           <EntitySet Name="Semesters" EntityType="Self.Semester" />
           <EntitySet Name="Students" EntityType="Self.Student" />
-          <EntitySet Name="StudyTables" EntityType="Self.StudyTable" />
           <AssociationSet Name="FK_ModuleTable_Semester" Association="Self.FK_ModuleTable_Semester">
             <End Role="Semester" EntitySet="Semesters" />
             <End Role="ModuleTable" EntitySet="ModuleTables" />
-          </AssociationSet>
-          <AssociationSet Name="FK_StudyTable_Module" Association="Self.FK_StudyTable_Module">
-            <End Role="ModuleTable" EntitySet="ModuleTables" />
-            <End Role="StudyTable" EntitySet="StudyTables" />
           </AssociationSet>
         </EntityContainer>
       </Schema>
@@ -181,10 +130,11 @@
     <!-- C-S mapping content -->
     <edmx:Mappings>
       <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
-        <EntityContainerMapping StorageEntityContainer="MyTimeWizDatabaseModelStoreContainer" CdmEntityContainer="MyTimeWizDatabaseEntities1">
+        <EntityContainerMapping StorageEntityContainer="MyTimeWizDatabaseModelStoreContainer" CdmEntityContainer="MyTimeWizDatabaseEntities2">
           <EntitySetMapping Name="ModuleTables">
             <EntityTypeMapping TypeName="MyTimeWizDatabaseModel.ModuleTable">
               <MappingFragment StoreEntitySet="ModuleTable">
+                <ScalarProperty Name="StudiedHours" ColumnName="StudiedHours" />
                 <ScalarProperty Name="Module_Id" ColumnName="Module_Id" />
                 <ScalarProperty Name="Name" ColumnName="Name" />
                 <ScalarProperty Name="Code" ColumnName="Code" />
@@ -192,6 +142,9 @@
                 <ScalarProperty Name="Semester_Id" ColumnName="Semester_Id" />
                 <ScalarProperty Name="ClassHoursPerWeek" ColumnName="ClassHoursPerWeek" />
                 <ScalarProperty Name="SelfStudyHours" ColumnName="SelfStudyHours" />
+                <ScalarProperty Name="RemainingWeekHours" ColumnName="RemainingWeekHours" />
+                <ScalarProperty Name="ProgressBarPercentage" ColumnName="ProgressBarPercentage" />
+                <ScalarProperty Name="StudyDate" ColumnName="StudyDate" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
@@ -214,18 +167,6 @@
                 <ScalarProperty Name="Surname" ColumnName="Surname" />
                 <ScalarProperty Name="Email" ColumnName="Email" />
                 <ScalarProperty Name="Gender" ColumnName="Gender" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="StudyTables">
-            <EntityTypeMapping TypeName="MyTimeWizDatabaseModel.StudyTable">
-              <MappingFragment StoreEntitySet="StudyTable">
-                <ScalarProperty Name="Study_Id" ColumnName="Study_Id" />
-                <ScalarProperty Name="StudiedHours" ColumnName="StudiedHours" />
-                <ScalarProperty Name="RemainingWeekHours" ColumnName="RemainingWeekHours" />
-                <ScalarProperty Name="Module_Id" ColumnName="Module_Id" />
-                <ScalarProperty Name="ProgressBarPercentage" ColumnName="ProgressBarPercentage" />
-                <ScalarProperty Name="StudyDate" ColumnName="StudyDate" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

@@ -13,10 +13,10 @@ namespace TimeWiz
     using System.Data.Entity;
     using System.Data.Entity.Infrastructure;
     
-    public partial class MyTimeWizDatabaseEntities1 : DbContext
+    public partial class MyTimeWizDatabaseEntities2 : DbContext
     {
-        public MyTimeWizDatabaseEntities1()
-            : base("name=MyTimeWizDatabaseEntities1")
+        public MyTimeWizDatabaseEntities2()
+            : base("name=MyTimeWizDatabaseEntities2")
         {
         }
     
@@ -28,6 +28,5 @@ namespace TimeWiz
         public virtual DbSet<ModuleTable> ModuleTables { get; set; }
         public virtual DbSet<Semester> Semesters { get; set; }
         public virtual DbSet<Student> Students { get; set; }
-        public virtual DbSet<StudyTable> StudyTables { get; set; }
     }
 }

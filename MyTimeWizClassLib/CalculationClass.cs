@@ -77,23 +77,16 @@ namespace MyTimeWizClassLib
 
             // Calculate the start and end dates of the current week
             DateTime startOfWeek = FirstDateOfWeek(currentDate.Year, currentWeek);
+            DateTime endOfWeek = startOfWeek.AddDays(6); // Assuming you have a 6-day study week
 
-            // my study week is only 6 days long and excludes Sundays
-            DateTime endOfWeek = startOfWeek.AddDays(5);
-
-            int totalStudiedHoursThisWeek = 0;
-
-            foreach (var entry in StudiedHoursPerDate)
-            {
-                if (entry.Key >= startOfWeek && entry.Key <= endOfWeek)
-                {
-                    totalStudiedHoursThisWeek += entry.Value;
-                }
-            }
+            int totalStudiedHoursThisWeek = StudiedHoursPerDate
+                .Where(entry => entry.Key >= startOfWeek && entry.Key <= endOfWeek)
+                .Sum(entry => entry.Value);
 
             int remainingHours = SelfStudyHours - totalStudiedHoursThisWeek;
             return remainingHours;
         }
+
 
         //----------------------------------------------------------------------------------------------------------------------------------------------------------
 
@@ -101,19 +94,18 @@ namespace MyTimeWizClassLib
         /// ProgressBar calculation that will give percentage
         /// </summary>
         /// <returns></returns>
-        public double ProgressBarCal(Dictionary<DateTime, int> StudiedHoursPerDate, double selfStudyHours)
+        public double ProgressBarCal(Dictionary<DateTime, int> StudiedHoursPerDate, int selfStudyHours)
         {
-            var progress = 0.0;
-
+            double progress = 0.0; // Use double to store a fractional result
 
             foreach (var entry in StudiedHoursPerDate)
             {
-                progress = (entry.Value / selfStudyHours) * 100;
+                progress += ((double)entry.Value / selfStudyHours) * 100.0;
             }
 
             return progress;
-
         }
+
 
         //----------------------------------------------------------------------------------------------------------------------------------------------------------
 

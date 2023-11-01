@@ -30,12 +30,9 @@ namespace TimeWiz.UserControls
         //databse objects
         private Semesters semesters= new Semesters();
         private ModuleTables moduleTables = new ModuleTables();
-        private ModuleTable mod;
-        private Semester semTable = new Semester();
-        private StudyTables studyTable = new StudyTables();
-
-
+         
         int semester_id=0;
+        int numWeeks = 0;
 
         /// <summary>
         ///  creating obj of study class
@@ -65,7 +62,6 @@ namespace TimeWiz.UserControls
             // Store the study object
             this.study = study;
             this.cal = cal;
-            this.mod = new ModuleTable();
             semesters = sem;
             currentSemester = new StudyClass();
         }
@@ -115,14 +111,15 @@ namespace TimeWiz.UserControls
             // Save module data only if all input is valid
             if (isValid)
             {
-               var newSemester = semesters.AddSemesterAdo(sc.SemesterNum, sc.NumberOfWeeks, sc.StartDate, sc.EndDate);
+                currentSemester.semesterData.SemesterList.Add(sc);
+                numWeeks= sc.NumberOfWeeks;
+                
+
+                var newSemester = semesters.AddSemesterAdo(sc.SemesterNum, sc.NumberOfWeeks, sc.StartDate, sc.EndDate);
                 semester_id = newSemester.Semester_Id;
                 if (newSemester != null)
                 {
                     semester_id = newSemester.Semester_Id;
-                    txtSemester.Clear();
-                    txtNumWeekSestr.Clear();
-                    txtStartDate.SelectedDate = null;
                     this.lblSaved.Content = $"Semester {newSemester.SemesterNum} saved successfully";
                 }
             }
@@ -182,14 +179,18 @@ namespace TimeWiz.UserControls
             }
             if (isValid)
             {
+                currentSemester.semesterData.ModuleList.Add(mc);
+                moduleData.Add(mc.Credits);
+                moduleData.Add(mc.ClassHoursPerWeek);
                 try {
                     // Calculate the SelfStudyHours for the current module
-                    foreach (SemesterDataClass moduleData in currentSemester.SemesterList)
+                
+                    foreach (ModuleClass moduleData in currentSemester.semesterData.ModuleList)
                     {
-                        int numberOfWeeks = moduleData.semester.NumberOfWeeks;
-                        int classHoursPerWeek = moduleData.module.ClassHoursPerWeek;
-                        int credit = moduleData.module.Credits;
-                        string code = moduleData.module.Code;
+                        int numberOfWeeks = numWeeks ;                        
+                        int classHoursPerWeek = moduleData.ClassHoursPerWeek;
+                        int credit = moduleData.Credits;
+                        string code = moduleData.Code;
 
                         // Calculate the SelfStudyHours for the current module
                         int selfStudyHours = cal.CalculateSelfStudyHours(code, numberOfWeeks, classHoursPerWeek, credits);
@@ -197,7 +198,7 @@ namespace TimeWiz.UserControls
                         // Update the SelfStudyHours property of the current module
                         if (selfStudyHours != 0)
                         {
-                            moduleData.module.SelfStudyHours = selfStudyHours;
+                            mc.SelfStudyHours = selfStudyHours;
                         }
                         else
                         {
@@ -205,7 +206,7 @@ namespace TimeWiz.UserControls
                             isValid = false;
                         }
                     }
-
+                   
                     // entity is giving error so i used ado.net to save module data
                     var module = moduleTables.AddModuleUsingADO(mc.Name, mc.Code, mc.Credits, semester_id, mc.ClassHoursPerWeek, mc.SelfStudyHours);
 
@@ -255,7 +256,7 @@ namespace TimeWiz.UserControls
 
                // currentSemester.semesterData.ModuleList.Clear();
 
-                MessageBox.Show($"{mod.Name}");
+                
             }
             else
             {

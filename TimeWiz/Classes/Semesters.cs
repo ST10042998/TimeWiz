@@ -15,7 +15,7 @@ namespace TimeWiz.Classes
     public class Semesters : DbContext
     {
 
-        private MyTimeWizDatabaseEntities1 db = new MyTimeWizDatabaseEntities1();
+        private MyTimeWizDatabaseEntities2 db = new MyTimeWizDatabaseEntities2();
 
         public  Semester semeseter = new Semester();
 
@@ -173,7 +173,7 @@ namespace TimeWiz.Classes
 
         public Semester UpdateSemester(int id,int semesterNum, int numOfWeeks, string startDate, string endDate)
         {
-            using (db = new MyTimeWizDatabaseEntities1())
+            using (db = new MyTimeWizDatabaseEntities2())
             {
                 var semester = db.Semesters.Where(s => s.Semester_Id == id).SingleOrDefault();
                 if (semester != null)
@@ -194,7 +194,7 @@ namespace TimeWiz.Classes
 
         public Semester GetSemester(int id)
         {
-            using (db = new MyTimeWizDatabaseEntities1())
+            using (db = new MyTimeWizDatabaseEntities2())
             {
                 var semester = db.Semesters.Where(s => s.Semester_Id == id).SingleOrDefault();
                 if (semester != null)
@@ -210,20 +210,44 @@ namespace TimeWiz.Classes
 
         public List<Semester> GetAllSemesters()
         {
-            using (db = new MyTimeWizDatabaseEntities1())
+            using (db = new MyTimeWizDatabaseEntities2())
             {
                 // Use the ToList method to retrieve all semesters as a list
                 return db.Semesters.ToList();
             }
         }
 
-        public Semester DeleteSemester(int id)
+        /*public List<Semester> DeleteSemester(int id)
         {
             using (db = new MyTimeWizDatabaseEntities1())
             {
-                var semester = db.Semesters.Where(s => s.Semester_Id == id).SingleOrDefault();
+                var semester = db.Semesters.Where(s => s.Semester_Id == id).ToList();
+                
+                if (semester.Count > 0)
+                {
+                    db.Semesters.RemoveRange(semester);
+                    db.SaveChanges();
+                   
+                }
+                
+                    return semester;
+                
+            }
+        }*/
+        public Semester DeleteSemester(int id)
+        {
+            using (var db = new MyTimeWizDatabaseEntities2())
+            {
+                var semester = db.Semesters.Find(id);
                 if (semester != null)
                 {
+                    // Find modules that reference the semester and set their Semester_Id to null.
+                    var modulesReferencingSemester = db.ModuleTables.Where(m => m.Semester_Id == id);
+                    foreach (var module in modulesReferencingSemester)
+                    {
+                        module.Semester_Id = 0;
+                    }
+
                     db.Semesters.Remove(semester);
                     db.SaveChanges();
                     return semester;
@@ -234,5 +258,6 @@ namespace TimeWiz.Classes
                 }
             }
         }
+
     }
 }

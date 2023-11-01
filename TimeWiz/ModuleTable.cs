@@ -14,12 +14,6 @@ namespace TimeWiz
     
     public partial class ModuleTable
     {
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
-        public ModuleTable()
-        {
-            this.StudyTables = new HashSet<StudyTable>();
-        }
-    
         public int Module_Id { get; set; }
         public string Name { get; set; }
         public string Code { get; set; }
@@ -27,9 +21,11 @@ namespace TimeWiz
         public int Semester_Id { get; set; }
         public Nullable<int> ClassHoursPerWeek { get; set; }
         public Nullable<int> SelfStudyHours { get; set; }
+        public Nullable<int> RemainingWeekHours { get; set; }
+        public Nullable<int> ProgressBarPercentage { get; set; }
+        public Nullable<System.DateTime> StudyDate { get; set; }
+        public Nullable<int> StudiedHours { get; set; }
     
         public virtual Semester Semester { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<StudyTable> StudyTables { get; set; }
     }
 }

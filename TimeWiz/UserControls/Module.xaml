@@ -13,6 +13,8 @@
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
 
+        <Label x:Name="lblView" Foreground="DarkCyan" Content="ADD DETAILS" FontSize="25" FontWeight="Bold"  Margin="0,10,70,0" VerticalAlignment="Top" Height="38" HorizontalAlignment="Right" Width="188"/>
+
         <!-- Semester number-->
         <Label x:Name="lblSemester" FontFamily="Calibri" Content="Semester Number :" HorizontalAlignment="Left" Margin="38,15,0,0" VerticalAlignment="Top"/>
         <TextBox x:Name="txtSemester" HorizontalAlignment="Left" Margin="215,19,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120"/>
@@ -49,7 +51,7 @@
         <DatePicker x:Name="txtStartDate"  HorizontalAlignment="Left" Margin="215,95,0,0" VerticalAlignment="Top" Width="120"/>
 
         <!-- button to save semester-->
-        <Button x:Name="btnSaveSemester" FontFamily="Calibri" Content="Save Semester" HorizontalAlignment="Left" Margin="211,158,0,0" VerticalAlignment="Top" Width="138" Background="#FFB5FF6F" Click="btnSaveSemester_Click">
+        <Button x:Name="btnSaveSemester" FontFamily="Calibri" Content="Add Semester" HorizontalAlignment="Left" Margin="211,158,0,0" VerticalAlignment="Top" Width="138" Background="#FFB5FF6F" Click="btnSaveSemester_Click">
             <Button.Effect>
                 <DropShadowEffect Color="#FF0CFF00" Opacity="0.45"/>
             </Button.Effect>

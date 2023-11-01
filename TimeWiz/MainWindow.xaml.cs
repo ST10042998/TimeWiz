@@ -122,6 +122,21 @@ namespace TimeWiz
         {
             NavigateToUserControl(new UserControls.Module(study,cal, semesters));
         }
+
+        //----------------------------------------------------------------------------------------------------------------------------------------------------------
+
+        /// <summary>
+        /// creating new instance of study
+        /// </summary>
+        public void NavigateToAddStudy()
+        {
+            NavigateToUserControl(new UserControls.Study(study));
+        }
+
+        public void NavigateToView()
+        {
+            NavigateToUserControl(new UserControls.View(study));
+        }
     }
 }
 //-----------------------------------------------------------------------------------------------------------------------------------------------------END..Eugene*

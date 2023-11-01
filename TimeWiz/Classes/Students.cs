@@ -10,7 +10,7 @@ namespace TimeWiz.Classes
     public class Students
     {
 
-        private MyTimeWizDatabaseEntities1 db = new MyTimeWizDatabaseEntities1();
+        private MyTimeWizDatabaseEntities2 db = new MyTimeWizDatabaseEntities2();
 
         private Student student = new Student();
 

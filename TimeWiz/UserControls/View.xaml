@@ -18,7 +18,7 @@
             <!-- Defining columns -->
             <DataGrid.Columns>
                 <DataGridTextColumn Header="Semester" Width="0.8*" Binding="{Binding SemesterNum}"/>
-                <DataGridTextColumn Header="Number of Weeks" Width="0.8*" Binding="{Binding NumberOfWeeks}"/>
+                <DataGridTextColumn Header="Number of Weeks" Width="0.8*" Binding="{Binding NumOfWeeks}"/>
                 <DataGridTextColumn Header="Start Date" Width="1*" Binding="{Binding StartDate}"/>
                 <DataGridTextColumn Header="End Date" Width="1*" Binding="{Binding EndDate}"/>
             </DataGrid.Columns>
@@ -32,6 +32,7 @@
                 <DataGridTextColumn Header="Module Name"  Width="1.2*" Binding="{Binding Name}"/>
                 <DataGridTextColumn Header="Module Code" Width="0.8*" Binding="{Binding Code}"/>
                 <DataGridTextColumn Header="Credits" Width="0.6*" Binding="{Binding Credits}"/>
+
                 <DataGridTextColumn Header="ClassHoursPerWeek" Width="1*" Binding="{Binding ClassHoursPerWeek}"/>
                 <DataGridTextColumn Header="Selfstudy Hours" Width="0.9*" Binding="{Binding SelfStudyHours}"/>
                 <DataGridTextColumn Header="RemainingHours" Width="*" Binding="{Binding RemainingWeekHours}"/>
@@ -42,7 +43,7 @@
                         <DataTemplate>
                             <!-- Define the progress bar here -->
                             <ProgressBar Foreground="Green"  Minimum="0"
-                                         Maximum="100" Value="{Binding Progressbar}" Width="100"/>
+                                         Maximum="100" Value="{Binding ProgressBarPercentage}" Width="100"/>
 
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
@@ -62,6 +63,7 @@
             </StackPanel>
         </Button>
         <Label x:Name="lblWeek" Foreground="Magenta" FontSize="21" HorizontalAlignment="Left" Margin="38,113,0,0" VerticalAlignment="Top" Height="31" Width="109"/>
+        <Label x:Name="lblView" Foreground="DarkCyan" Content="VIEW" FontSize="25" FontWeight="Bold"  Margin="0,10,24,0" VerticalAlignment="Top" Height="38" HorizontalAlignment="Right" Width="75"/>
 
     </Grid>
 
