@@ -75,8 +75,10 @@
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Data" />
+    <Reference Include="System.Drawing" />
     <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.Security" />
+    <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Core" />
@@ -95,32 +97,46 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Classes\Logins.cs" />
     <Compile Include="Classes\ModuleTables.cs" />
     <Compile Include="Classes\Semesters.cs" />
     <Compile Include="Classes\Students.cs" />
+    <Compile Include="Login.cs">
+      <DependentUpon>MyTimeWizModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="LoginAndRegister\Login.xaml.cs">
+      <DependentUpon>Login.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="LoginAndRegister\MyLogin.xaml.cs">
+      <DependentUpon>MyLogin.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="LoginAndRegister\MyLoginWorker.cs" />
+    <Compile Include="LoginAndRegister\MyRegister.xaml.cs">
+      <DependentUpon>MyRegister.xaml</DependentUpon>
+    </Compile>
     <Compile Include="ModuleTable.cs">
-      <DependentUpon>MyTimeWIzModel.tt</DependentUpon>
+      <DependentUpon>MyTimeWizModel.tt</DependentUpon>
     </Compile>
-    <Compile Include="MyTimeWIzModel.Context.cs">
+    <Compile Include="MyTimeWizModel.Context.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
-      <DependentUpon>MyTimeWIzModel.Context.tt</DependentUpon>
+      <DependentUpon>MyTimeWizModel.Context.tt</DependentUpon>
     </Compile>
-    <Compile Include="MyTimeWIzModel.cs">
+    <Compile Include="MyTimeWizModel.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
-      <DependentUpon>MyTimeWIzModel.tt</DependentUpon>
+      <DependentUpon>MyTimeWizModel.tt</DependentUpon>
     </Compile>
-    <Compile Include="MyTimeWIzModel.Designer.cs">
+    <Compile Include="MyTimeWizModel.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
-      <DependentUpon>MyTimeWIzModel.edmx</DependentUpon>
+      <DependentUpon>MyTimeWizModel.edmx</DependentUpon>
     </Compile>
     <Compile Include="Semester.cs">
-      <DependentUpon>MyTimeWIzModel.tt</DependentUpon>
+      <DependentUpon>MyTimeWizModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Student.cs">
-      <DependentUpon>MyTimeWIzModel.tt</DependentUpon>
+      <DependentUpon>MyTimeWizModel.tt</DependentUpon>
     </Compile>
     <Compile Include="UserControls\Home.xaml.cs">
       <DependentUpon>Home.xaml</DependentUpon>
@@ -134,6 +150,18 @@
     <Compile Include="UserControls\View.xaml.cs">
       <DependentUpon>View.xaml</DependentUpon>
     </Compile>
+    <Page Include="LoginAndRegister\Login.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="LoginAndRegister\MyLogin.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="LoginAndRegister\MyRegister.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -181,12 +209,12 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
-    <EntityDeploy Include="MyTimeWIzModel.edmx">
+    <EntityDeploy Include="MyTimeWizModel.edmx">
       <Generator>EntityModelCodeGenerator</Generator>
-      <LastGenOutput>MyTimeWIzModel.Designer.cs</LastGenOutput>
+      <LastGenOutput>MyTimeWizModel.Designer.cs</LastGenOutput>
     </EntityDeploy>
-    <None Include="MyTimeWIzModel.edmx.diagram">
-      <DependentUpon>MyTimeWIzModel.edmx</DependentUpon>
+    <None Include="MyTimeWizModel.edmx.diagram">
+      <DependentUpon>MyTimeWizModel.edmx</DependentUpon>
     </None>
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
@@ -237,6 +265,17 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="MyTimeWizModel.Context.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <DependentUpon>MyTimeWizModel.edmx</DependentUpon>
+      <LastGenOutput>MyTimeWizModel.Context.cs</LastGenOutput>
+    </Content>
+    <Content Include="MyTimeWizModel.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <DependentUpon>MyTimeWizModel.edmx</DependentUpon>
+      <LastGenOutput>MyTimeWizModel.cs</LastGenOutput>
+    </Content>
+    <Resource Include="Icons\TimeWiz4.png" />
     <Content Include="MyTimeWizDatabase.mdf">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
@@ -244,22 +283,10 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       <DependentUpon>MyTimeWizDatabase.mdf</DependentUpon>
     </Content>
-    <Content Include="MyTimeWIzModel.Context.tt">
-      <Generator>TextTemplatingFileGenerator</Generator>
-      <DependentUpon>MyTimeWIzModel.edmx</DependentUpon>
-      <LastGenOutput>MyTimeWIzModel.Context.cs</LastGenOutput>
-    </Content>
-    <Content Include="MyTimeWIzModel.tt">
-      <Generator>TextTemplatingFileGenerator</Generator>
-      <DependentUpon>MyTimeWIzModel.edmx</DependentUpon>
-      <LastGenOutput>MyTimeWIzModel.cs</LastGenOutput>
-    </Content>
   </ItemGroup>
   <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="LoginAndRegister\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

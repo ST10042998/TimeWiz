@@ -17,7 +17,7 @@ namespace TimeWiz.Classes
     public class ModuleTables: DbContext
     {
 
-        private MyTimeWizDatabaseEntities2 db = new MyTimeWizDatabaseEntities2();
+        private MyTimeWizDatabaseEntity db = new MyTimeWizDatabaseEntity();
 
         private ModuleTable module = new ModuleTable();
         public DbSet<ModuleTable> mod { get; set; }
@@ -177,7 +177,7 @@ namespace TimeWiz.Classes
             }
             catch (Exception e)
             {
-                throw;
+                
                 MessageBox.Show(e.Message);
             }
 
@@ -187,7 +187,7 @@ namespace TimeWiz.Classes
         
         public ModuleTable UpdateModule(int id,string name, string code, int credits,int semester_id,int classHours, int selfHours, int remainingHours,int Progressbar, DateTime date, int studiedHrs)
         {
-            using (db = new MyTimeWizDatabaseEntities2())
+            using (db = new MyTimeWizDatabaseEntity())
             {
 
 
@@ -217,7 +217,7 @@ namespace TimeWiz.Classes
 
         public ModuleTable UpdateStudyModule(int id, int remainingHours, int Progressbar, DateTime date,int studiedHrs)
         {
-            using (db = new MyTimeWizDatabaseEntities2())
+            using (db = new MyTimeWizDatabaseEntity())
             {
 
 
@@ -242,7 +242,7 @@ namespace TimeWiz.Classes
 
         public int GetStudiedHours(int id)
         {
-            using (db = new MyTimeWizDatabaseEntities2())
+            using (db = new MyTimeWizDatabaseEntity())
             {
                 var module = db.ModuleTables.Where(m => m.Module_Id == id).SingleOrDefault();
                 if (module != null)
@@ -259,7 +259,7 @@ namespace TimeWiz.Classes
 
         public List<ModuleTable> GetModuleByCode(string code)
         {
-            using (db = new MyTimeWizDatabaseEntities2())
+            using (db = new MyTimeWizDatabaseEntity())
             {
                 var module = db.ModuleTables.Where(m => m.Code == code).ToList();
                 if (module != null)
@@ -274,7 +274,7 @@ namespace TimeWiz.Classes
         }
         public List<ModuleTable> GetAllModules(Semester semester)
         {
-            using (db = new MyTimeWizDatabaseEntities2())
+            using (db = new MyTimeWizDatabaseEntity())
             {
                 var modules = db.ModuleTables.Where(m => m.Semester_Id == semester.Semester_Id).ToList();
                 return modules;
@@ -284,7 +284,7 @@ namespace TimeWiz.Classes
 
         public List <ModuleTable> DeleteModuleBySemesterId(int id)
         {
-            using (db = new MyTimeWizDatabaseEntities2())
+            using (db = new MyTimeWizDatabaseEntity())
             {
                 var module = db.ModuleTables.Where(m => m.Semester_Id == id).ToList();
                 if (module.Count > 0)

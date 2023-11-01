@@ -206,7 +206,7 @@ namespace TimeWiz.UserControls
         /// <returns></returns>
         public ModuleTable FindModuleByCode(string code)
         {
-            using (var db = new MyTimeWizDatabaseEntities2())
+            using (var db = new MyTimeWizDatabaseEntity())
             {
                 var module = db.ModuleTables.Where(m => m.Code == code).First();
                 return module;

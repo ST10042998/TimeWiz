@@ -51,6 +51,7 @@
   <ItemGroup>
     <Compile Include="CalculationClass.cs" />
     <Compile Include="SemesterDataClass.cs" />
+    <Compile Include="StudentClass.cs" />
     <Compile Include="StudyClass.cs" />
     <Compile Include="ModuleClass.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

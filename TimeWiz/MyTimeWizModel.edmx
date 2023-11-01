@@ -4,7 +4,16 @@
   <edmx:Runtime>
     <!-- SSDL content -->
     <edmx:StorageModels>
-    <Schema Namespace="MyTimeWizDatabaseModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+      <Schema Namespace="MyTimeWizDatabaseModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="Login">
+          <Key>
+            <PropertyRef Name="Login_Id" />
+          </Key>
+          <Property Name="Login_Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="UserName" Type="varchar(max)" Nullable="false" />
+          <Property Name="Password" Type="varchar(max)" Nullable="false" />
+          <Property Name="Student_Id" Type="int" />
+        </EntityType>
         <EntityType Name="ModuleTable">
           <Key>
             <PropertyRef Name="Module_Id" />
@@ -41,6 +50,18 @@
           <Property Name="Email" Type="varchar(max)" Nullable="false" />
           <Property Name="Gender" Type="varchar" MaxLength="50" Nullable="false" />
         </EntityType>
+        <Association Name="FK_Login_Student">
+          <End Role="Student" Type="Self.Student" Multiplicity="0..1" />
+          <End Role="Login" Type="Self.Login" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Student">
+              <PropertyRef Name="Student_Id" />
+            </Principal>
+            <Dependent Role="Login">
+              <PropertyRef Name="Student_Id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK_ModuleTable_Semester">
           <End Role="Semester" Type="Self.Semester" Multiplicity="1" />
           <End Role="ModuleTable" Type="Self.ModuleTable" Multiplicity="*" />
@@ -54,18 +75,34 @@
           </ReferentialConstraint>
         </Association>
         <EntityContainer Name="MyTimeWizDatabaseModelStoreContainer">
+          <EntitySet Name="Login" EntityType="Self.Login" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="ModuleTable" EntityType="Self.ModuleTable" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Semester" EntityType="Self.Semester" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Student" EntityType="Self.Student" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="FK_Login_Student" Association="Self.FK_Login_Student">
+            <End Role="Student" EntitySet="Student" />
+            <End Role="Login" EntitySet="Login" />
+          </AssociationSet>
           <AssociationSet Name="FK_ModuleTable_Semester" Association="Self.FK_ModuleTable_Semester">
             <End Role="Semester" EntitySet="Semester" />
             <End Role="ModuleTable" EntitySet="ModuleTable" />
           </AssociationSet>
         </EntityContainer>
-      </Schema></edmx:StorageModels>
+      </Schema>
+    </edmx:StorageModels>
     <!-- CSDL content -->
     <edmx:ConceptualModels>
       <Schema Namespace="MyTimeWizDatabaseModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="Login">
+          <Key>
+            <PropertyRef Name="Login_Id" />
+          </Key>
+          <Property Name="Login_Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="UserName" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="Password" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="Student_Id" Type="Int32" />
+          <NavigationProperty Name="Student" Relationship="Self.FK_Login_Student" FromRole="Login" ToRole="Student" />
+        </EntityType>
         <EntityType Name="ModuleTable">
           <Key>
             <PropertyRef Name="Module_Id" />
@@ -80,8 +117,8 @@
           <Property Name="RemainingWeekHours" Type="Int32" />
           <Property Name="ProgressBarPercentage" Type="Int32" />
           <Property Name="StudyDate" Type="DateTime" Precision="3" />
-          <NavigationProperty Name="Semester" Relationship="Self.FK_ModuleTable_Semester" FromRole="ModuleTable" ToRole="Semester" />
           <Property Name="StudiedHours" Type="Int32" />
+          <NavigationProperty Name="Semester" Relationship="Self.FK_ModuleTable_Semester" FromRole="ModuleTable" ToRole="Semester" />
         </EntityType>
         <EntityType Name="Semester">
           <Key>
@@ -103,7 +140,20 @@
           <Property Name="Surname" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" Nullable="false" />
           <Property Name="Email" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" Nullable="false" />
           <Property Name="Gender" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <NavigationProperty Name="Logins" Relationship="Self.FK_Login_Student" FromRole="Student" ToRole="Login" />
         </EntityType>
+        <Association Name="FK_Login_Student">
+          <End Role="Student" Type="Self.Student" Multiplicity="0..1" />
+          <End Role="Login" Type="Self.Login" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Student">
+              <PropertyRef Name="Student_Id" />
+            </Principal>
+            <Dependent Role="Login">
+              <PropertyRef Name="Student_Id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK_ModuleTable_Semester">
           <End Role="Semester" Type="Self.Semester" Multiplicity="1" />
           <End Role="ModuleTable" Type="Self.ModuleTable" Multiplicity="*" />
@@ -116,10 +166,15 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <EntityContainer Name="MyTimeWizDatabaseEntities2" annotation:LazyLoadingEnabled="true">
+        <EntityContainer Name="MyTimeWizDatabaseEntity" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="Logins" EntityType="Self.Login" />
           <EntitySet Name="ModuleTables" EntityType="Self.ModuleTable" />
           <EntitySet Name="Semesters" EntityType="Self.Semester" />
           <EntitySet Name="Students" EntityType="Self.Student" />
+          <AssociationSet Name="FK_Login_Student" Association="Self.FK_Login_Student">
+            <End Role="Student" EntitySet="Students" />
+            <End Role="Login" EntitySet="Logins" />
+          </AssociationSet>
           <AssociationSet Name="FK_ModuleTable_Semester" Association="Self.FK_ModuleTable_Semester">
             <End Role="Semester" EntitySet="Semesters" />
             <End Role="ModuleTable" EntitySet="ModuleTables" />
@@ -130,11 +185,20 @@
     <!-- C-S mapping content -->
     <edmx:Mappings>
       <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
-        <EntityContainerMapping StorageEntityContainer="MyTimeWizDatabaseModelStoreContainer" CdmEntityContainer="MyTimeWizDatabaseEntities2">
+        <EntityContainerMapping StorageEntityContainer="MyTimeWizDatabaseModelStoreContainer" CdmEntityContainer="MyTimeWizDatabaseEntity">
+          <EntitySetMapping Name="Logins">
+            <EntityTypeMapping TypeName="MyTimeWizDatabaseModel.Login">
+              <MappingFragment StoreEntitySet="Login">
+                <ScalarProperty Name="Login_Id" ColumnName="Login_Id" />
+                <ScalarProperty Name="UserName" ColumnName="UserName" />
+                <ScalarProperty Name="Password" ColumnName="Password" />
+                <ScalarProperty Name="Student_Id" ColumnName="Student_Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
           <EntitySetMapping Name="ModuleTables">
             <EntityTypeMapping TypeName="MyTimeWizDatabaseModel.ModuleTable">
               <MappingFragment StoreEntitySet="ModuleTable">
-                <ScalarProperty Name="StudiedHours" ColumnName="StudiedHours" />
                 <ScalarProperty Name="Module_Id" ColumnName="Module_Id" />
                 <ScalarProperty Name="Name" ColumnName="Name" />
                 <ScalarProperty Name="Code" ColumnName="Code" />
@@ -145,6 +209,7 @@
                 <ScalarProperty Name="RemainingWeekHours" ColumnName="RemainingWeekHours" />
                 <ScalarProperty Name="ProgressBarPercentage" ColumnName="ProgressBarPercentage" />
                 <ScalarProperty Name="StudyDate" ColumnName="StudyDate" />
+                <ScalarProperty Name="StudiedHours" ColumnName="StudiedHours" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

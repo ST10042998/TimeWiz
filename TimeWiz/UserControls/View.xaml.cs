@@ -91,7 +91,7 @@ namespace TimeWiz.UserControls
         private Semester FindSemesterByNum(string num)
         {
           
-            using (var db = new MyTimeWizDatabaseEntities2())
+            using (var db = new MyTimeWizDatabaseEntity())
             {
                 var semester = db.Semesters.Where(s => s.SemesterNum.ToString() == num).First();
                 return semester;

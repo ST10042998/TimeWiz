@@ -1,0 +1,94 @@
+﻿<UserControl x:Class="TimeWiz.LoginAndRegister.MyRegister"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:TimeWiz.LoginAndRegister"
+             
+    mc:Ignorable="d" 
+             d:DesignHeight="450"   Width="606.5" Background="White">
+    <Grid Width="586" Height="450" VerticalAlignment="Top" HorizontalAlignment="Right" Margin="0,0,10,0">
+        <Grid Margin="10,0" Height="304" VerticalAlignment="Top">
+            <Grid.ColumnDefinitions >
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="2*"/>
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition/>
+                <RowDefinition/>
+                <RowDefinition/>
+                <RowDefinition/>
+                <RowDefinition/>
+                <RowDefinition/>
+            </Grid.RowDefinitions>
+
+            <Label x:Name="lblName" Content="Name" HorizontalAlignment="Left" Grid.Row="0" VerticalAlignment="Center" Margin="70,12,0,13"/>
+            <Label x:Name="lblSurname" Content="Surname" HorizontalAlignment="Left" Grid.Row="1" VerticalAlignment="Center" Margin="70,0,0,0"/>
+            <Label x:Name="lblEmail" Content="Email" HorizontalAlignment="Left" Grid.Row="2" VerticalAlignment="Center" Margin="70,0,0,0"/>
+            <Label x:Name="lblGender" Content="Gender" HorizontalAlignment="Left" Grid.Row="3" VerticalAlignment="Center" Margin="70,0,0,0"/>
+            <Label x:Name="lblUsername" Content="UserName" HorizontalAlignment="Left" Grid.Row="4"  VerticalAlignment="Center" Margin="70,0,0,0"/>
+            <Label x:Name="lblPassword" Content="Password" HorizontalAlignment="Left" Grid.Row="5"  VerticalAlignment="Center"  Margin="70,0,0,0"/>
+
+
+            <RadioButton x:Name="radioMale" Content="Male" Grid.Column="1" HorizontalAlignment="Left" Margin="0,20,0,18" Grid.Row="3" VerticalAlignment="Center"/>
+            <RadioButton x:Name="radioFemale" Content="Female" Grid.Column="1" HorizontalAlignment="Left" Margin="107,20,0,16" Grid.Row="3" VerticalAlignment="Center"/>
+
+            <TextBox x:Name="txtName" BorderThickness="0,0,0,1" Grid.Column="1" HorizontalAlignment="Left" Height="23" Grid.Row="0" TextWrapping="Wrap"  VerticalAlignment="Center" Width="175" Margin="0,14"/>
+
+            <TextBox x:Name="txtSurname"  BorderThickness="0,0,0,1" Grid.Column="1" HorizontalAlignment="Left" Height="23" Grid.Row="1" TextWrapping="Wrap" VerticalAlignment="Center" Width="175" Margin="0,14"/>
+
+            <TextBox x:Name="txtEmail"  BorderThickness="0,0,0,1"  Grid.Column="1" HorizontalAlignment="Left" Height="23" Grid.Row="2" TextWrapping="Wrap" VerticalAlignment="Center" Width="173" Margin="0,14"/>
+
+            <TextBox x:Name="txtUsername"  BorderThickness="0,0,0,1"  Grid.Column="1" HorizontalAlignment="Left" Height="22" Grid.Row="4" TextWrapping="Wrap" VerticalAlignment="Center" Width="175" Margin="0,14"/>
+
+            <PasswordBox x:Name="pwBox"  BorderThickness="0,0,0,1" Grid.Column="1" HorizontalAlignment="Left"  Grid.Row="5" VerticalAlignment="Center" Width="175" Margin="0,16"/>
+        </Grid>
+        <Button x:Name="SaveBtn" Content="Save"  HorizontalAlignment="Left" Margin="302,349,0,0" VerticalAlignment="Top" Width="92" Height="23" Foreground="White" Background="ForestGreen" Click="SaveBtn_Click">
+            <Button.Style>
+                <Style TargetType="Button">
+                    <Setter Property="Template">
+                        <Setter.Value>
+                            <ControlTemplate TargetType="{x:Type Button}">
+                                <Border x:Name="LoginBorder" Background="{TemplateBinding Background}"
+                                            CornerRadius="16">
+                                    <ContentPresenter HorizontalAlignment="Center" 
+                                                          VerticalAlignment="Center"/>
+                                </Border>
+                                <ControlTemplate.Triggers>
+                                    <Trigger Property="IsMouseOver" Value="True">
+                                        <Setter Property="Background" Value="AliceBlue" TargetName="LoginBorder"  />
+                                        <Setter Property="TextBlock.Foreground" Value="Black"  TargetName="LoginBorder" />
+                                    </Trigger>
+                                </ControlTemplate.Triggers>
+                            </ControlTemplate>
+                        </Setter.Value>
+                    </Setter>
+                </Style>
+            </Button.Style>
+        </Button>
+        <Button x:Name="CancelBtn" Content="Cancel" HorizontalAlignment="Left" Margin="145,349,0,0" VerticalAlignment="Top" Width="92" Height="23" Foreground="White" Background="Red">
+            <Button.Style>
+                <Style TargetType="Button">
+                    <Setter Property="Template">
+                        <Setter.Value>
+                            <ControlTemplate TargetType="{x:Type Button}">
+                                <Border x:Name="LoginBorder" Background="{TemplateBinding Background}"
+                                            CornerRadius="16">
+                                    <ContentPresenter HorizontalAlignment="Center" 
+                                                          VerticalAlignment="Center"/>
+                                </Border>
+                                <ControlTemplate.Triggers>
+                                    <Trigger Property="IsMouseOver" Value="True">
+                                        <Setter Property="Background" Value="AliceBlue" TargetName="LoginBorder"  />
+                                        <Setter Property="TextBlock.Foreground" Value="Black"  TargetName="LoginBorder" />
+                                    </Trigger>
+                                </ControlTemplate.Triggers>
+                            </ControlTemplate>
+                        </Setter.Value>
+                    </Setter>
+                </Style>
+            </Button.Style>
+        </Button>
+
+    </Grid>
+</UserControl>
