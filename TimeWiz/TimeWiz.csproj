@@ -104,8 +104,8 @@
     <Compile Include="Login.cs">
       <DependentUpon>MyTimeWizModel.tt</DependentUpon>
     </Compile>
-    <Compile Include="LoginAndRegister\Login.xaml.cs">
-      <DependentUpon>Login.xaml</DependentUpon>
+    <Compile Include="LoginAndRegister\LoginWindow.xaml.cs">
+      <DependentUpon>LoginWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="LoginAndRegister\MyLogin.xaml.cs">
       <DependentUpon>MyLogin.xaml</DependentUpon>
@@ -150,7 +150,7 @@
     <Compile Include="UserControls\View.xaml.cs">
       <DependentUpon>View.xaml</DependentUpon>
     </Compile>
-    <Page Include="LoginAndRegister\Login.xaml">
+    <Page Include="LoginAndRegister\LoginWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

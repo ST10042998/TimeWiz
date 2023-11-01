@@ -14,6 +14,7 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using MyTimeWizClassLib;
 using TimeWiz.Classes;
+using TimeWiz.LoginAndRegister;
 
 namespace TimeWiz
 {
@@ -26,8 +27,12 @@ namespace TimeWiz
         private StudyClass study;
         private CalculationClass cal;
         private  Semesters semesters;
+        
+              
+         
         public MainWindow()
         {
+           
             InitializeComponent();
             study = new StudyClass();
             cal = new CalculationClass();
@@ -84,7 +89,11 @@ namespace TimeWiz
         /// <param name="e"></param>
         private void ExitBtn_Click(object sender, RoutedEventArgs e)
         {
-            Application.Current.Shutdown();
+           Application.Current.Shutdown();
+           LoginWindow loginWindow = new LoginWindow();
+           loginWindow.Window_Closing();
+           
+           
         }
 
         //--------------------------------------------------------------------------------------------------------------------------------------------------------

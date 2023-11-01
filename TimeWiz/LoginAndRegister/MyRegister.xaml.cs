@@ -48,6 +48,23 @@ namespace TimeWiz.LoginAndRegister
             MessageBox.Show($"{student.Gender}");
 
             loginWorker.AddStudent(student.Name,student.Surname,student.Email,student.Gender,student.UserName,student.Password);
+
+            if(loginWorker.CheckPassword(student.Password) == true)
+            {
+                this.navigateToLogin();
+            }
+            else
+            {
+               pwBox.Clear();
+            }
+        }
+
+        private void navigateToLogin()
+        {
+            if (Window.GetWindow(this) is LoginWindow mainWindow)
+            {
+                mainWindow.NavigateToLogin();
+            }
         }
     }
 }

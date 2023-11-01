@@ -21,6 +21,7 @@ namespace TimeWiz.LoginAndRegister
     public partial class MyLogin : UserControl
     {
         MyLoginWorker loginWorker = new MyLoginWorker();
+        bool isLogin = false;
         public MyLogin()
         {
             InitializeComponent();
@@ -30,7 +31,7 @@ namespace TimeWiz.LoginAndRegister
         private void txtblkSignUp_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
             // Call the NavigateToRegister method of the LoginWindow
-            if (Window.GetWindow(this) is Login mainWindow)
+            if (Window.GetWindow(this) is LoginWindow mainWindow)
             {
                 mainWindow.NavigateToRegister();
             }
@@ -48,12 +49,26 @@ namespace TimeWiz.LoginAndRegister
           if (loginWorker.Login(txtUsername.Text, pwBox.Password.ToString()))
             {
                 MessageBox.Show("Login Successful");
+                isLogin = true;
+                this.LogToApp();
             }
             else
             {
                 MessageBox.Show("Login Failed");
                 txtUsername.Clear();
                 pwBox.Clear();
+                isLogin = false;
+            }
+        }
+
+        private void LogToApp()
+        {   
+            if (isLogin)
+            {
+                if (Window.GetWindow(this) is LoginWindow mainWindow)
+                {
+                    mainWindow.NavigateToApp();
+                }
             }
         }
     }

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -15,11 +16,11 @@ using System.Windows.Shapes;
 namespace TimeWiz.LoginAndRegister
 {
     /// <summary>
-    /// Interaction logic for Login.xaml
+    /// Interaction logic for LoginWindow.xaml
     /// </summary>
-    public partial class Login : Window
+    public partial class LoginWindow : Window
     {
-        public Login()
+        public LoginWindow()
         {
             InitializeComponent();
             this.NavigateToLogin();
@@ -38,6 +39,8 @@ namespace TimeWiz.LoginAndRegister
             MainInput.Content = userControl;
 
         }
+
+
 
         //----------------------------------------------------------------------------------------------------------------------------------------------------------
 
@@ -58,6 +61,42 @@ namespace TimeWiz.LoginAndRegister
         {
             NavigateToUserControl(new MyRegister());
         }
+
+        public void NavigateToApp()
+        {
+
+            try
+            {
+                Thread newWindowThread = new Thread(new ThreadStart(ThreadStartingPoint));
+                newWindowThread.SetApartmentState(ApartmentState.STA);
+                newWindowThread.IsBackground = true;
+                newWindowThread.Start();
+            }
+            catch (Exception ex)
+            {
+                // logging it  
+            }
+        }
+
+        private void ThreadStartingPoint()
+        {
+            try
+            {
+                MainWindow main = new MainWindow();
+                main.Show();
+                System.Windows.Threading.Dispatcher.Run();
+            }
+            catch (Exception ex)
+            {
+                // logging it  
+            }
+
+        }
+
+        public void Window_Closing()
+        {
+            LoginWindow lw = new LoginWindow();
+            lw.Close();
+        }
     }
 }
-

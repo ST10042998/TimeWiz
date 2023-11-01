@@ -11,6 +11,7 @@
         <EntityTypeShape EntityType="MyTimeWizDatabaseModel.Student" Width="1.5" PointX="0.75" PointY="0.875" IsExpanded="true" />
         <AssociationConnector Association="MyTimeWizDatabaseModel.FK_Login_Student" ManuallyRouted="false" />
         <AssociationConnector Association="MyTimeWizDatabaseModel.FK_ModuleTable_Semester" ManuallyRouted="false" />
+        <AssociationConnector Association="MyTimeWizDatabaseModel.FK_Student_Semester" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

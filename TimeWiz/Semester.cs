@@ -18,6 +18,7 @@ namespace TimeWiz
         public Semester()
         {
             this.ModuleTables = new HashSet<ModuleTable>();
+            this.Students = new HashSet<Student>();
         }
     
         public int Semester_Id { get; set; }
@@ -28,5 +29,7 @@ namespace TimeWiz
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<ModuleTable> ModuleTables { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<Student> Students { get; set; }
     }
 }

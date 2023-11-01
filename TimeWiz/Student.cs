@@ -25,8 +25,10 @@ namespace TimeWiz
         public string Surname { get; set; }
         public string Email { get; set; }
         public string Gender { get; set; }
+        public int Semester_Id { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Login> Logins { get; set; }
+        public virtual Semester Semester { get; set; }
     }
 }
