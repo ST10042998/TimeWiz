@@ -66,7 +66,7 @@ namespace TimeWiz.LoginAndRegister
 
         private void LoginBtn_Click(object sender, RoutedEventArgs e)
         {
-            loginInfos.DeleteLoginInfo();
+            
             
             if (loginWorker.Login(txtUsername.Text, pwBox.Password.ToString()))
             {

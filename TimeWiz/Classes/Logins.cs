@@ -87,11 +87,11 @@ namespace TimeWiz.Classes
                         cmd.Parameters.AddWithValue("@UserName", username);
                         cmd.Parameters.AddWithValue("@Password", password);
 
-                        int Login_id = Convert.ToInt32(cmd.ExecuteScalar()); // Get the newly inserted module's ID
+                        int Login_id = Convert.ToInt32(cmd.ExecuteScalar()); // Get the newly inserted login ID
 
                         if (Login_id > 0)
                         {
-                            // If a module was successfully inserted, return its details
+                            // If a login was successfully inserted, return its details
                             return new Login
                             {
                                 

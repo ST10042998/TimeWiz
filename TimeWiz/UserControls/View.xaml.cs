@@ -144,7 +144,7 @@ namespace TimeWiz.UserControls
                     MessageBox.Show("Invalid selection. Please choose a valid semester.", "Error", MessageBoxButton.OK, MessageBoxImage.Warning);
                 }
             }
-        
+
 
         /// <summary>
         /// deleting a semester (button click event)
@@ -153,47 +153,50 @@ namespace TimeWiz.UserControls
         /// <param name="e"></param>
         private void btnDelete_Click(object sender, RoutedEventArgs e)
         {
-
             // Retrieve the selected item (ComboBoxItem) from the ComboBox
             ComboBoxItem selectedComboBoxItem = cmBoxSemest.SelectedItem as ComboBoxItem;
 
             if (selectedComboBoxItem != null)
             {
                 // Retrieve the semester object from the ComboBox item's Tag
-                Semester Studysemester = selectedComboBoxItem.Tag as Semester;
+                Semester studySemester = selectedComboBoxItem.Tag as Semester;
 
-                if (Studysemester != null)
+                if (studySemester != null)
                 {
-                    var option = MessageBox.Show($"Are you sure you want to delete semester {Studysemester.SemesterNum}","Delete",MessageBoxButton.YesNo,MessageBoxImage.Warning);
-                   if( option == MessageBoxResult.Yes)
-                   {
-                        //deleting data from database
+                    var option = MessageBox.Show($"Are you sure you want to delete semester {studySemester.SemesterNum}", "Delete", MessageBoxButton.YesNo, MessageBoxImage.Warning);
+                    if (option == MessageBoxResult.Yes)
+                    {
+                        // Delete the semester and associated modules
+
+                        Semester deletedSemester = semester.DeleteSemesterAdo(studySemester.Semester_Id);
                        
-                        module.DeleteModuleBySemesterId(Studysemester.Semester_Id);
-
-                        semester.DeleteSemester(Studysemester.Semester_Id);
-
-
-                        this.lblWeek.Content =string.Empty;
-
-                        //refreshing my datagrids after deleting semester
-                        Dispatcher.Invoke(() =>
+                        if (deletedSemester != null)
                         {
-                            DatagrdViewSem.ItemsSource = null;
-                            DatagrdViewSem.Items.Refresh();
-                            DatagrdViewModule.ItemsSource = null;
-                            DatagrdViewModule.Items.Refresh();
-                        });
-                        
-                        MessageBox.Show($"Successfully deleted semester", "Delete", MessageBoxButton.OK, MessageBoxImage.Information);
+                            this.lblWeek.Content = string.Empty;
 
-                        // Remove the selected ComboBoxItem from the ComboBox
-                        cmBoxSemest.Items.Remove(selectedComboBoxItem);
-                        cmBoxSemest.SelectedItem = null;
-                   }
+                            // Refreshing your data grids after deleting semester
+                            Dispatcher.Invoke(() =>
+                            {
+                                DatagrdViewSem.ItemsSource = null;
+                                DatagrdViewSem.Items.Refresh();
+                                DatagrdViewModule.ItemsSource = null;
+                                DatagrdViewModule.Items.Refresh();
+                            });
+
+                            MessageBox.Show($"Successfully deleted semester", "Delete", MessageBoxButton.OK, MessageBoxImage.Information);
+
+                            // Remove the selected ComboBoxItem from the ComboBox
+                            cmBoxSemest.Items.Remove(selectedComboBoxItem);
+                            cmBoxSemest.SelectedItem = null;
+                        }
+                        else
+                        {
+                            MessageBox.Show($"Failed to delete semester", "Delete", MessageBoxButton.OK, MessageBoxImage.Information);
+                        }
+                    }
                     else
                     {
-                       MessageBox.Show($"Deletion of semester{Studysemester.SemesterNum} cancelled ", "Delete", MessageBoxButton.OK, MessageBoxImage.Information);
+                        MessageBox.Show($"Deletion of semester {studySemester.SemesterNum} cancelled", "Delete", MessageBoxButton.OK, MessageBoxImage.Information);
                     }
                 }
             }

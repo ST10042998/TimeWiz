@@ -145,7 +145,7 @@ namespace TimeWiz.Classes
                         {
                             while (reader.Read())
                             {
-                                // Map the database columns to the Semester object
+                               
                                 Semester semester = new Semester
                                 {
                                     Semester_Id = (int)reader["Semester_Id"],
@@ -160,6 +160,28 @@ namespace TimeWiz.Classes
                             }
                         }
                     }
+                }
+            }
+            catch (Exception e)
+            {
+                MessageBox.Show(e.Message);
+            }
+
+            return semesters;
+        }
+
+        public List<Semester> GetAllSemesterEF(int id)
+        {
+            List<Semester> semesters = new List<Semester>();
+
+            try
+            {
+                using (var context = new MyTimeWizDatabaseEntity())
+                {
+                    // Query the database using Entity Framework
+                    semesters = context.Semesters
+                        .Where(s => s.Student_Id == id)
+                        .ToList();
                 }
             }
             catch (Exception e)
@@ -280,36 +302,84 @@ namespace TimeWiz.Classes
         }
 
         //----------------------------------------------------------------------------------------------------------------------------------------------------------------------
-      
+
         /// <summary>
         /// delete semester using entity
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        public Semester DeleteSemester(int id)
+        public Semester DeleteSemesterAdo(int id)
         {
-            using (var db = new MyTimeWizDatabaseEntity())
-            {
-                var semester = db.Semesters.Find(id);
-                if (semester != null)
-                {
-                    // Find modules that reference the semester and set their Semester_Id to null.
-                    var modulesReferencingSemester = db.ModuleTables.Where(m => m.Semester_Id == id);
-                    foreach (var module in modulesReferencingSemester)
-                    {
-                        module.Semester_Id = 0;
-                    }
+            Semester deletedSemester = null;
 
-                    db.Semesters.Remove(semester);
-                    db.SaveChanges();
-                    return semester;
-                }
-                else
+            using (SqlConnection connection = new SqlConnection(ConnectString))
+            {
+                connection.Open();
+
+                // Begin a transaction for data consistency
+                using (SqlTransaction transaction = connection.BeginTransaction())
                 {
-                    return null;
+                    try
+                    {
+                        // Retrieve the semester to delete
+                        string selectSemesterQuery = "SELECT * FROM Semester WHERE Semester_Id = @Semester_Id";
+                        using (SqlCommand selectSemesterCmd = new SqlCommand(selectSemesterQuery, connection, transaction))
+                        {
+                            selectSemesterCmd.Parameters.AddWithValue("@Semester_Id", id);
+
+                            using (SqlDataReader semesterReader = selectSemesterCmd.ExecuteReader())
+                            {
+                                if (semesterReader.Read())
+                                {
+                                    deletedSemester = new Semester
+                                    {
+                                        Semester_Id = (int)semesterReader["Semester_Id"],
+                                        // Map other properties as needed
+                                    };
+                                }
+                            }
+                        }
+
+                        if (deletedSemester != null)
+                        {
+                            // Delete modules that reference the semester
+                            string deleteModulesQuery = "DELETE FROM ModuleTable WHERE Semester_Id = @Semester_Id";
+                            using (SqlCommand deleteModulesCmd = new SqlCommand(deleteModulesQuery, connection, transaction))
+                            {
+                                deleteModulesCmd.Parameters.AddWithValue("@Semester_Id", id);
+                                deleteModulesCmd.ExecuteNonQuery();
+                            }
+
+                            // Delete the semester
+                            string deleteSemesterQuery = "DELETE FROM Semester WHERE Semester_Id = @Semester_Id";
+                            using (SqlCommand deleteSemesterCmd = new SqlCommand(deleteSemesterQuery, connection, transaction))
+                            {
+                                deleteSemesterCmd.Parameters.AddWithValue("@Semester_Id", id);
+                                deleteSemesterCmd.ExecuteNonQuery();
+                            }
+
+                            // Commit the transaction if everything is successful
+                            transaction.Commit();
+                        }
+                        else
+                        {
+                            // Roll back the transaction if the semester was not found
+                            transaction.Rollback();
+                        }
+                    }
+                    catch (Exception e)
+                    {
+                        // Handle any exceptions here
+                        MessageBox.Show(e.Message);
+                        // Roll back the transaction in case of an exception
+                        transaction.Rollback();
+                    }
                 }
             }
+
+            return deletedSemester;
         }
+
 
     }
 }

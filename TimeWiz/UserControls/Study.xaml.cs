@@ -68,13 +68,13 @@ namespace TimeWiz.UserControls
             var student_id = module.GetStudentId(login_Id);
 
             // Sort the semesters in alphabetical order
-            var sortedSemester = semester.GetAllSemesterAdo(student_id)
+            var sortedSemester = semester.GetAllSemesterEF(student_id)
                 .OrderBy(s => s.SemesterNum)
                 .ToList();
 
             // Clear the current items
             cmBoxSemester.Items.Clear();
-
+            
             foreach (var sem in sortedSemester)
             {
                 // Exclude empty module code
@@ -84,8 +84,7 @@ namespace TimeWiz.UserControls
                     comboBoxItem.Content = sem.SemesterNum.ToString();
 
                     // Set the Tag property with the associated StudyClass object
-                    comboBoxItem.Tag = sem; // Ensure 'study' is a valid StudyClass object
-
+                    comboBoxItem.Tag = sem; 
                     this.cmBoxSemester.Items.Add(comboBoxItem);
                    
                 }
@@ -166,6 +165,7 @@ namespace TimeWiz.UserControls
 
                             // Save changes to the database
                             module.UpdateStudyModule(selectedModule.Module_Id, mc.RemainingWeekHours, Convert.ToInt32(mc.Progressbar), DateTime.Now, mc.StudiedHours);
+                            module.UpdateStudyModuleAdo(selectedModule.Module_Id, mc.RemainingWeekHours, Convert.ToInt32(mc.Progressbar), DateTime.Now, mc.StudiedHours);
 
                             txtStudyHrs.Clear();
                             MessageBox.Show($"Studied {mc.StudiedHours} hours for {selectedModule.Name} on {currentDate.ToShortDateString()}", "Save", MessageBoxButton.OK, MessageBoxImage.Information);

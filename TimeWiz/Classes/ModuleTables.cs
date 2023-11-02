@@ -14,7 +14,7 @@ using System.Windows.Media.Animation;
 
 namespace TimeWiz.Classes
 {
-    public class ModuleTables: DbContext
+    public class ModuleTables : DbContext
     {
 
         private MyTimeWizDatabaseEntity db = new MyTimeWizDatabaseEntity();
@@ -56,7 +56,7 @@ namespace TimeWiz.Classes
         }
 
         //----------------------------------------------------------------------------------------------------------------------------------------------------------------------
-       
+
         /// <summary>
         /// add module to database using ado.net   
         /// </summary>
@@ -84,7 +84,7 @@ namespace TimeWiz.Classes
                         cmd.Parameters.AddWithValue("@ClassHoursPerWeek", classhours);
                         cmd.Parameters.AddWithValue("@SelfStudyHours", selfstudyhours);
                         cmd.Parameters.AddWithValue("@RemainingWeekHours", DBNull.Value); // Nullable column
-                        cmd.Parameters.AddWithValue("@ProgressBarPercentage", 0 ); // Nullable column
+                        cmd.Parameters.AddWithValue("@ProgressBarPercentage", 0); // Nullable column
                         cmd.Parameters.AddWithValue("@StudyDate", DBNull.Value); // Nullable column
                         cmd.Parameters.AddWithValue("@StudiedHours", DBNull.Value); // Nullable column
 
@@ -131,7 +131,7 @@ namespace TimeWiz.Classes
         /// <param name="classhours"></param>
         /// <param name="selfstudy"></param>
         /// <returns></returns>
-        public ModuleTable AddModule(string name, string code, int credits, int semesterId ,int classhours , int selfstudy)
+        public ModuleTable AddModule(string name, string code, int credits, int semesterId, int classhours, int selfstudy)
         {
             var module = new ModuleTable
             {
@@ -139,13 +139,13 @@ namespace TimeWiz.Classes
                 Code = code,
                 Credits = credits,
                 Semester_Id = semesterId,
-                ClassHoursPerWeek  = classhours,
+                ClassHoursPerWeek = classhours,
                 SelfStudyHours = selfstudy
             };
             try
 
             {
-                using (var dbContext = new ModuleTables()) 
+                using (var dbContext = new ModuleTables())
                 {
                     dbContext.mod.Add(module);
                     dbContext.SaveChanges();
@@ -157,7 +157,7 @@ namespace TimeWiz.Classes
             {
                 MessageBox.Show(e.Message);
                 MessageBox.Show("Module insertion failed.");
-                
+
                 return null;
             }
         }
@@ -209,7 +209,7 @@ namespace TimeWiz.Classes
             }
             catch (Exception e)
             {
-                
+
                 MessageBox.Show(e.Message);
             }
 
@@ -233,7 +233,7 @@ namespace TimeWiz.Classes
         /// <param name="date"></param>
         /// <param name="studiedHrs"></param>
         /// <returns></returns>
-        public ModuleTable UpdateModule(int id,string name, string code, int credits,int semester_id,int classHours, int selfHours, int remainingHours,int Progressbar, DateTime date, int studiedHrs)
+        public ModuleTable UpdateModule(int id, string name, string code, int credits, int semester_id, int classHours, int selfHours, int remainingHours, int Progressbar, DateTime date, int studiedHrs)
         {
             using (db = new MyTimeWizDatabaseEntity())
             {
@@ -274,7 +274,7 @@ namespace TimeWiz.Classes
         /// <param name="date"></param>
         /// <param name="studiedHrs"></param>
         /// <returns></returns>
-        public ModuleTable UpdateStudyModule(int id, int remainingHours, int Progressbar, DateTime date,int studiedHrs)
+        public ModuleTable UpdateStudyModule(int id, int remainingHours, int Progressbar, DateTime date, int studiedHrs)
         {
             using (db = new MyTimeWizDatabaseEntity())
             {
@@ -283,7 +283,7 @@ namespace TimeWiz.Classes
                 var module = db.ModuleTables.Where(m => m.Module_Id == id).SingleOrDefault();
                 if (module != null)
                 {
-               
+
                     module.RemainingWeekHours = remainingHours;
                     module.ProgressBarPercentage = Progressbar;
                     module.StudyDate = date;
@@ -295,6 +295,53 @@ namespace TimeWiz.Classes
                 else
                 {
                     return null;
+                }
+            }
+        }
+        //----------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+        /// <summary>
+        /// update module using ado.net
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="remainingHours"></param>
+        /// <param name="Progressbar"></param>
+        /// <param name="date"></param>
+        /// <param name="studiedHrs"></param>
+        /// <returns></returns>
+        public ModuleTable UpdateStudyModuleAdo(int id, int remainingHours, int Progressbar, DateTime date, int studiedHrs)
+        {
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                connection.Open();
+
+                string updateQuery = "UPDATE ModuleTable " +
+                                    "SET RemainingWeekHours = @RemainingWeekHours, " +
+                                    "ProgressBarPercentage = @ProgressBarPercentage, " +
+                                    "StudyDate = @StudyDate, " +
+                                    "StudiedHours = @StudiedHours " +
+                                    "WHERE Module_Id = @Module_Id";
+
+                using (SqlCommand cmd = new SqlCommand(updateQuery, connection))
+                {
+                    cmd.Parameters.AddWithValue("@RemainingWeekHours", remainingHours);
+                    cmd.Parameters.AddWithValue("@ProgressBarPercentage", Progressbar);
+                    cmd.Parameters.AddWithValue("@StudyDate", date);
+                    cmd.Parameters.AddWithValue("@StudiedHours", studiedHrs);
+                    cmd.Parameters.AddWithValue("@Module_Id", id);
+
+                    int rowsAffected = cmd.ExecuteNonQuery();
+
+                    if (rowsAffected > 0)
+                    {
+
+                        return GetModuleByIdAdo(id);
+                    }
+                    else
+                    {
+                        // Module with the specified ID was not found
+                        return null;
+                    }
                 }
             }
         }
@@ -361,7 +408,7 @@ namespace TimeWiz.Classes
                 return modules;
             }
         }
-     
+
         //----------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
         /// <summary>
@@ -369,7 +416,7 @@ namespace TimeWiz.Classes
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        public List <ModuleTable> DeleteModuleBySemesterId(int id)
+        public List<ModuleTable> DeleteModuleBySemesterId(int id)
         {
             using (db = new MyTimeWizDatabaseEntity())
             {
@@ -385,7 +432,7 @@ namespace TimeWiz.Classes
                     return module;
                 }
             }
-        
+
         }
 
         //----------------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -412,7 +459,7 @@ namespace TimeWiz.Classes
                     {
                         if (reader.Read())
                         {
-                            id = reader.GetInt32(0); 
+                            id = reader.GetInt32(0);
                         }
                     }
                 }
@@ -421,6 +468,41 @@ namespace TimeWiz.Classes
             return id;
         }
 
+        public ModuleTable GetModuleByIdAdo(int id)
+        {
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                connection.Open();
+
+                string selectQuery = "SELECT * FROM ModuleTable WHERE Module_Id = @Module_Id";
+
+                using (SqlCommand cmd = new SqlCommand(selectQuery, connection))
+                {
+                    cmd.Parameters.AddWithValue("@Module_Id", id);
+
+                    using (SqlDataReader reader = cmd.ExecuteReader())
+                    {
+                        if (reader.Read())
+                        {
+                            // Map the database columns to the ModuleTable object
+                            ModuleTable module = new ModuleTable
+                            {
+                                Module_Id = (int)reader["Module_Id"],
+                                // Map other properties as needed
+                            };
+
+                            return module;
+                        }
+                        else
+                        {
+                            // No record found with the specified Module_Id
+                            return null;
+                        }
+                    }
+                }
+            }
+        }
 
     }
-}//------------------------------------------------------------------------------------------------------------------------------------------------------------------------Eugene*end
+}
+//------------------------------------------------------------------------------------------------------------------------------------------------------------------------Eugene*end

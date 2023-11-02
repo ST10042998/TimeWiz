@@ -89,6 +89,7 @@
                 </Style>
             </Button.Style>
         </Button>
+        <TextBlock x:Name="textBlock" HorizontalAlignment="Left" Margin="173,302,0,0" FontSize="8" Text="should contain uppercase, lowercase, special character and number" VerticalAlignment="Top" Height="18" Width="237"/>
 
     </Grid>
 </UserControl>

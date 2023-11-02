@@ -25,7 +25,9 @@
     <UpdatePeriodically>false</UpdatePeriodically>
     <UpdateRequired>false</UpdateRequired>
     <MapFileExtensions>true</MapFileExtensions>
-    <ApplicationRevision>0</ApplicationRevision>
+    <TargetCulture>en</TargetCulture>
+    <PublisherName>Eugene</PublisherName>
+    <ApplicationRevision>1</ApplicationRevision>
     <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <PublishWizardCompleted>true</PublishWizardCompleted>
@@ -51,7 +53,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup>
-    <ApplicationIcon>logo-removebg-preview %281%29 %282%29.ico</ApplicationIcon>
+    <ApplicationIcon>TimeWizIcon.ico</ApplicationIcon>
   </PropertyGroup>
   <PropertyGroup>
     <ManifestCertificateThumbprint>FE645BDA953C74DD98F46FA094474760E3B8148B</ManifestCertificateThumbprint>
@@ -291,6 +293,7 @@
       <LastGenOutput>MyTimeWizModel.cs</LastGenOutput>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Resource Include="TimeWizIcon.ico" />
     <Resource Include="Icons\TimeWiz4.png" />
     <Content Include="MyTimeWizDatabase.mdf">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>

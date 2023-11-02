@@ -133,40 +133,29 @@ namespace TimeWiz.LoginAndRegister
         /// <returns></returns>
         public bool Login(string username, string password)
         {
-            
-            if (!String.IsNullOrWhiteSpace(username) && !String.IsNullOrWhiteSpace(password))
+            if (String.IsNullOrWhiteSpace(username) || String.IsNullOrWhiteSpace(password))
             {
-                var db = new MyTimeWizDatabaseEntity();
-                var login = db.Logins.FirstOrDefault(l => l.UserName == username);
-                if (login != null)
-                {
-                   
-
-                    if (login.Password == this.HashPassword(password))
-                    {
-                      
-                        return true;
-
-                    }
-                    else
-                    {
-                        return false;
-                    }
-                }
-                else
-                {
-                    return false;
-                } 
-            }
-            else
-            {
+                MessageBox.Show("Please enter a username and password.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
                 return false;
             }
+
+            using (var db = new MyTimeWizDatabaseEntity())
+            {
+                var login = db.Logins.FirstOrDefault(l => l.UserName == username);
+
+                if (login != null && login.Password == this.HashPassword(password))
+                {
+
+                    return true;
+                }
+            }
+            MessageBox.Show("Login failed.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+            return false;
         }
-       
+
         //----------------------------------------------------------------------------------------------------------------------------------
 
-       
+
         /// <summary>
         /// check if the email is valid
         /// </summary>

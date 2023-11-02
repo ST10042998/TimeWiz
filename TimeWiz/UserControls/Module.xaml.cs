@@ -212,6 +212,7 @@ namespace TimeWiz.UserControls
                         {
                             this.lblErrorS.Content = "Class Hours cant be more than number of weeks";
                             isValid = false;
+                            return;
                         }
                     }
                    
