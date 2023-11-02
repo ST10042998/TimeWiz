@@ -17,7 +17,7 @@ namespace TimeWiz
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public Student()
         {
-            this.Logins = new HashSet<Login>();
+            this.Semesters = new HashSet<Semester>();
         }
     
         public int Student_Id { get; set; }
@@ -25,10 +25,10 @@ namespace TimeWiz
         public string Surname { get; set; }
         public string Email { get; set; }
         public string Gender { get; set; }
-        public int Semester_Id { get; set; }
+        public Nullable<int> Login_Id { get; set; }
     
+        public virtual Login Login { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<Login> Logins { get; set; }
-        public virtual Semester Semester { get; set; }
+        public virtual ICollection<Semester> Semesters { get; set; }
     }
 }

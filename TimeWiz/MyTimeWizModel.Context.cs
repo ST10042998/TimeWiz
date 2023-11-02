@@ -29,5 +29,6 @@ namespace TimeWiz
         public virtual DbSet<ModuleTable> ModuleTables { get; set; }
         public virtual DbSet<Semester> Semesters { get; set; }
         public virtual DbSet<Student> Students { get; set; }
+        public virtual DbSet<LoginInfo> LoginInfoes { get; set; }
     }
 }

@@ -97,12 +97,14 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Classes\LoginInfos.cs" />
     <Compile Include="Classes\Logins.cs" />
     <Compile Include="Classes\ModuleTables.cs" />
     <Compile Include="Classes\Semesters.cs" />
     <Compile Include="Classes\Students.cs" />
     <Compile Include="Login.cs">
       <DependentUpon>MyTimeWizModel.tt</DependentUpon>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Compile>
     <Compile Include="LoginAndRegister\LoginWindow.xaml.cs">
       <DependentUpon>LoginWindow.xaml</DependentUpon>
@@ -114,29 +116,39 @@
     <Compile Include="LoginAndRegister\MyRegister.xaml.cs">
       <DependentUpon>MyRegister.xaml</DependentUpon>
     </Compile>
+    <Compile Include="LoginInfo.cs">
+      <DependentUpon>MyTimeWizModel.tt</DependentUpon>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Compile>
     <Compile Include="ModuleTable.cs">
       <DependentUpon>MyTimeWizModel.tt</DependentUpon>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Compile>
     <Compile Include="MyTimeWizModel.Context.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>MyTimeWizModel.Context.tt</DependentUpon>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Compile>
     <Compile Include="MyTimeWizModel.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>MyTimeWizModel.tt</DependentUpon>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Compile>
     <Compile Include="MyTimeWizModel.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>MyTimeWizModel.edmx</DependentUpon>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Compile>
     <Compile Include="Semester.cs">
       <DependentUpon>MyTimeWizModel.tt</DependentUpon>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Compile>
     <Compile Include="Student.cs">
       <DependentUpon>MyTimeWizModel.tt</DependentUpon>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Compile>
     <Compile Include="UserControls\Home.xaml.cs">
       <DependentUpon>Home.xaml</DependentUpon>
@@ -212,9 +224,11 @@
     <EntityDeploy Include="MyTimeWizModel.edmx">
       <Generator>EntityModelCodeGenerator</Generator>
       <LastGenOutput>MyTimeWizModel.Designer.cs</LastGenOutput>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </EntityDeploy>
     <None Include="MyTimeWizModel.edmx.diagram">
       <DependentUpon>MyTimeWizModel.edmx</DependentUpon>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
@@ -269,11 +283,13 @@
       <Generator>TextTemplatingFileGenerator</Generator>
       <DependentUpon>MyTimeWizModel.edmx</DependentUpon>
       <LastGenOutput>MyTimeWizModel.Context.cs</LastGenOutput>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="MyTimeWizModel.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
       <DependentUpon>MyTimeWizModel.edmx</DependentUpon>
       <LastGenOutput>MyTimeWizModel.cs</LastGenOutput>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Resource Include="Icons\TimeWiz4.png" />
     <Content Include="MyTimeWizDatabase.mdf">

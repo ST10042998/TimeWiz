@@ -12,7 +12,13 @@
           <Property Name="Login_Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="UserName" Type="varchar(max)" Nullable="false" />
           <Property Name="Password" Type="varchar(max)" Nullable="false" />
-          <Property Name="Student_Id" Type="int" />
+        </EntityType>
+        <EntityType Name="LoginInfo">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Login_Id" Type="int" Nullable="false" />
         </EntityType>
         <EntityType Name="ModuleTable">
           <Key>
@@ -39,6 +45,7 @@
           <Property Name="NumOfWeeks" Type="int" Nullable="false" />
           <Property Name="StartDate" Type="datetime" Nullable="false" />
           <Property Name="EndDate" Type="datetime" Nullable="false" />
+          <Property Name="Student_Id" Type="int" Nullable="false" />
         </EntityType>
         <EntityType Name="Student">
           <Key>
@@ -49,17 +56,17 @@
           <Property Name="Surname" Type="varchar(max)" Nullable="false" />
           <Property Name="Email" Type="varchar(max)" Nullable="false" />
           <Property Name="Gender" Type="varchar" MaxLength="50" Nullable="false" />
-          <Property Name="Semester_Id" Type="int" Nullable="false" />
+          <Property Name="Login_Id" Type="int" />
         </EntityType>
-        <Association Name="FK_Login_Student">
-          <End Role="Student" Type="Self.Student" Multiplicity="0..1" />
-          <End Role="Login" Type="Self.Login" Multiplicity="*" />
+        <Association Name="FK_LoginInfo_Login_Id">
+          <End Role="Login" Type="Self.Login" Multiplicity="1" />
+          <End Role="LoginInfo" Type="Self.LoginInfo" Multiplicity="*" />
           <ReferentialConstraint>
-            <Principal Role="Student">
-              <PropertyRef Name="Student_Id" />
+            <Principal Role="Login">
+              <PropertyRef Name="Login_Id" />
             </Principal>
-            <Dependent Role="Login">
-              <PropertyRef Name="Student_Id" />
+            <Dependent Role="LoginInfo">
+              <PropertyRef Name="Login_Id" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -75,33 +82,50 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK_Student_Semester">
-          <End Role="Semester" Type="Self.Semester" Multiplicity="1" />
+        <Association Name="FK_Semester_Student">
+          <End Role="Student" Type="Self.Student" Multiplicity="1" />
+          <End Role="Semester" Type="Self.Semester" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Student">
+              <PropertyRef Name="Student_Id" />
+            </Principal>
+            <Dependent Role="Semester">
+              <PropertyRef Name="Student_Id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Student_Login">
+          <End Role="Login" Type="Self.Login" Multiplicity="0..1" />
           <End Role="Student" Type="Self.Student" Multiplicity="*" />
           <ReferentialConstraint>
-            <Principal Role="Semester">
-              <PropertyRef Name="Semester_Id" />
+            <Principal Role="Login">
+              <PropertyRef Name="Login_Id" />
             </Principal>
             <Dependent Role="Student">
-              <PropertyRef Name="Semester_Id" />
+              <PropertyRef Name="Login_Id" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
         <EntityContainer Name="MyTimeWizDatabaseModelStoreContainer">
           <EntitySet Name="Login" EntityType="Self.Login" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="LoginInfo" EntityType="Self.LoginInfo" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="ModuleTable" EntityType="Self.ModuleTable" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Semester" EntityType="Self.Semester" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Student" EntityType="Self.Student" Schema="dbo" store:Type="Tables" />
-          <AssociationSet Name="FK_Login_Student" Association="Self.FK_Login_Student">
-            <End Role="Student" EntitySet="Student" />
+          <AssociationSet Name="FK_LoginInfo_Login_Id" Association="Self.FK_LoginInfo_Login_Id">
             <End Role="Login" EntitySet="Login" />
+            <End Role="LoginInfo" EntitySet="LoginInfo" />
           </AssociationSet>
           <AssociationSet Name="FK_ModuleTable_Semester" Association="Self.FK_ModuleTable_Semester">
             <End Role="Semester" EntitySet="Semester" />
             <End Role="ModuleTable" EntitySet="ModuleTable" />
           </AssociationSet>
-          <AssociationSet Name="FK_Student_Semester" Association="Self.FK_Student_Semester">
+          <AssociationSet Name="FK_Semester_Student" Association="Self.FK_Semester_Student">
+            <End Role="Student" EntitySet="Student" />
             <End Role="Semester" EntitySet="Semester" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Student_Login" Association="Self.FK_Student_Login">
+            <End Role="Login" EntitySet="Login" />
             <End Role="Student" EntitySet="Student" />
           </AssociationSet>
         </EntityContainer>
@@ -116,8 +140,8 @@
           <Property Name="Login_Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="UserName" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" Nullable="false" />
           <Property Name="Password" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" Nullable="false" />
-          <Property Name="Student_Id" Type="Int32" />
-          <NavigationProperty Name="Student" Relationship="Self.FK_Login_Student" FromRole="Login" ToRole="Student" />
+          <NavigationProperty Name="Students" Relationship="Self.FK_Student_Login" FromRole="Login" ToRole="Student" />
+          <NavigationProperty Name="LoginInfoes" Relationship="MyTimeWizDatabaseModel.FK_LoginInfo_Login_Id" FromRole="Login" ToRole="LoginInfo" />
         </EntityType>
         <EntityType Name="ModuleTable">
           <Key>
@@ -145,8 +169,9 @@
           <Property Name="NumOfWeeks" Type="Int32" Nullable="false" />
           <Property Name="StartDate" Type="DateTime" Nullable="false" Precision="3" />
           <Property Name="EndDate" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="Student_Id" Type="Int32" Nullable="false" />
           <NavigationProperty Name="ModuleTables" Relationship="Self.FK_ModuleTable_Semester" FromRole="Semester" ToRole="ModuleTable" />
-          <NavigationProperty Name="Students" Relationship="MyTimeWizDatabaseModel.FK_Student_Semester" FromRole="Semester" ToRole="Student" />
+          <NavigationProperty Name="Student" Relationship="Self.FK_Semester_Student" FromRole="Semester" ToRole="Student" />
         </EntityType>
         <EntityType Name="Student">
           <Key>
@@ -157,19 +182,19 @@
           <Property Name="Surname" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" Nullable="false" />
           <Property Name="Email" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" Nullable="false" />
           <Property Name="Gender" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
-          <NavigationProperty Name="Logins" Relationship="Self.FK_Login_Student" FromRole="Student" ToRole="Login" />
-          <Property Name="Semester_Id" Type="Int32" Nullable="false" />
-          <NavigationProperty Name="Semester" Relationship="MyTimeWizDatabaseModel.FK_Student_Semester" FromRole="Student" ToRole="Semester" />
+          <Property Name="Login_Id" Type="Int32" />
+          <NavigationProperty Name="Login" Relationship="Self.FK_Student_Login" FromRole="Student" ToRole="Login" />
+          <NavigationProperty Name="Semesters" Relationship="Self.FK_Semester_Student" FromRole="Student" ToRole="Semester" />
         </EntityType>
-        <Association Name="FK_Login_Student">
-          <End Role="Student" Type="Self.Student" Multiplicity="0..1" />
-          <End Role="Login" Type="Self.Login" Multiplicity="*" />
+        <Association Name="FK_Student_Login">
+          <End Role="Login" Type="Self.Login" Multiplicity="0..1" />
+          <End Role="Student" Type="Self.Student" Multiplicity="*" />
           <ReferentialConstraint>
-            <Principal Role="Student">
-              <PropertyRef Name="Student_Id" />
+            <Principal Role="Login">
+              <PropertyRef Name="Login_Id" />
             </Principal>
-            <Dependent Role="Login">
-              <PropertyRef Name="Student_Id" />
+            <Dependent Role="Student">
+              <PropertyRef Name="Login_Id" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -185,33 +210,58 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_Semester_Student">
+          <End Role="Student" Type="Self.Student" Multiplicity="1" />
+          <End Role="Semester" Type="Self.Semester" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Student">
+              <PropertyRef Name="Student_Id" />
+            </Principal>
+            <Dependent Role="Semester">
+              <PropertyRef Name="Student_Id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <EntityContainer Name="MyTimeWizDatabaseEntity" annotation:LazyLoadingEnabled="true">
           <EntitySet Name="Logins" EntityType="Self.Login" />
           <EntitySet Name="ModuleTables" EntityType="Self.ModuleTable" />
           <EntitySet Name="Semesters" EntityType="Self.Semester" />
           <EntitySet Name="Students" EntityType="Self.Student" />
-          <AssociationSet Name="FK_Login_Student" Association="Self.FK_Login_Student">
-            <End Role="Student" EntitySet="Students" />
+          <AssociationSet Name="FK_Student_Login" Association="Self.FK_Student_Login">
             <End Role="Login" EntitySet="Logins" />
+            <End Role="Student" EntitySet="Students" />
           </AssociationSet>
           <AssociationSet Name="FK_ModuleTable_Semester" Association="Self.FK_ModuleTable_Semester">
             <End Role="Semester" EntitySet="Semesters" />
             <End Role="ModuleTable" EntitySet="ModuleTables" />
           </AssociationSet>
-          <AssociationSet Name="FK_Student_Semester" Association="MyTimeWizDatabaseModel.FK_Student_Semester">
-            <End Role="Semester" EntitySet="Semesters" />
+          <AssociationSet Name="FK_Semester_Student" Association="Self.FK_Semester_Student">
             <End Role="Student" EntitySet="Students" />
+            <End Role="Semester" EntitySet="Semesters" />
+          </AssociationSet>
+          <EntitySet Name="LoginInfoes" EntityType="MyTimeWizDatabaseModel.LoginInfo" />
+          <AssociationSet Name="FK_LoginInfo_Login_Id" Association="MyTimeWizDatabaseModel.FK_LoginInfo_Login_Id">
+            <End Role="Login" EntitySet="Logins" />
+            <End Role="LoginInfo" EntitySet="LoginInfoes" />
           </AssociationSet>
         </EntityContainer>
-        <Association Name="FK_Student_Semester">
-          <End Type="MyTimeWizDatabaseModel.Semester" Role="Semester" Multiplicity="1" />
-          <End Type="MyTimeWizDatabaseModel.Student" Role="Student" Multiplicity="*" />
+        <EntityType Name="LoginInfo">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Login_Id" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="Login" Relationship="MyTimeWizDatabaseModel.FK_LoginInfo_Login_Id" FromRole="LoginInfo" ToRole="Login" />
+        </EntityType>
+        <Association Name="FK_LoginInfo_Login_Id">
+          <End Type="MyTimeWizDatabaseModel.Login" Role="Login" Multiplicity="1" />
+          <End Type="MyTimeWizDatabaseModel.LoginInfo" Role="LoginInfo" Multiplicity="*" />
           <ReferentialConstraint>
-            <Principal Role="Semester">
-              <PropertyRef Name="Semester_Id" />
+            <Principal Role="Login">
+              <PropertyRef Name="Login_Id" />
             </Principal>
-            <Dependent Role="Student">
-              <PropertyRef Name="Semester_Id" />
+            <Dependent Role="LoginInfo">
+              <PropertyRef Name="Login_Id" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -227,7 +277,6 @@
                 <ScalarProperty Name="Login_Id" ColumnName="Login_Id" />
                 <ScalarProperty Name="UserName" ColumnName="UserName" />
                 <ScalarProperty Name="Password" ColumnName="Password" />
-                <ScalarProperty Name="Student_Id" ColumnName="Student_Id" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
@@ -256,18 +305,27 @@
                 <ScalarProperty Name="NumOfWeeks" ColumnName="NumOfWeeks" />
                 <ScalarProperty Name="StartDate" ColumnName="StartDate" />
                 <ScalarProperty Name="EndDate" ColumnName="EndDate" />
+                <ScalarProperty Name="Student_Id" ColumnName="Student_Id" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="Students">
             <EntityTypeMapping TypeName="MyTimeWizDatabaseModel.Student">
               <MappingFragment StoreEntitySet="Student">
-                <ScalarProperty Name="Semester_Id" ColumnName="Semester_Id" />
                 <ScalarProperty Name="Student_Id" ColumnName="Student_Id" />
                 <ScalarProperty Name="Name" ColumnName="Name" />
                 <ScalarProperty Name="Surname" ColumnName="Surname" />
                 <ScalarProperty Name="Email" ColumnName="Email" />
                 <ScalarProperty Name="Gender" ColumnName="Gender" />
+                <ScalarProperty Name="Login_Id" ColumnName="Login_Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="LoginInfoes">
+            <EntityTypeMapping TypeName="MyTimeWizDatabaseModel.LoginInfo">
+              <MappingFragment StoreEntitySet="LoginInfo">
+                <ScalarProperty Name="Login_Id" ColumnName="Login_Id" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

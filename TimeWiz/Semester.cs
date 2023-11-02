@@ -18,7 +18,6 @@ namespace TimeWiz
         public Semester()
         {
             this.ModuleTables = new HashSet<ModuleTable>();
-            this.Students = new HashSet<Student>();
         }
     
         public int Semester_Id { get; set; }
@@ -26,10 +25,10 @@ namespace TimeWiz
         public int NumOfWeeks { get; set; }
         public System.DateTime StartDate { get; set; }
         public System.DateTime EndDate { get; set; }
+        public int Student_Id { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<ModuleTable> ModuleTables { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<Student> Students { get; set; }
+        public virtual Student Student { get; set; }
     }
 }

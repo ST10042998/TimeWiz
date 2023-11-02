@@ -15,6 +15,7 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using MyTimeWizClassLib;
 using TimeWiz.Classes;
+using TimeWiz.LoginAndRegister;
 
 namespace TimeWiz.UserControls
 {
@@ -28,9 +29,10 @@ namespace TimeWiz.UserControls
         private StudyClass study;
 
         private Semesters semester = new Semesters();
-        private ModuleTables module;
-       
-        private SqlConnection connection;
+        private ModuleTables module  = new ModuleTables();
+        private LoginInfos loginfo = new LoginInfos();
+
+        int login_Id = 0;
 
         //----------------------------------------------------------------------------------------------------------------------------------------------------------
 
@@ -47,8 +49,6 @@ namespace TimeWiz.UserControls
 
             // Populate the semester combobox
             this.SemesterData();
-            
-            module = new ModuleTables();
            
         }
 
@@ -59,11 +59,14 @@ namespace TimeWiz.UserControls
         /// </summary>
         private void SemesterData()
         {
-           
+            login_Id = loginfo.GetLastAdded().Login_Id;
+
+
             // Sort the semesters in alphabetical order
-            var sortedSemester = semester.GetAllSemesterAdo()
+            var sortedSemester = semester.GetAllSemesterAdo(module.GetStudentId(login_Id))
                 .OrderBy(s => s.SemesterNum)
                 .ToList();
+
 
             // Clear the current items
             cmBoxSemest.Items.Clear();
@@ -165,10 +168,12 @@ namespace TimeWiz.UserControls
                    if( option == MessageBoxResult.Yes)
                    {
                         //deleting data from database
+                       
                         module.DeleteModuleBySemesterId(Studysemester.Semester_Id);
 
                         semester.DeleteSemester(Studysemester.Semester_Id);
-                                           
+
+
                         this.lblWeek.Content =string.Empty;
 
                         //refreshing my datagrids after deleting semester

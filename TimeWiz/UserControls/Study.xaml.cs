@@ -17,6 +17,7 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using MyTimeWizClassLib;
 using TimeWiz.Classes;
+using TimeWiz.LoginAndRegister;
 
 namespace TimeWiz.UserControls
 {
@@ -28,8 +29,11 @@ namespace TimeWiz.UserControls
         //initializing obj
         private CalculationClass cal = new CalculationClass();
         private Semesters semester = new Semesters();
-        private ModuleTables module;
-       
+        private ModuleTables module = new ModuleTables();
+        private StudyClass study;
+        private LoginInfos loginfo = new LoginInfos();
+
+        int login_Id = 0;
        
         //----------------------------------------------------------------------------------------------------------------------------------------------------------------
 
@@ -48,8 +52,8 @@ namespace TimeWiz.UserControls
             InitializeComponent();
             // Populate the semester combobox
             this.SemesterData();
-            //semester = new Semesters();
-            module = new ModuleTables();
+            
+            this.study = study;
         }
 
 
@@ -60,9 +64,11 @@ namespace TimeWiz.UserControls
         /// </summary>
         private void SemesterData()
         {
-           ;
+            login_Id = loginfo.GetLastAdded().Login_Id;
+            var student_id = module.GetStudentId(login_Id);
+
             // Sort the semesters in alphabetical order
-            var sortedSemester = semester.GetAllSemesterAdo()
+            var sortedSemester = semester.GetAllSemesterAdo(student_id)
                 .OrderBy(s => s.SemesterNum)
                 .ToList();
 
@@ -81,6 +87,7 @@ namespace TimeWiz.UserControls
                     comboBoxItem.Tag = sem; // Ensure 'study' is a valid StudyClass object
 
                     this.cmBoxSemester.Items.Add(comboBoxItem);
+                   
                 }
                 else
                 {

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using MyTimeWizClassLib;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -20,11 +21,18 @@ namespace TimeWiz.LoginAndRegister
     /// </summary>
     public partial class LoginWindow : Window
     {
+      
+        /// <summary>
+        /// Constructor for the login window
+        /// </summary>
         public LoginWindow()
         {
+           
             InitializeComponent();
             this.NavigateToLogin();
         }
+
+        //----------------------------------------------------------------------------------------------------------------------------------------------------------
 
         /// <summary>
         ///Method that displays the page depending on the menu item user chooses
@@ -62,6 +70,11 @@ namespace TimeWiz.LoginAndRegister
             NavigateToUserControl(new MyRegister());
         }
 
+        //----------------------------------------------------------------------------------------------------------------------------------------------------------
+
+        /// <summary>
+        /// method to go to home display and using thread to open new window
+        /// </summary>
         public void NavigateToApp()
         {
 
@@ -74,10 +87,15 @@ namespace TimeWiz.LoginAndRegister
             }
             catch (Exception ex)
             {
-                // logging it  
+                  
             }
         }
 
+        //----------------------------------------------------------------------------------------------------------------------------------------------------------
+
+        /// <summary>
+        /// 
+        /// </summary>
         private void ThreadStartingPoint()
         {
             try
@@ -93,10 +111,33 @@ namespace TimeWiz.LoginAndRegister
 
         }
 
-        public void Window_Closing()
+        //----------------------------------------------------------------------------------------------------------------------------------------------------------
+
+        /// <summary>
+        /// method to hide the window
+        /// </summary>
+        public void CloseWindow()
         {
-            LoginWindow lw = new LoginWindow();
-            lw.Close();
+            if (this is Window window)
+            {
+                window.Hide();
+            }
         }
+
+        //----------------------------------------------------------------------------------------------------------------------------------------------------------
+
+        /// <summary>
+        /// method to exit the window
+        /// </summary>
+        public void exitWindow()
+        {
+            if (this is Window window)
+            {
+                window.Close();
+            }
+        }
+
+
+
     }
 }

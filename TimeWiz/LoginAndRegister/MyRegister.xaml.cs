@@ -21,13 +21,27 @@ namespace TimeWiz.LoginAndRegister
     /// </summary>
     public partial class MyRegister : UserControl
     {
-        StudentClass studentClass = new StudentClass();
+       
         MyLoginWorker loginWorker = new MyLoginWorker();
+
+        //----------------------------------------------------------------------------------------------------------------------------------
+
+        /// <summary>
+        /// Constructor
+        /// </summary>
         public MyRegister()
         {
+           
             InitializeComponent();
         }
 
+        //----------------------------------------------------------------------------------------------------------------------------------
+
+        /// <summary>
+        /// Save event saving user's information to the database
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void SaveBtn_Click(object sender, RoutedEventArgs e)
         {
             StudentClass student  = new StudentClass();
@@ -44,8 +58,6 @@ namespace TimeWiz.LoginAndRegister
             }
             student.UserName = txtUsername.Text;
             student.Password = pwBox.Password.ToString();
-            MessageBox.Show($"{student.Password}");
-            MessageBox.Show($"{student.Gender}");
 
             loginWorker.AddStudent(student.Name,student.Surname,student.Email,student.Gender,student.UserName,student.Password);
 
@@ -55,10 +67,15 @@ namespace TimeWiz.LoginAndRegister
             }
             else
             {
-               pwBox.Clear();
+                 pwBox.Clear();
             }
         }
 
+        //----------------------------------------------------------------------------------------------------------------------------------
+
+        /// <summary>
+        /// navigate to login 
+        /// </summary>
         private void navigateToLogin()
         {
             if (Window.GetWindow(this) is LoginWindow mainWindow)
@@ -66,5 +83,7 @@ namespace TimeWiz.LoginAndRegister
                 mainWindow.NavigateToLogin();
             }
         }
+        
+        
     }
 }

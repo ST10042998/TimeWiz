@@ -16,7 +16,7 @@ namespace TimeWiz.Classes
 
         private Student student = new Student();
 
-       
+        //connection string
         private string connectionString = Properties.Settings.Default.ConnectionString;
        
 
@@ -44,26 +44,42 @@ namespace TimeWiz.Classes
             this.Connection.ConnectionString = connectionString;
         }
 
+        //----------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+        /// <summary>
+        /// constructor
+        /// </summary>
         public Students()
         {
 
         }
 
         //----------------------------------------------------------------------------------------------------------------------------------------------------------------------
-        public Student AddStudentUsingADO(string name, string surname, string email, string gender)
+     
+        /// <summary>
+        /// adding student to database using ADO
+        /// </summary>
+        /// <param name="name"></param>
+        /// <param name="surname"></param>
+        /// <param name="email"></param>
+        /// <param name="gender"></param>
+        /// <param name="login_id"></param>
+        /// <returns></returns>
+        public Student AddStudentUsingADO(string name, string surname, string email, string gender, int login_id)
         {
             try
             {
                 using (SqlConnection connection = new SqlConnection(connectionString))
                 {
                     connection.Open();
-                    using (SqlCommand cmd = new SqlCommand("INSERT INTO Student (Name, Surname, Email, Gender)" +
-                        " VALUES (@Name, @Surname, @Email, @Gender); SELECT SCOPE_IDENTITY()", connection))
+                    using (SqlCommand cmd = new SqlCommand("INSERT INTO Student (Name, Surname, Email, Gender, Login_Id)" +
+                        " VALUES (@Name, @Surname, @Email, @Gender, @Login_Id); SELECT SCOPE_IDENTITY()", connection))
                     {
                         cmd.Parameters.AddWithValue("@Name", name);
                         cmd.Parameters.AddWithValue("@Surname", surname);
                         cmd.Parameters.AddWithValue("@Email", email);
                         cmd.Parameters.AddWithValue("@Gender", gender);
+                        cmd.Parameters.AddWithValue("@Login_Id", login_id);
 
                         int studentId = Convert.ToInt32(cmd.ExecuteScalar()); // Get the newly inserted module's ID
 
@@ -76,7 +92,8 @@ namespace TimeWiz.Classes
                                 Name = name,
                                 Surname = surname,
                                 Email = email,
-                                Gender = gender
+                                Gender = gender,
+                                Login_Id = login_id
                             };
                         }
                         else
@@ -94,7 +111,18 @@ namespace TimeWiz.Classes
             }
         }
 
-        public Student AddStudent(string name,string surname,string email,string gender)
+        //----------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+        /// <summary>
+        /// adding student to database using Entity Framework
+        /// </summary>
+        /// <param name="name"></param>
+        /// <param name="surname"></param>
+        /// <param name="email"></param>
+        /// <param name="gender"></param>
+        /// <param name="login"></param>
+        /// <returns></returns>
+        public Student AddStudent(string name,string surname,string email,string gender,int login)
         {
 
             var student = new Student
@@ -102,7 +130,8 @@ namespace TimeWiz.Classes
                 Name = name,
                 Surname = surname,
                 Email = email,
-                Gender = gender
+                Gender = gender,
+                Login_Id = login
             };
             try
 
@@ -124,8 +153,39 @@ namespace TimeWiz.Classes
             }
         }
 
+        //----------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
-    
-        
+        /// <summary>
+        /// getting student id using ADO
+        /// </summary>
+        /// <param name="login"></param>
+        /// <returns></returns>
+        public int GetStudentId(int login)
+        {
+            int id = 0;
+            string query = "SELECT Student_Id FROM Student WHERE Login_Id = @Login_Id";
+
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                connection.Open();
+
+                using (SqlCommand cmd = new SqlCommand(query, connection))
+                {
+                    cmd.Parameters.AddWithValue("@Login_Id", login);
+
+                    using (SqlDataReader reader = cmd.ExecuteReader())
+                    {
+                        if (reader.Read())
+                        {
+                            id = reader.GetInt32(0); // Assuming Student_Id is an integer field.
+                        }
+                    }
+                }
+            }
+
+            return id;
+        }
+
     }
 }
+//----------------------------------------------------------------------------------------------------------------------------------------------------------------------Eugene*end

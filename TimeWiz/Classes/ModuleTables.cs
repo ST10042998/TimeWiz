@@ -22,6 +22,9 @@ namespace TimeWiz.Classes
         private ModuleTable module = new ModuleTable();
         public DbSet<ModuleTable> mod { get; set; }
 
+        /// <summary>
+        /// connection string
+        /// </summary>
         private string connectionString = Properties.Settings.Default.ConnectionString;
         public ModuleTables()
         {
@@ -43,7 +46,7 @@ namespace TimeWiz.Classes
         //----------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
         /// <summary>
-        /// 
+        /// connect to database
         /// </summary>
         public void ConnectDB()
         {
@@ -53,6 +56,17 @@ namespace TimeWiz.Classes
         }
 
         //----------------------------------------------------------------------------------------------------------------------------------------------------------------------
+       
+        /// <summary>
+        /// add module to database using ado.net   
+        /// </summary>
+        /// <param name="name"></param>
+        /// <param name="code"></param>
+        /// <param name="credits"></param>
+        /// <param name="semesterId"></param>
+        /// <param name="classhours"></param>
+        /// <param name="selfstudyhours"></param>
+        /// <returns></returns>
         public ModuleTable AddModuleUsingADO(string name, string code, int credits, int semesterId, int classhours, int selfstudyhours)
         {
             try
@@ -105,7 +119,18 @@ namespace TimeWiz.Classes
             }
         }
 
+        //----------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
+        /// <summary>
+        /// add module to database
+        /// </summary>
+        /// <param name="name"></param>
+        /// <param name="code"></param>
+        /// <param name="credits"></param>
+        /// <param name="semesterId"></param>
+        /// <param name="classhours"></param>
+        /// <param name="selfstudy"></param>
+        /// <returns></returns>
         public ModuleTable AddModule(string name, string code, int credits, int semesterId ,int classhours , int selfstudy)
         {
             var module = new ModuleTable
@@ -136,6 +161,13 @@ namespace TimeWiz.Classes
                 return null;
             }
         }
+        //----------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+        /// <summary>
+        /// get all modules from database using ado.net
+        /// </summary>
+        /// <param name="selectedSemesterNum"></param>
+        /// <returns></returns>
         public List<ModuleTable> GetAllModulesAdo(string selectedSemesterNum)
         {
             List<ModuleTable> modules = new List<ModuleTable>();
@@ -184,7 +216,23 @@ namespace TimeWiz.Classes
             return modules;
         }
 
-        
+        //----------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+        /// <summary>
+        /// update module using entity framework
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="name"></param>
+        /// <param name="code"></param>
+        /// <param name="credits"></param>
+        /// <param name="semester_id"></param>
+        /// <param name="classHours"></param>
+        /// <param name="selfHours"></param>
+        /// <param name="remainingHours"></param>
+        /// <param name="Progressbar"></param>
+        /// <param name="date"></param>
+        /// <param name="studiedHrs"></param>
+        /// <returns></returns>
         public ModuleTable UpdateModule(int id,string name, string code, int credits,int semester_id,int classHours, int selfHours, int remainingHours,int Progressbar, DateTime date, int studiedHrs)
         {
             using (db = new MyTimeWizDatabaseEntity())
@@ -215,6 +263,17 @@ namespace TimeWiz.Classes
             }
         }
 
+        //----------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+        /// <summary>
+        /// updating module ,study hours part using entity framework
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="remainingHours"></param>
+        /// <param name="Progressbar"></param>
+        /// <param name="date"></param>
+        /// <param name="studiedHrs"></param>
+        /// <returns></returns>
         public ModuleTable UpdateStudyModule(int id, int remainingHours, int Progressbar, DateTime date,int studiedHrs)
         {
             using (db = new MyTimeWizDatabaseEntity())
@@ -240,6 +299,13 @@ namespace TimeWiz.Classes
             }
         }
 
+        //----------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+        /// <summary>
+        /// get study hours 
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         public int GetStudiedHours(int id)
         {
             using (db = new MyTimeWizDatabaseEntity())
@@ -257,6 +323,13 @@ namespace TimeWiz.Classes
             }
         }
 
+        //----------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+        /// <summary>
+        /// get module by modulecode
+        /// </summary>
+        /// <param name="code"></param>
+        /// <returns></returns>
         public List<ModuleTable> GetModuleByCode(string code)
         {
             using (db = new MyTimeWizDatabaseEntity())
@@ -272,6 +345,14 @@ namespace TimeWiz.Classes
                 }
             }
         }
+
+        //----------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+        /// <summary>
+        /// get all modules from database that are in the selected semester
+        /// </summary>
+        /// <param name="semester"></param>
+        /// <returns></returns>
         public List<ModuleTable> GetAllModules(Semester semester)
         {
             using (db = new MyTimeWizDatabaseEntity())
@@ -281,7 +362,13 @@ namespace TimeWiz.Classes
             }
         }
      
+        //----------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
+        /// <summary>
+        /// delete module by semester id using entity framework
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         public List <ModuleTable> DeleteModuleBySemesterId(int id)
         {
             using (db = new MyTimeWizDatabaseEntity())
@@ -301,5 +388,39 @@ namespace TimeWiz.Classes
         
         }
 
+        //----------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+        /// <summary>
+        /// get student id using login id
+        /// </summary>
+        /// <param name="login"></param>
+        /// <returns></returns>
+        public int GetStudentId(int login)
+        {
+            int id = 0;
+            string query = "SELECT Student_Id FROM Student WHERE Login_Id = @Login_Id";
+
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                connection.Open();
+
+                using (SqlCommand cmd = new SqlCommand(query, connection))
+                {
+                    cmd.Parameters.AddWithValue("@Login_Id", login);
+
+                    using (SqlDataReader reader = cmd.ExecuteReader())
+                    {
+                        if (reader.Read())
+                        {
+                            id = reader.GetInt32(0); 
+                        }
+                    }
+                }
+            }
+
+            return id;
+        }
+
+
     }
-}
+}//------------------------------------------------------------------------------------------------------------------------------------------------------------------------Eugene*end

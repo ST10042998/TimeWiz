@@ -25,6 +25,14 @@ namespace MyTimeWizClassLib
         //----------------------------------------------------------------------------------------------------------------------------------------------------------
 
         /// <summary>
+        /// Holds the student id
+        /// </summary>
+        private int student_id;
+        public int Student_id { get => semesterNum; set => semesterNum = value; }
+
+        //----------------------------------------------------------------------------------------------------------------------------------------------------------
+
+        /// <summary>
         /// Holds the start date of the semester 
         /// </summary>
         private string startDate;

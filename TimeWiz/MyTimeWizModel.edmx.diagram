@@ -4,14 +4,16 @@
   <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
     <!-- Diagram content (shape and connector positions) -->
     <edmx:Diagrams>
-      <Diagram DiagramId="2f012d697f5944afa490890ea95949ab" Name="Diagram1" ZoomLevel="74">
-        <EntityTypeShape EntityType="MyTimeWizDatabaseModel.Login" Width="1.5" PointX="3" PointY="1" IsExpanded="true" />
-        <EntityTypeShape EntityType="MyTimeWizDatabaseModel.ModuleTable" Width="1.5" PointX="3" PointY="5" IsExpanded="true" />
-        <EntityTypeShape EntityType="MyTimeWizDatabaseModel.Semester" Width="1.5" PointX="0.75" PointY="5.625" IsExpanded="true" />
-        <EntityTypeShape EntityType="MyTimeWizDatabaseModel.Student" Width="1.5" PointX="0.75" PointY="0.875" IsExpanded="true" />
-        <AssociationConnector Association="MyTimeWizDatabaseModel.FK_Login_Student" ManuallyRouted="false" />
+      <Diagram DiagramId="3c83f784e96d49ff8b3eddd353dee609" Name="Diagram1">
+        <EntityTypeShape EntityType="MyTimeWizDatabaseModel.Login" Width="1.5" PointX="0.75" PointY="1.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="MyTimeWizDatabaseModel.ModuleTable" Width="1.5" PointX="7.5" PointY="1" IsExpanded="true" />
+        <EntityTypeShape EntityType="MyTimeWizDatabaseModel.Semester" Width="1.5" PointX="5.25" PointY="1.375" IsExpanded="true" />
+        <EntityTypeShape EntityType="MyTimeWizDatabaseModel.Student" Width="1.5" PointX="3" PointY="1.375" IsExpanded="true" />
+        <AssociationConnector Association="MyTimeWizDatabaseModel.FK_Student_Login" ManuallyRouted="false" />
         <AssociationConnector Association="MyTimeWizDatabaseModel.FK_ModuleTable_Semester" ManuallyRouted="false" />
-        <AssociationConnector Association="MyTimeWizDatabaseModel.FK_Student_Semester" />
+        <AssociationConnector Association="MyTimeWizDatabaseModel.FK_Semester_Student" ManuallyRouted="false" />
+        <EntityTypeShape EntityType="MyTimeWizDatabaseModel.LoginInfo" Width="1.5" PointX="3" PointY="5" />
+        <AssociationConnector Association="MyTimeWizDatabaseModel.FK_LoginInfo_Login_Id" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

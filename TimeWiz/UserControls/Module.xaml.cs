@@ -18,6 +18,8 @@ using TimeWiz.Classes;
 using System.Windows.Markup;
 using System.Runtime.InteropServices.ComTypes;
 using System.Xml.Linq;
+using TimeWiz.LoginAndRegister;
+using System.Runtime.Remoting.Messaging;
 
 namespace TimeWiz.UserControls
 {
@@ -30,9 +32,13 @@ namespace TimeWiz.UserControls
         //databse objects
         private Semesters semesters= new Semesters();
         private ModuleTables moduleTables = new ModuleTables();
-         
-        int semester_id=0;
+      
+        private LoginInfos loginfo = new LoginInfos();
+
+        int semester_id = 0;
         int numWeeks = 0;
+        int student_id = 0;
+        int login_Id = 0;
 
         /// <summary>
         ///  creating obj of study class
@@ -43,8 +49,8 @@ namespace TimeWiz.UserControls
         /// creating obj of calculation class
         /// </summary>
         private CalculationClass cal;
-        private StudyClass currentSemester ;
 
+        private StudyClass currentSemester;
         /// <summary>
         /// list that holds module data for my calculations
         /// </summary>
@@ -64,6 +70,7 @@ namespace TimeWiz.UserControls
             this.cal = cal;
             semesters = sem;
             currentSemester = new StudyClass();
+           
         }
 
         //----------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -113,10 +120,11 @@ namespace TimeWiz.UserControls
             {
                 currentSemester.semesterData.SemesterList.Add(sc);
                 numWeeks= sc.NumberOfWeeks;
-                
 
-                var newSemester = semesters.AddSemesterAdo(sc.SemesterNum, sc.NumberOfWeeks, sc.StartDate, sc.EndDate);
-                semester_id = newSemester.Semester_Id;
+                login_Id = loginfo.GetLastAdded().Login_Id;
+
+                var newSemester = semesters.AddSemesterAdo(sc.SemesterNum, sc.NumberOfWeeks, sc.StartDate, sc.EndDate, moduleTables.GetStudentId(login_Id));
+
                 if (newSemester != null)
                 {
                     semester_id = newSemester.Semester_Id;
@@ -314,10 +322,17 @@ namespace TimeWiz.UserControls
 
         }
 
+        //----------------------------------------------------------------------------------------------------------------------------------------------------------
+
+        /// <summary>
+        /// done button event
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void btnDone_Click(object sender, RoutedEventArgs e)
         {
             // Check if there are any modules associated with the current semester
-            if (semesters.GetAllSemesterAdo().Any())
+            if (semesters.GetAllSemesterAdo(moduleTables.GetStudentId(login_Id)).Any())
             {
                 txtSemester.Clear();
                 txtNumWeekSestr.Clear();

@@ -13,7 +13,7 @@ namespace MyTimeWizClassLib
         /// Creating obj for my SemesterDataV
         /// </summary>
         public SemesterDataClass semesterData = new SemesterDataClass();
-      
+
         //----------------------------------------------------------------------------------------------------------------------------------------------------------
 
         /// <summary>
@@ -29,6 +29,7 @@ namespace MyTimeWizClassLib
         public StudyClass()
         {
             SemesterList = new List<SemesterDataClass>();
+           
         }
     }
 }

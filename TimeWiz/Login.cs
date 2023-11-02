@@ -14,11 +14,20 @@ namespace TimeWiz
     
     public partial class Login
     {
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
+        public Login()
+        {
+            this.Students = new HashSet<Student>();
+            this.LoginInfoes = new HashSet<LoginInfo>();
+        }
+    
         public int Login_Id { get; set; }
         public string UserName { get; set; }
         public string Password { get; set; }
-        public Nullable<int> Student_Id { get; set; }
     
-        public virtual Student Student { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<Student> Students { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<LoginInfo> LoginInfoes { get; set; }
     }
 }

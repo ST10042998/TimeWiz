@@ -27,20 +27,26 @@ namespace TimeWiz
         private StudyClass study;
         private CalculationClass cal;
         private  Semesters semesters;
+      
+        private LoginWindow lw = new LoginWindow();
         
-              
-         
+        
+
         public MainWindow()
         {
-           
+
             InitializeComponent();
             study = new StudyClass();
             cal = new CalculationClass();
-           semesters =  new Semesters();
+            semesters = new Semesters();
+            
+
             // Navigates to the home page when the application starts
             NavigateToUserControl(new UserControls.Home());
+        
+        
         }
-
+       
         //--------------------------------------------------------------------------------------------------------------------------------------------------------
 
         /// <summary>
@@ -89,11 +95,9 @@ namespace TimeWiz
         /// <param name="e"></param>
         private void ExitBtn_Click(object sender, RoutedEventArgs e)
         {
-           Application.Current.Shutdown();
-           LoginWindow loginWindow = new LoginWindow();
-           loginWindow.Window_Closing();
-           
-           
+            lw.exitWindow();
+            Application.Current.Shutdown();
+             
         }
 
         //--------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -142,6 +146,11 @@ namespace TimeWiz
             NavigateToUserControl(new UserControls.Study(study));
         }
 
+        //----------------------------------------------------------------------------------------------------------------------------------------------------------
+
+        /// <summary>
+        /// creating new instance of view
+        /// </summary>
         public void NavigateToView()
         {
             NavigateToUserControl(new UserControls.View(study));

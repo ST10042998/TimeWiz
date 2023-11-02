@@ -21,11 +21,16 @@ namespace TimeWiz.Classes
 
        public ModuleTables module = new ModuleTables();
         public DbSet<Semester> Sem { get; set; }
-        public Semesters ()
-    {
-        
-    }
 
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        public Semesters ()
+        {
+        
+        }
+
+        //connection string
         private readonly string ConnectString = Properties.Settings.Default.ConnectionString;
 
 
@@ -53,8 +58,18 @@ namespace TimeWiz.Classes
             this.Connection.ConnectionString = ConnectString;
         }
 
+        //----------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
-        public Semester AddSemesterAdo(int semesterNum, int numOfWeeks, string startDate, string endDate)
+        /// <summary>
+        /// add semester using ado
+        /// </summary>
+        /// <param name="semesterNum"></param>
+        /// <param name="numOfWeeks"></param>
+        /// <param name="startDate"></param>
+        /// <param name="endDate"></param>
+        /// <param name="student_id"></param>
+        /// <returns></returns>
+        public Semester AddSemesterAdo(int semesterNum, int numOfWeeks, string startDate, string endDate, int student_id)
         {
             try
             {
@@ -62,8 +77,8 @@ namespace TimeWiz.Classes
                 {
                     connection.Open();
 
-                    string insertQuery = "INSERT INTO Semester (SemesterNum, NumOfWeeks, StartDate, EndDate) " +
-                        "VALUES (@SemesterNum, @NumOfWeeks, @StartDate, @EndDate); SELECT SCOPE_IDENTITY()";
+                    string insertQuery = "INSERT INTO Semester (SemesterNum, NumOfWeeks, StartDate, EndDate, Student_Id) " +
+                        "VALUES (@SemesterNum, @NumOfWeeks, @StartDate, @EndDate, @Student_Id); SELECT SCOPE_IDENTITY()";
 
                     using (SqlCommand cmd = new SqlCommand(insertQuery, connection))
                     {
@@ -71,6 +86,7 @@ namespace TimeWiz.Classes
                         cmd.Parameters.AddWithValue("@NumOfWeeks", numOfWeeks);
                         cmd.Parameters.AddWithValue("@StartDate", startDate);
                         cmd.Parameters.AddWithValue("@EndDate", endDate);
+                        cmd.Parameters.AddWithValue("@Student_Id", student_id);
 
                         int semesterId = Convert.ToInt32(cmd.ExecuteScalar()); // Get the newly inserted semester's ID
 
@@ -83,7 +99,8 @@ namespace TimeWiz.Classes
                                 SemesterNum = semesterNum,
                                 NumOfWeeks = numOfWeeks,
                                 StartDate = Convert.ToDateTime(startDate),
-                                EndDate = Convert.ToDateTime(endDate)
+                                EndDate = Convert.ToDateTime(endDate),
+                                Student_Id = student_id
                             };
                         }
                         else
@@ -101,7 +118,14 @@ namespace TimeWiz.Classes
             }
         }
 
-        public List<Semester> GetAllSemesterAdo()
+        //----------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+        /// <summary>
+        /// get all semesters using ado
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public List<Semester> GetAllSemesterAdo(int id)
         {
             List<Semester> semesters = new List<Semester>();
 
@@ -111,10 +135,12 @@ namespace TimeWiz.Classes
                 {
                     connection.Open();
 
-                    string selectQuery = "SELECT * FROM Semester"; // SQL query to select all semesters
+                    string selectQuery = "SELECT * FROM Semester WHERE Student_Id = @Student_Id";
 
                     using (SqlCommand cmd = new SqlCommand(selectQuery, connection))
                     {
+                        cmd.Parameters.AddWithValue("@Student_Id", id);
+
                         using (SqlDataReader reader = cmd.ExecuteReader())
                         {
                             while (reader.Read())
@@ -126,7 +152,8 @@ namespace TimeWiz.Classes
                                     SemesterNum = (int)reader["SemesterNum"],
                                     NumOfWeeks = (int)reader["NumOfWeeks"],
                                     StartDate = (DateTime)reader["StartDate"],
-                                    EndDate = (DateTime)reader["EndDate"]
+                                    EndDate = (DateTime)reader["EndDate"],
+                                    Student_Id = (int)reader["Student_Id"]
                                 };
 
                                 semesters.Add(semester);
@@ -143,20 +170,31 @@ namespace TimeWiz.Classes
             return semesters;
         }
 
+        //----------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
-        public Semester AddSemester(int semesterNum, int numOfWeeks, string startDate, string endDate)
+        /// <summary>
+        /// adding semester using entity framework
+        /// </summary>
+        /// <param name="semesterNum"></param>
+        /// <param name="numOfWeeks"></param>
+        /// <param name="startDate"></param>
+        /// <param name="endDate"></param>
+        /// <param name="student_id"></param>
+        /// <returns></returns>
+        public Semester AddSemester(int semesterNum, int numOfWeeks, string startDate, string endDate, int student_id)
         {
             var semester = new Semester
             {
                 SemesterNum = semesterNum,
                 NumOfWeeks = numOfWeeks,
                 StartDate = Convert.ToDateTime(startDate),
-                EndDate = Convert.ToDateTime(endDate)
+                EndDate = Convert.ToDateTime(endDate),
+                Student_Id = student_id
             };
 
             try
             {
-                using (var dbContext = new Semesters()) // Replace YourDbContext with the actual name of your DbContext class
+                using (var dbContext = new Semesters()) 
                 {
                     dbContext.Sem.Add(semester);
                     dbContext.SaveChanges();
@@ -171,6 +209,17 @@ namespace TimeWiz.Classes
             }
         }
 
+        //----------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+        /// <summary>
+        /// update semester using entity
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="semesterNum"></param>
+        /// <param name="numOfWeeks"></param>
+        /// <param name="startDate"></param>
+        /// <param name="endDate"></param>
+        /// <returns></returns>
         public Semester UpdateSemester(int id,int semesterNum, int numOfWeeks, string startDate, string endDate)
         {
             using (db = new MyTimeWizDatabaseEntity())
@@ -192,6 +241,13 @@ namespace TimeWiz.Classes
             }
         }
 
+        //----------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+        /// <summary>
+        /// get semester using entity
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         public Semester GetSemester(int id)
         {
             using (db = new MyTimeWizDatabaseEntity())
@@ -208,16 +264,28 @@ namespace TimeWiz.Classes
             }
         }
 
+        //----------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+        /// <summary>
+        /// get all semesters using entity
+        /// </summary>
+        /// <returns></returns>
         public List<Semester> GetAllSemesters()
         {
             using (db = new MyTimeWizDatabaseEntity())
             {
-                // Use the ToList method to retrieve all semesters as a list
+               
                 return db.Semesters.ToList();
             }
         }
 
+        //----------------------------------------------------------------------------------------------------------------------------------------------------------------------
       
+        /// <summary>
+        /// delete semester using entity
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         public Semester DeleteSemester(int id)
         {
             using (var db = new MyTimeWizDatabaseEntity())
@@ -245,3 +313,4 @@ namespace TimeWiz.Classes
 
     }
 }
+//---------------------------------------------------------------------------------------------------------------------------------------------------------------------Eugene*end

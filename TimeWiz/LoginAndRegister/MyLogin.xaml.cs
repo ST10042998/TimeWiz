@@ -1,4 +1,5 @@
-﻿using System;
+﻿using MyTimeWizClassLib;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -12,6 +13,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using TimeWiz.Classes;
 
 namespace TimeWiz.LoginAndRegister
 {
@@ -20,22 +22,39 @@ namespace TimeWiz.LoginAndRegister
     /// </summary>
     public partial class MyLogin : UserControl
     {
+        //create an instance classes
         MyLoginWorker loginWorker = new MyLoginWorker();
+        Logins logins = new Logins();
+        LoginInfos loginInfos = new LoginInfos();
+      
         bool isLogin = false;
+
+        public int Login_Id { get; set; }
+
+        //----------------------------------------------------------------------------------------------------------------------------------
+
         public MyLogin()
         {
-            InitializeComponent();
+             InitializeComponent();
         }
 
+        //----------------------------------------------------------------------------------------------------------------------------------
 
+        /// <summary>
+        /// Call the NavigateToRegister method of the LoginWindow
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void txtblkSignUp_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
-            // Call the NavigateToRegister method of the LoginWindow
+          
             if (Window.GetWindow(this) is LoginWindow mainWindow)
             {
                 mainWindow.NavigateToRegister();
             }
         }
+
+        //----------------------------------------------------------------------------------------------------------------------------------
 
         private void lblblkSignUp_PreviewMouseMove(object sender, MouseEventArgs e)
         {
@@ -43,14 +62,23 @@ namespace TimeWiz.LoginAndRegister
 
         }
 
+        //----------------------------------------------------------------------------------------------------------------------------------
+
         private void LoginBtn_Click(object sender, RoutedEventArgs e)
-        {   
-            MessageBox.Show($"{pwBox.Password.ToString()}");
-          if (loginWorker.Login(txtUsername.Text, pwBox.Password.ToString()))
+        {
+            loginInfos.DeleteLoginInfo();
+            
+            if (loginWorker.Login(txtUsername.Text, pwBox.Password.ToString()))
             {
                 MessageBox.Show("Login Successful");
                 isLogin = true;
+
+                Login_Id = logins.GetLoginId(txtUsername.Text);
+                loginInfos.AddLoginInfoUsingADO(Login_Id);
+
+                this.closewindow();
                 this.LogToApp();
+               
             }
             else
             {
@@ -58,9 +86,19 @@ namespace TimeWiz.LoginAndRegister
                 txtUsername.Clear();
                 pwBox.Clear();
                 isLogin = false;
+                
+                if (Window.GetWindow(this) is LoginWindow mainWindow)
+                {
+                    mainWindow.NavigateToLogin();
+                }
             }
         }
 
+        //----------------------------------------------------------------------------------------------------------------------------------
+
+        /// <summary>
+        /// Navigate to the main application    
+        /// </summary>
         private void LogToApp()
         {   
             if (isLogin)
@@ -71,5 +109,21 @@ namespace TimeWiz.LoginAndRegister
                 }
             }
         }
+
+        //----------------------------------------------------------------------------------------------------------------------------------
+
+        /// <summary>
+        /// Close the LoginWindow
+        /// </summary>
+        private void closewindow()
+        {
+            if (Window.GetWindow(this) is LoginWindow mainWindow)
+            {
+                mainWindow.CloseWindow();
+            }
+        }
+
+        
     }
 }
+//----------------------------------------------------------------------------------------------------------------------------------Eugene*End
